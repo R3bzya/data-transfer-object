@@ -2,6 +2,7 @@
 
 namespace Rbz\Forms;
 
+use DomainException;
 use Rbz\Forms\Errors\Collection\ErrorCollection;
 use Throwable;
 
@@ -14,7 +15,7 @@ abstract class CompositeForm extends Form
         $success = true;
 
         foreach ($this->getAdditionalForms() as $form) {
-            $success = $this->$form->load($data) && $success;
+            $success = $this->getForm($form)->load($data) && $success;
         }
 
         return parent::load($data) && $success;
@@ -40,9 +41,7 @@ abstract class CompositeForm extends Form
         $validate = true;
 
         foreach ($this->getAdditionalForms() as $form) {
-            if ($this->isFormAttribute($form)) {
-                $validate = $this->$form->validate() && $validate;
-            }
+            $validate = $this->getForm($form)->validate() && $validate;
         }
 
         return parent::validate() && $validate;
@@ -54,16 +53,14 @@ abstract class CompositeForm extends Form
             return $this->additionalForms();
         }
 
-        $additionalForm = [];
+        $additionalForms = [];
         foreach ($this->getAttributes() as $attribute) {
             if ($this->isFormAttribute($attribute)) {
-                /** @var Form $form */
-                $form = $this->getAttribute($attribute);
-                $additionalForm[] = $form->getFormName();
+                $additionalForms[] = $this->getForm($attribute)->getFormName();
             }
         }
 
-        return $additionalForm;
+        return $additionalForms;
     }
 
     public function isFormAttribute($attribute): bool
@@ -79,9 +76,7 @@ abstract class CompositeForm extends Form
     {
         $collection = parent::getErrors();
         foreach ($this->getAdditionalForms() as $form) {
-            if ($this->isFormAttribute($form)) {
-                $collection = $collection->with($this->$form->getErrors());
-            }
+            $collection = $collection->with($this->getForm($form)->getErrors());
         }
         return $collection;
     }
@@ -94,5 +89,14 @@ abstract class CompositeForm extends Form
     public function hasErrors(): bool
     {
         return $this->getErrors()->isNotEmpty();
+    }
+
+    public function getForm(string $attribute): Form
+    {
+        if (! $this->isFormAttribute($attribute)) {
+            throw new DomainException("Attribute `$attribute` is not a form");
+        }
+
+        return $this->getAttribute($attribute);
     }
 }
