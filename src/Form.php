@@ -83,7 +83,7 @@ abstract class Form extends Attributes
 
     public function hasErrors(): bool
     {
-        return $this->getErrors()->isNotEmpty();
+        return self::getErrors()->isNotEmpty();
     }
 
     public function getFormName(): string
@@ -93,6 +93,6 @@ abstract class Form extends Attributes
 
     public function setError(string $attribute, string $message): void
     {
-        $this->getErrors()->add(new ErrorItem($attribute, $message));
+        self::getErrors()->add(new ErrorItem($attribute, $message));
     }
 }
