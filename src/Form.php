@@ -18,7 +18,7 @@ abstract class Form extends Attributes
 
     public function load(array $data): bool
     {
-        if (! empty($data) && ! $this->setAttributes($data)) {
+        if (empty($data) || ! $this->setAttributes($data)) {
             $this->setError($this->getFormName(), ErrorMessage::getMessageNotLoad($this->getFormName()));
             return false;
         }
