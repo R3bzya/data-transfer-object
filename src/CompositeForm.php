@@ -4,7 +4,6 @@ namespace Rbz\Forms;
 
 use DomainException;
 use Rbz\Forms\Errors\Collection\ErrorCollection;
-use Throwable;
 
 abstract class CompositeForm extends Form
 {
@@ -23,17 +22,14 @@ abstract class CompositeForm extends Form
 
     public function setAttributes(array $data): bool
     {
-        foreach ($data as $attribute => $value) {
-            if ($this->hasAttribute($attribute) && ! $this->isAdditionalForm($attribute)) {
-                try {
-                    $this->setAttribute($attribute, $value);
-                } catch (Throwable $e) {
-                    return false;
-                }
-            }
-        }
+        return parent::setAttributes($this->getFilteredData($data));
+    }
 
-        return true;
+    private function getFilteredData(array $data): array
+    {
+        return array_filter_keys($data, function ($key) {
+            return $this->isAdditionalForm($key);
+        });
     }
 
     public function validate(): bool
