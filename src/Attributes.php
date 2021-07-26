@@ -77,22 +77,6 @@ abstract class Attributes implements Arrayable
         return isset($this->$attribute);
     }
 
-    public function isAvailableAttributes(): bool
-    {
-        foreach ($this->getAttributes() as $attribute) {
-            if (! $this->isAvailableAttribute($attribute)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public function isAvailableAttribute(string $attribute): bool
-    {
-        return $this->isSetAttribute($attribute) || $this->isNullAttribute($attribute);
-    }
-
     public function isNullAttribute(string $attribute): bool
     {
         try {

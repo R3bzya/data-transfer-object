@@ -2,8 +2,8 @@
 
 namespace Rbz\Forms;
 
+use DomainException;
 use Rbz\Forms\Errors\Collection\ErrorCollection;
-use Throwable;
 
 abstract class CompositeForm extends Form
 {
@@ -11,40 +11,31 @@ abstract class CompositeForm extends Form
 
     public function load(array $data): bool
     {
-        $success = true;
-
+        $success = parent::load($data);
         foreach ($this->getAdditionalForms() as $form) {
-            $success = $this->$form->load($data) && $success;
+            $success = $this->getForm($form)->load($data) && $success;
         }
-
-        return parent::load($data) && $success;
+        return $success;
     }
 
     public function setAttributes(array $data): bool
     {
-        foreach ($data as $attribute => $value) {
-            if ($this->hasAttribute($attribute) && ! $this->isAdditionalForm($attribute)) {
-                try {
-                    $this->setAttribute($attribute, $value);
-                } catch (Throwable $e) {
-                    return false;
-                }
-            }
-        }
+        return parent::setAttributes($this->getFilteredData($data));
+    }
 
-        return true;
+    private function getFilteredData(array $data): array
+    {
+        return array_filter_keys($data, function ($key) {
+            return $this->isAdditionalForm($key);
+        });
     }
 
     public function validate(): bool
     {
         $validate = true;
-
         foreach ($this->getAdditionalForms() as $form) {
-            if ($this->isFormAttribute($form)) {
-                $validate = $this->$form->validate() && $validate;
-            }
+            $validate = $this->getForm($form)->validate() && $validate;
         }
-
         return parent::validate() && $validate;
     }
 
@@ -53,17 +44,7 @@ abstract class CompositeForm extends Form
         if (! empty($this->additionalForms())) {
             return $this->additionalForms();
         }
-
-        $additionalForm = [];
-        foreach ($this->getAttributes() as $attribute) {
-            if ($this->isFormAttribute($attribute)) {
-                /** @var Form $form */
-                $form = $this->getAttribute($attribute);
-                $additionalForm[] = $form->getFormName();
-            }
-        }
-
-        return $additionalForm;
+        return $this->findAdditionalForms();
     }
 
     public function isFormAttribute($attribute): bool
@@ -71,7 +52,6 @@ abstract class CompositeForm extends Form
         if ($this->isSetAttribute($attribute)) {
             return $this->getAttribute($attribute) instanceof Form;
         }
-
         return false;
     }
 
@@ -79,9 +59,7 @@ abstract class CompositeForm extends Form
     {
         $collection = parent::getErrors();
         foreach ($this->getAdditionalForms() as $form) {
-            if ($this->isFormAttribute($form)) {
-                $collection = $collection->with($this->$form->getErrors());
-            }
+            $collection = $collection->with($this->getForm($form)->getErrors());
         }
         return $collection;
     }
@@ -94,5 +72,24 @@ abstract class CompositeForm extends Form
     public function hasErrors(): bool
     {
         return $this->getErrors()->isNotEmpty();
+    }
+
+    public function getForm(string $attribute): Form
+    {
+        if (! $this->isFormAttribute($attribute)) {
+            throw new DomainException("Attribute `$attribute` is not a form");
+        }
+        return $this->getAttribute($attribute);
+    }
+
+    public function findAdditionalForms(): array
+    {
+        $additionalForms = [];
+        foreach ($this->getAttributes() as $attribute) {
+            if ($this->isFormAttribute($attribute)) {
+                $additionalForms[] = $this->getForm($attribute)->getFormName();
+            }
+        }
+        return $additionalForms;
     }
 }
