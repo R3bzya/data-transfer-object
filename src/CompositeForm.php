@@ -26,7 +26,7 @@ abstract class CompositeForm extends Form
     private function getFilteredData(array $data): array
     {
         return array_filter_keys($data, function ($key) {
-            return $this->isAdditionalForm($key);
+            return ! $this->isAdditionalForm($key);
         });
     }
 

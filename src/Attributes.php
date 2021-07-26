@@ -57,7 +57,9 @@ abstract class Attributes implements Arrayable
     {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
-            $attributes[$attribute] = $this->getAttribute($attribute);
+            $attributes[$attribute] = $this->getAttribute($attribute) instanceof Arrayable
+                ? $this->getAttribute($attribute)->toArray()
+                : $this->getAttribute($attribute);
         }
         return $attributes;
     }
