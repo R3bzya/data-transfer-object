@@ -11,13 +11,11 @@ abstract class CompositeForm extends Form
 
     public function load(array $data): bool
     {
-        $success = true;
-
+        $success = parent::load($data);
         foreach ($this->getAdditionalForms() as $form) {
             $success = $this->getForm($form)->load($data) && $success;
         }
-
-        return parent::load($data) && $success;
+        return $success;
     }
 
     public function setAttributes(array $data): bool
@@ -35,11 +33,9 @@ abstract class CompositeForm extends Form
     public function validate(): bool
     {
         $validate = true;
-
         foreach ($this->getAdditionalForms() as $form) {
             $validate = $this->getForm($form)->validate() && $validate;
         }
-
         return parent::validate() && $validate;
     }
 
@@ -48,15 +44,7 @@ abstract class CompositeForm extends Form
         if (! empty($this->additionalForms())) {
             return $this->additionalForms();
         }
-
-        $additionalForms = [];
-        foreach ($this->getAttributes() as $attribute) {
-            if ($this->isFormAttribute($attribute)) {
-                $additionalForms[] = $this->getForm($attribute)->getFormName();
-            }
-        }
-
-        return $additionalForms;
+        return $this->findAdditionalForms();
     }
 
     public function isFormAttribute($attribute): bool
@@ -64,7 +52,6 @@ abstract class CompositeForm extends Form
         if ($this->isSetAttribute($attribute)) {
             return $this->getAttribute($attribute) instanceof Form;
         }
-
         return false;
     }
 
@@ -92,7 +79,17 @@ abstract class CompositeForm extends Form
         if (! $this->isFormAttribute($attribute)) {
             throw new DomainException("Attribute `$attribute` is not a form");
         }
-
         return $this->getAttribute($attribute);
+    }
+
+    public function findAdditionalForms(): array
+    {
+        $additionalForms = [];
+        foreach ($this->getAttributes() as $attribute) {
+            if ($this->isFormAttribute($attribute)) {
+                $additionalForms[] = $this->getForm($attribute)->getFormName();
+            }
+        }
+        return $additionalForms;
     }
 }

@@ -7,16 +7,16 @@ use Illuminate\Contracts\Support\Arrayable;
 class ErrorItem implements Arrayable
 {
     private string $attribute;
-    private string $message;
+    private array $messages;
 
     /**
      * @param string $attribute
-     * @param string $message
+     * @param array $messages
      */
-    public function __construct(string $attribute, string $message)
+    public function __construct(string $attribute, array $messages)
     {
         $this->attribute = $attribute;
-        $this->message = $message;
+        $this->messages = $messages;
     }
 
     public function getAttribute(): string
@@ -24,16 +24,31 @@ class ErrorItem implements Arrayable
         return $this->attribute;
     }
 
-    public function getMessage(): string
+    public function getMessages(): array
     {
-        return $this->message;
+        return $this->messages;
     }
 
     public function toArray(): array
     {
         return [
             'attribute' => $this->getAttribute(),
-            'message' => $this->getMessage(),
+            'messages' => $this->getMessages(),
         ];
+    }
+
+    public function equalTo(string $attribute): bool
+    {
+        return $this->attribute == $attribute;
+    }
+
+    public function addMessage(string $message): void
+    {
+        $this->addMessages((array) $message);
+    }
+
+    public function addMessages(array $messages): void
+    {
+        $this->messages = array_unique(array_merge($this->messages, $messages));
     }
 }

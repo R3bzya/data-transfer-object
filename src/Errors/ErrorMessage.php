@@ -5,8 +5,8 @@ namespace Rbz\Forms\Errors;
 use DomainException;
 
 /**
- * @method static getMessageIsNotSet(string $property = '')
- * @method static getMessageNotLoad(string $property = '')
+ * @method static getIsNotSet(string $property = '')
+ * @method static getNotLoad(string $property = '')
  */
 class ErrorMessage
 {
@@ -15,7 +15,7 @@ class ErrorMessage
      */
     public static function __callStatic($name, $arguments)
     {
-        $error = lcfirst(str_replace(['getMessage'], '', $name));
+        $error = lcfirst(str_replace(['get'], '', $name));
         return ErrorList::getDescriptionByError($error, $arguments[0] ?? '');
     }
 }

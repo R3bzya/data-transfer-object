@@ -14,7 +14,7 @@ if (! function_exists('get_class_name')) {
 }
 
 if (! function_exists('array_filter_keys')) {
-    function array_filter_keys($array, ?callable $callable): array
+    function array_filter_keys(array $array, ?callable $callable): array
     {
         return array_filter($array, $callable, ARRAY_FILTER_USE_KEY);
     }

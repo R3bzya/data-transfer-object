@@ -9,9 +9,18 @@ class ErrorCollection implements Arrayable
     /** @var ErrorItem[] */
     private array $items = [];
 
-    public function add(ErrorItem $item): void
+    public function add(string $attribute, string $message): void
     {
-        $this->items[] = $item;
+        $this->addItem(new ErrorItem($attribute, (array) $message));
+    }
+
+    public function addItem(ErrorItem $item): void
+    {
+        if ($this->has($item->getAttribute())) {
+            $this->get($item->getAttribute())->addMessages($item->getMessages());
+        } else {
+            $this->items[] = $item;
+        }
     }
 
     public function getItems(): array
@@ -21,17 +30,15 @@ class ErrorCollection implements Arrayable
 
     public function getFirst(): ?ErrorItem
     {
-        if ($this->isEmpty()) {
-            return null;
-        }
-
-        return $this->getItems()[0];
+        return array_first($this->getItems());
     }
 
     public function with(ErrorCollection $collection): self
     {
         $clone = clone $this;
-        $clone->items = array_merge($this->getItems(), $collection->getItems());
+        foreach ($collection->getItems() as $item) {
+            $clone->addItem($item);
+        }
         return $clone;
     }
 
@@ -50,5 +57,25 @@ class ErrorCollection implements Arrayable
         return array_map(function (ErrorItem $item) {
             return $item->toArray();
         }, $this->getItems());
+    }
+
+    public function has(string $attribute): bool
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item->equalTo($attribute)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function get(string $attribute): ?ErrorItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->equalTo($attribute)) {
+                return $item;
+            }
+        }
+        return null;
     }
 }
