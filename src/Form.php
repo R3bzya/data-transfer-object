@@ -59,10 +59,7 @@ abstract class Form extends Attributes
 
     public function validateAttribute(string $attribute): bool
     {
-        if ($this->isSetAttribute($attribute) || $this->isNullAttribute($attribute)) {
-            return true;
-        }
-        return false;
+        return $this->isSetAttribute($attribute) || $this->isNullAttribute($attribute);
     }
 
     protected function toCamelCase(string $value): string
