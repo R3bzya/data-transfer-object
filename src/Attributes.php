@@ -26,10 +26,10 @@ abstract class Attributes implements Arrayable
 
     public function getAttributes(): array
     {
-        $class = new ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
 
         $attributes = [];
-        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (! $property->isStatic()) {
                 $attributes[] = $property->getName();
             }
@@ -57,7 +57,7 @@ abstract class Attributes implements Arrayable
     {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
-            $attributes[$attribute] = $this->getAttribute($attribute) instanceof Arrayable
+            $attributes[$attribute] = $this->isArrayableAttribute($attribute)
                 ? $this->getAttribute($attribute)->toArray()
                 : $this->getAttribute($attribute);
         }
@@ -83,6 +83,15 @@ abstract class Attributes implements Arrayable
     {
         try {
             return is_null($this->getAttribute($attribute));
+        } catch (Throwable $e) {}
+
+        return false;
+    }
+
+    public function isArrayableAttribute(string $attribute): bool
+    {
+        try {
+            return $this->getAttribute($attribute) instanceof Arrayable;
         } catch (Throwable $e) {}
 
         return false;
