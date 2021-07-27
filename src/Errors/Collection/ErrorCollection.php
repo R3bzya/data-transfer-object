@@ -30,7 +30,7 @@ class ErrorCollection implements Arrayable
 
     public function getFirst(): ?ErrorItem
     {
-        return array_first($this->getItems());
+        return array_first($this->items);
     }
 
     public function with(ErrorCollection $collection): self
@@ -56,12 +56,12 @@ class ErrorCollection implements Arrayable
     {
         return array_map(function (ErrorItem $item) {
             return $item->toArray();
-        }, $this->getItems());
+        }, $this->items);
     }
 
     public function has(string $attribute): bool
     {
-        foreach ($this->getItems() as $item) {
+        foreach ($this->items as $item) {
             if ($item->equalTo($attribute)) {
                 return true;
             }
