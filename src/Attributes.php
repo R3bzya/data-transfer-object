@@ -11,17 +11,13 @@ abstract class Attributes implements Arrayable
 {
     public function setAttributes(array $data): bool
     {
+        $success = true;
         foreach ($data as $attribute => $value) {
             if ($this->hasAttribute($attribute)) {
-                try {
-                    $this->setAttribute($attribute, $value);
-                } catch (Throwable $e) {
-                    return false;
-                }
+                $success = $this->setAttribute($attribute, $value) && $success;
             }
         }
-
-        return true;
+        return $success;
     }
 
     public function getAttributes(): array
@@ -43,9 +39,14 @@ abstract class Attributes implements Arrayable
         return $this->$attribute;
     }
 
-    public function setAttribute(string $attribute, $value): void
+    public function setAttribute(string $attribute, $value): bool
     {
-        $this->$attribute = $value;
+        try {
+            $this->$attribute = $value;
+            return true;
+        } catch (Throwable $e) {}
+
+        return false;
     }
 
     public function hasAttribute(string $attribute): bool
