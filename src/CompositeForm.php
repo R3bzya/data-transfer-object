@@ -25,8 +25,8 @@ abstract class CompositeForm extends Form
 
     private function getFilteredData(array $data): array
     {
-        return array_filter_keys($data, function ($key) {
-            return ! $this->isAdditionalForm($key);
+        return array_filter_keys($data, function ($attribute) {
+            return ! $this->isAdditionalForm($attribute);
         });
     }
 
@@ -74,6 +74,9 @@ abstract class CompositeForm extends Form
         return $this->getErrors()->isNotEmpty();
     }
 
+    /**
+     * @throws DomainException
+     */
     public function getForm(string $attribute): Form
     {
         if (! $this->isFormAttribute($attribute)) {

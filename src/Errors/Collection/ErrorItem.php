@@ -32,8 +32,8 @@ class ErrorItem implements Arrayable
     public function toArray(): array
     {
         return [
-            'attribute' => $this->getAttribute(),
-            'messages' => $this->getMessages(),
+            'attribute' => $this->attribute,
+            'messages' => $this->messages,
         ];
     }
 

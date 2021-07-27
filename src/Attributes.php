@@ -11,25 +11,21 @@ abstract class Attributes implements Arrayable
 {
     public function setAttributes(array $data): bool
     {
+        $success = true;
         foreach ($data as $attribute => $value) {
             if ($this->hasAttribute($attribute)) {
-                try {
-                    $this->setAttribute($attribute, $value);
-                } catch (Throwable $e) {
-                    return false;
-                }
+                $success = $this->setAttribute($attribute, $value) && $success;
             }
         }
-
-        return true;
+        return $success;
     }
 
     public function getAttributes(): array
     {
-        $class = new ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
 
         $attributes = [];
-        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (! $property->isStatic()) {
                 $attributes[] = $property->getName();
             }
@@ -43,9 +39,14 @@ abstract class Attributes implements Arrayable
         return $this->$attribute;
     }
 
-    public function setAttribute(string $attribute, $value): void
+    public function setAttribute(string $attribute, $value): bool
     {
-        $this->$attribute = $value;
+        try {
+            $this->$attribute = $value;
+            return true;
+        } catch (Throwable $e) {}
+
+        return false;
     }
 
     public function hasAttribute(string $attribute): bool
@@ -57,7 +58,7 @@ abstract class Attributes implements Arrayable
     {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
-            $attributes[$attribute] = $this->getAttribute($attribute) instanceof Arrayable
+            $attributes[$attribute] = $this->isArrayableAttribute($attribute)
                 ? $this->getAttribute($attribute)->toArray()
                 : $this->getAttribute($attribute);
         }
@@ -83,6 +84,15 @@ abstract class Attributes implements Arrayable
     {
         try {
             return is_null($this->getAttribute($attribute));
+        } catch (Throwable $e) {}
+
+        return false;
+    }
+
+    public function isArrayableAttribute(string $attribute): bool
+    {
+        try {
+            return $this->getAttribute($attribute) instanceof Arrayable;
         } catch (Throwable $e) {}
 
         return false;
