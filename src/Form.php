@@ -71,7 +71,9 @@ abstract class Form extends Attributes
     {
         $camelCaseAttributes = [];
         foreach ($data as $attribute => $value) {
-            $camelCaseAttributes[$this->toCamelCase($attribute)] = $value;
+            $camelCaseAttributes[$this->toCamelCase($attribute)] = is_array($value)
+                ? $this->toCamelCaseKeys($value)
+                : $value;
         }
         return $camelCaseAttributes;
     }

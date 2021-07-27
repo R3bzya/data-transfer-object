@@ -20,14 +20,25 @@ abstract class CompositeForm extends Form
 
     public function setAttributes(array $data): bool
     {
-        return parent::setAttributes($this->getFilteredData($data));
+        $success = parent::setAttributes($this->getThisFormFields($data));
+        foreach ($this->getDataFormsForThisForm($data) as $form => $value) {
+            $success = $this->getForm($form)->load($value) && $success;
+        }
+        return $success;
     }
 
-    private function getFilteredData(array $data): array
+    private function getThisFormFields(array $data): array
     {
         return array_filter_keys($data, function ($attribute) {
             return ! $this->isAdditionalForm($attribute);
         });
+    }
+
+    private function getDataFormsForThisForm(array $data): array
+    {
+        return array_filter($data, function ($value, $attribute) {
+            return $this->isAdditionalForm($attribute) && is_array($value);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     public function validate(): bool
