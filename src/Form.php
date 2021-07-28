@@ -19,7 +19,7 @@ abstract class Form extends FormErrors
         if (empty($data) || ! $this->setAttributes($data)) {
             $this->errors()->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
         }
-        return $this->countErrorsHasNotChanged($count);
+        return $this->countErrorsEqualTo($count);
     }
 
     public function validate(): bool
@@ -48,7 +48,7 @@ abstract class Form extends FormErrors
                 $this->errors()->add($attribute, ErrorMessage::getIsNotSet($attribute));
             }
         }
-        return $this->countErrorsHasNotChanged($count);
+        return $this->countErrorsEqualTo($count);
     }
 
     public function validateAttribute(string $attribute): bool

@@ -41,8 +41,8 @@ abstract class FormErrors extends Attributes
         return $this->errors()->count();
     }
 
-    public function countErrorsHasNotChanged(int $count): bool
+    public function countErrorsEqualTo(int $count): bool
     {
-        return $this->errors()->countErrorsHasNotChanged($count);
+        return $this->errors()->countErrorsEqualTo($count);
     }
 }

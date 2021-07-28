@@ -95,7 +95,7 @@ class ErrorCollection implements Arrayable
         return count($this->items);
     }
 
-    public function countErrorsHasNotChanged(int $count): bool
+    public function countErrorsEqualTo(int $count): bool
     {
         return $this->count() == $count;
     }
