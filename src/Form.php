@@ -4,6 +4,7 @@ namespace Rbz\Forms;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Rbz\Forms\Errors\Collection\ErrorItem;
 use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\FromInterface;
 
@@ -34,7 +35,7 @@ abstract class Form extends FormErrors
     {
         $messageBag = Validator::make($this->toArray(), $rules)->getMessageBag();
         foreach ($messageBag->toArray() as $attribute => $messages) {
-            $this->errors()->add($attribute, $messages);
+            $this->errors()->addItem(new ErrorItem($attribute, $messages));
         }
         return $messageBag->isEmpty();
     }
