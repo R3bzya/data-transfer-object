@@ -112,4 +112,9 @@ abstract class CompositeForm extends Form
         }
         return $additionalForms;
     }
+
+    public function getFirstError(?string $attribute = null): ?string
+    {
+        return $this->getErrors()->getFirstMessage($attribute);
+    }
 }

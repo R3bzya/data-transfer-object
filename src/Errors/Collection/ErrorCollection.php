@@ -19,18 +19,39 @@ class ErrorCollection implements Arrayable
         if ($this->has($item->getAttribute())) {
             $this->get($item->getAttribute())->addMessages($item->getMessages());
         } else {
-            $this->items[] = $item;
+            $this->items[$item->getAttribute()] = $item;
         }
     }
 
-    public function getItems(): array
+    public function items(): array
     {
         return $this->items;
     }
 
-    public function getFirst(): ?ErrorItem
+    public function getItems(): array
     {
-        return array_first($this->items);
+        return $this->items();
+    }
+
+    public function getFirst(?string $attribute = null): ?ErrorItem
+    {
+        if ($attribute) {
+            return $this->get($attribute);
+        }
+
+        foreach ($this->items as $item) {
+            return $item;
+        }
+
+        return null;
+    }
+
+    public function getFirstMessage(?string $attribute = null): ?string
+    {
+        if ($error = $this->getFirst($attribute)) {
+            return $error->getMessage();
+        }
+        return null;
     }
 
     public function with(ErrorCollection $collection): self
@@ -61,21 +82,11 @@ class ErrorCollection implements Arrayable
 
     public function has(string $attribute): bool
     {
-        foreach ($this->items as $item) {
-            if ($item->equalTo($attribute)) {
-                return true;
-            }
-        }
-        return false;
+        return key_exists($attribute, $this->items);
     }
 
     public function get(string $attribute): ?ErrorItem
     {
-        foreach ($this->items as $item) {
-            if ($item->equalTo($attribute)) {
-                return $item;
-            }
-        }
-        return null;
+        return $this->items[$attribute] ?? null;
     }
 }

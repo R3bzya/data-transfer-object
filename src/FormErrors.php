@@ -30,4 +30,9 @@ abstract class FormErrors extends Attributes
     {
         return $this->errors()->isNotEmpty();
     }
+
+    public function getFirstError(?string $attribute = null): ?string
+    {
+        return $this->errors()->getFirstMessage($attribute);
+    }
 }
