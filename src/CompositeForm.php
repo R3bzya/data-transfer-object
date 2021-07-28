@@ -7,7 +7,13 @@ use Rbz\Forms\Errors\Collection\ErrorCollection;
 
 abstract class CompositeForm extends Form
 {
-    abstract public function additionalForms(): array;
+    /**
+     * @deprecated
+     */
+    public function additionalForms(): array
+    {
+        return [];
+    }
 
     public function load(array $data): bool
     {
@@ -43,18 +49,15 @@ abstract class CompositeForm extends Form
 
     public function validate(): bool
     {
-        $validate = true;
+        $validate = parent::validate();
         foreach ($this->getAdditionalForms() as $form) {
             $validate = $this->getForm($form)->validate() && $validate;
         }
-        return parent::validate() && $validate;
+        return $validate;
     }
 
     public function getAdditionalForms(): array
     {
-        if (! empty($this->additionalForms())) {
-            return $this->additionalForms();
-        }
         return $this->findAdditionalForms();
     }
 
@@ -96,12 +99,15 @@ abstract class CompositeForm extends Form
         return $this->getAttribute($attribute);
     }
 
+    /**
+     * @deprecated
+     */
     public function findAdditionalForms(): array
     {
         $additionalForms = [];
         foreach ($this->getAttributes() as $attribute) {
             if ($this->isFormAttribute($attribute)) {
-                $additionalForms[] = $this->getForm($attribute)->getFormName();
+                $additionalForms[] = $attribute;
             }
         }
         return $additionalForms;
