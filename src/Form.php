@@ -8,11 +8,9 @@ use Rbz\Forms\Errors\Collection\ErrorCollection;
 use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\FromInterface;
 
-abstract class Form extends Attributes
+abstract class Form extends FormErrors
     implements FromInterface
 {
-    private ErrorCollection $errors;
-
     abstract public function rules(): array;
 
     public function load(array $data): bool
@@ -22,7 +20,7 @@ abstract class Form extends Attributes
             $errors->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
         }
 
-        $this->setErrors($this->getErrors()->with($errors));
+        $this->setErrors($this->errors()->with($errors));
         return $errors->isEmpty();
     }
 
@@ -39,7 +37,7 @@ abstract class Form extends Attributes
     {
         $messageBag = Validator::make($this->toArray(), $rules)->getMessageBag();
         foreach ($messageBag->toArray() as $attribute => $messages) {
-            $this->getErrors()->add($attribute, $messages);
+            $this->errors()->add($attribute, $messages);
         }
         return $messageBag->isEmpty();
     }
@@ -53,7 +51,7 @@ abstract class Form extends Attributes
             }
         }
 
-        $this->setErrors($this->getErrors()->with($errors));
+        $this->setErrors($this->errors()->with($errors));
         return $errors->isEmpty();
     }
 
@@ -78,26 +76,8 @@ abstract class Form extends Attributes
         return $camelCaseAttributes;
     }
 
-    public function getErrors(): ErrorCollection
-    {
-        if (! isset($this->errors)) {
-            $this->errors = new ErrorCollection();
-        }
-        return $this->errors;
-    }
-
-    public function hasErrors(): bool
-    {
-        return self::getErrors()->isNotEmpty();
-    }
-
     public function getFormName(): string
     {
         return $this->toCamelCase(get_class_name($this));
-    }
-
-    public function setErrors(ErrorCollection $collection): void
-    {
-        $this->errors = $collection;
     }
 }
