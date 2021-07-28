@@ -4,7 +4,6 @@ namespace Rbz\Forms;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Rbz\Forms\Errors\Collection\ErrorCollection;
 use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\FromInterface;
 
@@ -15,13 +14,11 @@ abstract class Form extends FormErrors
 
     public function load(array $data): bool
     {
-        $errors = new ErrorCollection();
+        $count = $this->getErrorCount();
         if (empty($data) || ! $this->setAttributes($data)) {
-            $errors->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
+            $this->errors()->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
         }
-
-        $this->setErrors($this->errors()->with($errors));
-        return $errors->isEmpty();
+        return $this->countErrorsHasNotChanged($count);
     }
 
     public function validate(): bool
@@ -44,15 +41,13 @@ abstract class Form extends FormErrors
 
     public function validateAttributes(array $attributes): bool
     {
-        $errors = new ErrorCollection();
+        $count = $this->getErrorCount();
         foreach ($attributes as $attribute) {
             if (! $this->validateAttribute($attribute)) {
-                $errors->add($attribute, ErrorMessage::getIsNotSet($attribute));
+                $this->errors()->add($attribute, ErrorMessage::getIsNotSet($attribute));
             }
         }
-
-        $this->setErrors($this->errors()->with($errors));
-        return $errors->isEmpty();
+        return $this->countErrorsHasNotChanged($count);
     }
 
     public function validateAttribute(string $attribute): bool

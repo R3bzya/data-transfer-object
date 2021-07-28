@@ -117,4 +117,14 @@ abstract class CompositeForm extends Form
     {
         return $this->getErrors()->getFirstMessage($attribute);
     }
+
+    public function getErrorCount(): int
+    {
+        return $this->getErrors()->count();
+    }
+
+    public function countErrorsHasNotChanged(int $count): bool
+    {
+        return $this->getErrors()->countErrorsHasNotChanged($count);
+    }
 }

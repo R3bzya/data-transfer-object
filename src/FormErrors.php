@@ -35,4 +35,14 @@ abstract class FormErrors extends Attributes
     {
         return $this->errors()->getFirstMessage($attribute);
     }
+
+    public function getErrorCount(): int
+    {
+        return $this->errors()->count();
+    }
+
+    public function countErrorsHasNotChanged(int $count): bool
+    {
+        return $this->errors()->countErrorsHasNotChanged($count);
+    }
 }

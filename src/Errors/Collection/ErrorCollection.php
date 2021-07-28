@@ -89,4 +89,14 @@ class ErrorCollection implements Arrayable
     {
         return $this->items[$attribute] ?? null;
     }
+
+    public function count(): int
+    {
+        return count($this->items);
+    }
+
+    public function countErrorsHasNotChanged(int $count): bool
+    {
+        return $this->count() == $count;
+    }
 }
