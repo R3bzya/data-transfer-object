@@ -19,7 +19,7 @@ abstract class CompositeForm extends Form
     {
         $success = parent::load($data);
         foreach ($this->getAdditionalForms() as $form) {
-            $success = $this->getForm($form)->load($data) && $success;
+            $success = $this->getForm($form)->load($data[$form] ?? $data) && $success;
         }
         return $success;
     }
