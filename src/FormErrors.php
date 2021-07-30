@@ -3,6 +3,7 @@
 namespace Rbz\Forms;
 
 use Rbz\Forms\Errors\Collection\ErrorCollection;
+use Rbz\Forms\Errors\ErrorMessage;
 
 abstract class FormErrors extends Attributes
 {
@@ -41,8 +42,12 @@ abstract class FormErrors extends Attributes
         return $this->errors()->count();
     }
 
-    public function countErrorsEqualTo(int $count): bool
+    public function setAttribute(string $attribute, $value): bool
     {
-        return $this->errors()->countErrorsEqualTo($count);
+        if (! parent::setAttribute($attribute, $value)) {
+            $this->errors()->add($attribute, ErrorMessage::notSet());
+            return false;
+        }
+        return true;
     }
 }

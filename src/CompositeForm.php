@@ -8,7 +8,7 @@ use Rbz\Forms\Errors\Collection\ErrorCollection;
 abstract class CompositeForm extends Form
 {
     /**
-     * @deprecated
+     * @deprecated will be removed at 2.0.0
      */
     public function additionalForms(): array
     {
@@ -100,7 +100,7 @@ abstract class CompositeForm extends Form
     }
 
     /**
-     * @deprecated
+     * @deprecated will be removed at 2.0.0. Use getAdditionalForms()
      */
     public function findAdditionalForms(): array
     {
@@ -121,10 +121,5 @@ abstract class CompositeForm extends Form
     public function getErrorCount(): int
     {
         return $this->getErrors()->count();
-    }
-
-    public function countErrorsEqualTo(int $count): bool
-    {
-        return $this->getErrors()->countErrorsEqualTo($count);
     }
 }

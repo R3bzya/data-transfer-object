@@ -94,9 +94,4 @@ class ErrorCollection implements Arrayable
     {
         return count($this->items);
     }
-
-    public function countErrorsEqualTo(int $count): bool
-    {
-        return $this->count() == $count;
-    }
 }

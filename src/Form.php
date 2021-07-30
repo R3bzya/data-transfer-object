@@ -15,11 +15,12 @@ abstract class Form extends FormErrors
 
     public function load(array $data): bool
     {
-        $count = $this->getErrorCount();
-        if (empty($data) || ! $this->setAttributes($data)) {
-            $this->errors()->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
+        if (empty($data)) {
+            $this->errors()->add($this->getFormName(), ErrorMessage::notLoad($this->getFormName()));
+            return false;
         }
-        return $this->countErrorsEqualTo($count);
+
+        return $this->setAttributes($data);
     }
 
     public function validate(): bool
@@ -42,18 +43,26 @@ abstract class Form extends FormErrors
 
     public function validateAttributes(array $attributes): bool
     {
-        $count = $this->getErrorCount();
+        $validate = true;
         foreach ($attributes as $attribute) {
-            if (! $this->validateAttribute($attribute)) {
-                $this->errors()->add($attribute, ErrorMessage::getIsNotSet($attribute));
-            }
+            $validate = $this->validateAttribute($attribute) && $validate;
         }
-        return $this->countErrorsEqualTo($count);
+        return $validate;
     }
 
     public function validateAttribute(string $attribute): bool
     {
-        return $this->isSetAttribute($attribute) || $this->isNullAttribute($attribute);
+        if (! $this->hasAttribute($attribute)) {
+            $this->errors()->add($attribute, ErrorMessage::undefinedProperty($attribute));
+            return false;
+        }
+
+        if (! $this->isSetAttribute($attribute) && ! $this->isNullAttribute($attribute)) {
+            $this->errors()->add($attribute, ErrorMessage::isNotSet($attribute));
+            return false;
+        }
+
+        return true;
     }
 
     protected function toCamelCase(string $value): string
