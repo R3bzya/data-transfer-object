@@ -75,9 +75,9 @@ class ErrorCollection implements Arrayable
 
     public function toArray(): array
     {
-        return array_map(function (ErrorItem $item) {
+        return array_values(array_map(function (ErrorItem $item) {
             return $item->toArray();
-        }, $this->items);
+        }, $this->items));
     }
 
     public function has(string $attribute): bool
