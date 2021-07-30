@@ -4,26 +4,23 @@ namespace Rbz\Forms;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Rbz\Forms\Errors\Collection\ErrorCollection;
+use Rbz\Forms\Errors\Collection\ErrorItem;
 use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\FromInterface;
 
-abstract class Form extends Attributes
+abstract class Form extends FormErrors
     implements FromInterface
 {
-    private ErrorCollection $errors;
-
     abstract public function rules(): array;
 
     public function load(array $data): bool
     {
-        $errors = new ErrorCollection();
-        if (empty($data) || ! $this->setAttributes($data)) {
-            $errors->add($this->getFormName(), ErrorMessage::getNotLoad($this->getFormName()));
+        if (empty($data)) {
+            $this->errors()->add($this->getFormName(), ErrorMessage::notLoad($this->getFormName()));
+            return false;
         }
 
-        $this->setErrors($this->getErrors()->with($errors));
-        return $errors->isEmpty();
+        return $this->setAttributes($data);
     }
 
     public function validate(): bool
@@ -39,27 +36,33 @@ abstract class Form extends Attributes
     {
         $messageBag = Validator::make($this->toArray(), $rules)->getMessageBag();
         foreach ($messageBag->toArray() as $attribute => $messages) {
-            $this->getErrors()->add($attribute, $messages);
+            $this->errors()->addItem(new ErrorItem($attribute, $messages));
         }
         return $messageBag->isEmpty();
     }
 
     public function validateAttributes(array $attributes): bool
     {
-        $errors = new ErrorCollection();
+        $validate = true;
         foreach ($attributes as $attribute) {
-            if (! $this->validateAttribute($attribute)) {
-                $errors->add($attribute, ErrorMessage::getIsNotSet($attribute));
-            }
+            $validate = $this->validateAttribute($attribute) && $validate;
         }
-
-        $this->setErrors($this->getErrors()->with($errors));
-        return $errors->isEmpty();
+        return $validate;
     }
 
     public function validateAttribute(string $attribute): bool
     {
-        return $this->isSetAttribute($attribute) || $this->isNullAttribute($attribute);
+        if (! $this->hasAttribute($attribute)) {
+            $this->errors()->add($attribute, ErrorMessage::undefinedProperty($attribute));
+            return false;
+        }
+
+        if (! $this->isSetAttribute($attribute) && ! $this->isNullAttribute($attribute)) {
+            $this->errors()->add($attribute, ErrorMessage::isNotSet($attribute));
+            return false;
+        }
+
+        return true;
     }
 
     protected function toCamelCase(string $value): string
@@ -78,26 +81,8 @@ abstract class Form extends Attributes
         return $camelCaseAttributes;
     }
 
-    public function getErrors(): ErrorCollection
-    {
-        if (! isset($this->errors)) {
-            $this->errors = new ErrorCollection();
-        }
-        return $this->errors;
-    }
-
-    public function hasErrors(): bool
-    {
-        return self::getErrors()->isNotEmpty();
-    }
-
     public function getFormName(): string
     {
         return $this->toCamelCase(get_class_name($this));
-    }
-
-    public function setErrors(ErrorCollection $collection): void
-    {
-        $this->errors = $collection;
     }
 }

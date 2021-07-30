@@ -7,13 +7,19 @@ use Rbz\Forms\Errors\Collection\ErrorCollection;
 
 abstract class CompositeForm extends Form
 {
-    abstract public function additionalForms(): array;
+    /**
+     * @deprecated will be removed at 2.0.0
+     */
+    public function additionalForms(): array
+    {
+        return [];
+    }
 
     public function load(array $data): bool
     {
         $success = parent::load($data);
         foreach ($this->getAdditionalForms() as $form) {
-            $success = $this->getForm($form)->load($data) && $success;
+            $success = $this->getForm($form)->load($data[$form] ?? $data) && $success;
         }
         return $success;
     }
@@ -43,18 +49,15 @@ abstract class CompositeForm extends Form
 
     public function validate(): bool
     {
-        $validate = true;
+        $validate = parent::validate();
         foreach ($this->getAdditionalForms() as $form) {
             $validate = $this->getForm($form)->validate() && $validate;
         }
-        return parent::validate() && $validate;
+        return $validate;
     }
 
     public function getAdditionalForms(): array
     {
-        if (! empty($this->additionalForms())) {
-            return $this->additionalForms();
-        }
         return $this->findAdditionalForms();
     }
 
@@ -96,14 +99,27 @@ abstract class CompositeForm extends Form
         return $this->getAttribute($attribute);
     }
 
+    /**
+     * @deprecated will be removed at 2.0.0. Use getAdditionalForms()
+     */
     public function findAdditionalForms(): array
     {
         $additionalForms = [];
         foreach ($this->getAttributes() as $attribute) {
             if ($this->isFormAttribute($attribute)) {
-                $additionalForms[] = $this->getForm($attribute)->getFormName();
+                $additionalForms[] = $attribute;
             }
         }
         return $additionalForms;
+    }
+
+    public function getFirstError(?string $attribute = null): ?string
+    {
+        return $this->getErrors()->getFirstMessage($attribute);
+    }
+
+    public function getErrorCount(): int
+    {
+        return $this->getErrors()->count();
     }
 }

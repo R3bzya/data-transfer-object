@@ -37,11 +37,6 @@ class ErrorItem implements Arrayable
         ];
     }
 
-    public function equalTo(string $attribute): bool
-    {
-        return $this->attribute == $attribute;
-    }
-
     public function addMessage(string $message): void
     {
         $this->addMessages((array) $message);
@@ -50,5 +45,10 @@ class ErrorItem implements Arrayable
     public function addMessages(array $messages): void
     {
         $this->messages = array_unique(array_merge($this->messages, $messages));
+    }
+
+    public function getMessage(): string
+    {
+        return $this->messages[0] ?? '';
     }
 }
