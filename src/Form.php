@@ -83,6 +83,6 @@ abstract class Form extends FormErrors
 
     public function getFormName(): string
     {
-        return $this->toCamelCase(get_class_name($this));
+        return get_class_name($this);
     }
 }
