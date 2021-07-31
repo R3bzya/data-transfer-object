@@ -53,12 +53,12 @@ abstract class Form extends FormErrors
     public function validateAttribute(string $attribute): bool
     {
         if (! $this->hasAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::undefinedProperty($attribute));
+            $this->errors()->add($attribute, ErrorMessage::undefined($attribute));
             return false;
         }
 
         if (! $this->isSetAttribute($attribute) && ! $this->isNullAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::isNotSet($attribute));
+            $this->errors()->add($attribute, ErrorMessage::required($attribute));
             return false;
         }
 

@@ -5,10 +5,10 @@ namespace Rbz\Forms\Errors;
 use DomainException;
 
 /**
- * @method static isNotSet(string $property = '')
+ * @method static required(string $property = '')
  * @method static notLoad(string $property = '')
  * @method static notSet(string $property = '')
- * @method static undefinedProperty(string $property = '')
+ * @method static undefined(string $property = '')
  */
 class ErrorMessage
 {

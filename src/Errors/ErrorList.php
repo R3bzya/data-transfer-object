@@ -6,20 +6,20 @@ use DomainException;
 
 class ErrorList
 {
-    const IS_NOT_SET = 'isNotSet';
+    const REQUIRED = 'required';
 
     const NOT_LOAD = 'notLoad';
     const NOT_SET = 'notSet';
 
-    const UNDEFINED_PROPERTY = 'undefinedProperty';
+    const UNDEFINED = 'undefined';
 
     public static function getListDescription(string $property = ''): array
     {
         return [
-            self::IS_NOT_SET => sprintf('Поле %s обязательно для заполнения.', $property),
+            self::REQUIRED => sprintf('Поле %s обязательно для заполнения.', $property),
             self::NOT_LOAD => sprintf('Форма %s не заполнена.', $property),
             self::NOT_SET => sprintf('Поле %s не было заполнено.', $property),
-            self::UNDEFINED_PROPERTY => sprintf('Поле %s неопределено.', $property),
+            self::UNDEFINED => sprintf('Поле %s неопределено.', $property),
         ];
     }
 
