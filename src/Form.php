@@ -26,7 +26,7 @@ abstract class Form extends FormErrors
     public function validate(): bool
     {
         $validate = $this->validateAttributes($this->getAttributes());
-        if ($validate && $rules = static::rules()) {
+        if ($validate && $rules = $this->rules()) {
             return $this->validateRules($rules);
         }
         return $validate;
