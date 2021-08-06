@@ -7,14 +7,6 @@ use Rbz\Forms\Errors\Collection\ErrorCollection;
 
 abstract class CompositeForm extends Form
 {
-    /**
-     * @deprecated will be removed at 2.0.0
-     */
-    public function additionalForms(): array
-    {
-        return [];
-    }
-
     public function load(array $data): bool
     {
         $success = parent::load($data);
@@ -58,7 +50,13 @@ abstract class CompositeForm extends Form
 
     public function getAdditionalForms(): array
     {
-        return $this->findAdditionalForms();
+        $additionalForms = [];
+        foreach ($this->getAttributes() as $attribute) {
+            if ($this->isFormAttribute($attribute)) {
+                $additionalForms[] = $attribute;
+            }
+        }
+        return $additionalForms;
     }
 
     public function isFormAttribute($attribute): bool
@@ -97,20 +95,6 @@ abstract class CompositeForm extends Form
             throw new DomainException("Attribute `$attribute` is not a form");
         }
         return $this->getAttribute($attribute);
-    }
-
-    /**
-     * @deprecated will be removed at 2.0.0. Use getAdditionalForms()
-     */
-    public function findAdditionalForms(): array
-    {
-        $additionalForms = [];
-        foreach ($this->getAttributes() as $attribute) {
-            if ($this->isFormAttribute($attribute)) {
-                $additionalForms[] = $attribute;
-            }
-        }
-        return $additionalForms;
     }
 
     public function getFirstError(?string $attribute = null): ?string
