@@ -1,11 +1,11 @@
 <?php
 
-namespace Rbz\Forms;
+namespace Rbz\Forms\Composites;
 
 use DomainException;
-use Rbz\Forms\Collections\Error\ErrorCollection;
+use Rbz\Forms\Form;
 
-abstract class CompositeForm extends Form
+abstract class CompositeForm extends CompositeFormValidator
 {
     public function load(array $data): bool
     {
@@ -39,15 +39,6 @@ abstract class CompositeForm extends Form
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    public function validate(array $attributes = []): bool
-    {
-        $validate = parent::validate();
-        foreach ($this->getAdditionalForms() as $form) {
-            $validate = $this->getForm($form)->validate() && $validate;
-        }
-        return $validate;
-    }
-
     public function getAdditionalForms(): array
     {
         $additionalForms = [];
@@ -67,23 +58,9 @@ abstract class CompositeForm extends Form
         return false;
     }
 
-    public function getErrors(): ErrorCollection
-    {
-        $collection = parent::getErrors();
-        foreach ($this->getAdditionalForms() as $form) {
-            $collection = $collection->with($this->getForm($form)->getErrors());
-        }
-        return $collection;
-    }
-
     public function isAdditionalForm(string $form): bool
     {
         return in_array($form, $this->getAdditionalForms());
-    }
-
-    public function hasErrors(): bool
-    {
-        return $this->getErrors()->isNotEmpty();
     }
 
     /**
@@ -95,15 +72,5 @@ abstract class CompositeForm extends Form
             throw new DomainException("Attribute `$attribute` is not a form");
         }
         return $this->getAttribute($attribute);
-    }
-
-    public function getFirstError(?string $attribute = null): ?string
-    {
-        return $this->getErrors()->getFirstMessage($attribute);
-    }
-
-    public function getErrorCount(): int
-    {
-        return $this->getErrors()->count();
     }
 }

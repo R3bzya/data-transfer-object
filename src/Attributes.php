@@ -58,11 +58,16 @@ abstract class Attributes implements Arrayable
     {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
-            $attributes[$attribute] = $this->isArrayableAttribute($attribute)
-                ? $this->getAttribute($attribute)->toArray()
-                : $this->getAttribute($attribute);
+            $attributes[$attribute] = $this->attributeAsArray($attribute);
         }
         return $attributes;
+    }
+
+    public function attributeAsArray(string $attribute)
+    {
+        return $this->isArrayableAttribute($attribute)
+            ? $this->getAttribute($attribute)->toArray()
+            : $this->getAttribute($attribute);
     }
 
     public function isSetAttributes(): bool

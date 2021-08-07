@@ -29,6 +29,7 @@ abstract class FormValidator extends FormErrors
     public function validate(array $attributes = []): bool
     {
         $this->validationAttributes()->load($attributes);
+
         $validate = $this->validateAttributes($this->getSafeAttributes()->getAttributes());
         if ($validate && $rules = $this->rules()) {
             return $this->validateRules(

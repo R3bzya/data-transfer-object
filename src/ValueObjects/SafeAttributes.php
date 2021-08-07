@@ -20,9 +20,7 @@ class SafeAttributes
     {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
-            $attributes[$attribute] = $this->form->isArrayableAttribute($attribute)
-                ? $this->form->getAttribute($attribute)->toArray()
-                : $this->form->getAttribute($attribute);
+            $attributes[$attribute] = $this->form->attributeAsArray($attribute);
         }
         return $attributes;
     }
@@ -32,8 +30,8 @@ class SafeAttributes
         return $this->collection->filter($this->form->getAttributes());
     }
 
-    public function filter(array $rules, bool $keys): array
+    public function filter(array $attributes, bool $keys): array
     {
-        return $this->collection->filter($rules, $keys);
+        return $this->collection->filter($attributes, $keys);
     }
 }
