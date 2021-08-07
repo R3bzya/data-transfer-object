@@ -3,7 +3,7 @@
 namespace Rbz\Forms;
 
 use DomainException;
-use Rbz\Forms\Errors\Collection\ErrorCollection;
+use Rbz\Forms\Collections\Error\ErrorCollection;
 
 abstract class CompositeForm extends Form
 {
@@ -39,7 +39,7 @@ abstract class CompositeForm extends Form
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    public function validate(): bool
+    public function validate(array $attributes = []): bool
     {
         $validate = parent::validate();
         foreach ($this->getAdditionalForms() as $form) {

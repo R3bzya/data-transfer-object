@@ -6,5 +6,5 @@ interface FromInterface
 {
     public function load(array $data): bool;
 
-    public function validate(): bool;
+    public function validate(array $attributes = []): bool;
 }

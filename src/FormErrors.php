@@ -2,7 +2,7 @@
 
 namespace Rbz\Forms;
 
-use Rbz\Forms\Errors\Collection\ErrorCollection;
+use Rbz\Forms\Collections\Error\ErrorCollection;
 use Rbz\Forms\Errors\ErrorMessage;
 
 abstract class FormErrors extends Attributes

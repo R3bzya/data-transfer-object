@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Errors\Collection;
+namespace Rbz\Forms\Collections\Error;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Forms\Interfaces\CollectionInterface;
 
-class ErrorCollection implements Arrayable
+class ErrorCollection implements CollectionInterface
 {
     /** @var ErrorItem[] */
     private array $items = [];
@@ -20,6 +20,13 @@ class ErrorCollection implements Arrayable
             $this->get($item->getAttribute())->addMessages($item->getMessages());
         } else {
             $this->items[$item->getAttribute()] = $item;
+        }
+    }
+
+    public function load(array $data): void
+    {
+        foreach ($data as $attribute => $messages) {
+            $this->addItem(new ErrorItem($attribute, $messages));
         }
     }
 
@@ -54,7 +61,7 @@ class ErrorCollection implements Arrayable
         return null;
     }
 
-    public function with(ErrorCollection $collection): self
+    public function with(CollectionInterface $collection): self
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {

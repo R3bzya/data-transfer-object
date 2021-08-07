@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Errors\Collection;
+namespace Rbz\Forms\Collections\Error;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Forms\Interfaces\ItemInterface;
 
-class ErrorItem implements Arrayable
+class ErrorItem implements ItemInterface
 {
     private string $attribute;
     private array $messages;

@@ -2,17 +2,13 @@
 
 namespace Rbz\Forms;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Rbz\Forms\Errors\Collection\ErrorItem;
 use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\FromInterface;
 
-abstract class Form extends FormErrors
+abstract class Form extends FormValidator
     implements FromInterface
 {
-    abstract public function rules(): array;
-
     public function load(array $data): bool
     {
         if (empty($data)) {
@@ -21,48 +17,6 @@ abstract class Form extends FormErrors
         }
 
         return $this->setAttributes($data);
-    }
-
-    public function validate(): bool
-    {
-        $validate = $this->validateAttributes($this->getAttributes());
-        if ($validate && $rules = $this->rules()) {
-            return $this->validateRules($rules);
-        }
-        return $validate;
-    }
-
-    public function validateRules(array $rules): bool
-    {
-        $messageBag = Validator::make($this->toArray(), $rules)->getMessageBag();
-        foreach ($messageBag->toArray() as $attribute => $messages) {
-            $this->errors()->addItem(new ErrorItem($attribute, $messages));
-        }
-        return $messageBag->isEmpty();
-    }
-
-    public function validateAttributes(array $attributes): bool
-    {
-        $validate = true;
-        foreach ($attributes as $attribute) {
-            $validate = $this->validateAttribute($attribute) && $validate;
-        }
-        return $validate;
-    }
-
-    public function validateAttribute(string $attribute): bool
-    {
-        if (! $this->hasAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::undefined($attribute));
-            return false;
-        }
-
-        if (! $this->isSetAttribute($attribute) && ! $this->isNullAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::required($attribute));
-            return false;
-        }
-
-        return true;
     }
 
     protected function toCamelCase(string $value): string
