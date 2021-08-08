@@ -2,9 +2,10 @@
 
 namespace Rbz\Forms\Collections\Error;
 
-use Rbz\Forms\Interfaces\CollectionInterface;
+use Rbz\Forms\Interfaces\Collections\CollectionInterface;
+use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
 
-class ErrorCollection implements CollectionInterface
+class ErrorCollection implements ErrorCollectionInterface
 {
     /** @var ErrorItem[] */
     private array $items = [];

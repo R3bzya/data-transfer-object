@@ -1,12 +1,9 @@
 <?php
 
-namespace Rbz\Forms\Interfaces;
+namespace Rbz\Forms\Interfaces\Collections;
 
 use Rbz\Forms\Collections\Error\ErrorItem;
 
-/**
- * @deprecated
- */
 interface ErrorCollectionInterface extends CollectionInterface
 {
     public function add(string $attribute, string $message): void;

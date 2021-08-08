@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Collections\Validation;
+namespace Rbz\Forms\Collections\Accessible;
 
-use Rbz\Forms\Interfaces\ItemInterface;
+use Rbz\Forms\Interfaces\Collections\Items\ItemInterface;
 
-class ExceptionItem implements ItemInterface
+class AccessibleItem implements ItemInterface
 {
     private string $attribute;
     private bool $exclude;

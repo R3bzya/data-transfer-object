@@ -2,15 +2,15 @@
 
 namespace Rbz\Forms\ValueObjects;
 
-use Rbz\Forms\Collections\Validation\ValidationAttributeCollection;
-use Rbz\Forms\FormValidator;
+use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
+use Rbz\Forms\Interfaces\FormInterface;
 
 class SafeAttributes
 {
-    private FormValidator $form;
-    private ValidationAttributeCollection $collection;
+    private FormInterface $form;
+    private AccessibleCollectionInterface $collection;
 
-    public function __construct(FormValidator $form, ValidationAttributeCollection $collection)
+    public function __construct(FormInterface $form, AccessibleCollectionInterface $collection)
     {
         $this->form = $form;
         $this->collection = $collection;
@@ -27,7 +27,7 @@ class SafeAttributes
 
     public function getAttributes(): array
     {
-        return $this->collection->filter($this->form->getAttributes());
+        return $this->filter($this->form->getAttributes(), false);
     }
 
     public function filter(array $attributes, bool $keys): array

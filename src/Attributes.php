@@ -3,11 +3,12 @@
 namespace Rbz\Forms;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Forms\Interfaces\AttributesInterface;
 use ReflectionClass;
 use ReflectionProperty;
 use Throwable;
 
-abstract class Attributes implements Arrayable
+abstract class Attributes implements AttributesInterface
 {
     public function setAttributes(array $data): bool
     {

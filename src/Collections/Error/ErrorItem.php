@@ -2,7 +2,7 @@
 
 namespace Rbz\Forms\Collections\Error;
 
-use Rbz\Forms\Interfaces\ItemInterface;
+use Rbz\Forms\Interfaces\Collections\Items\ItemInterface;
 
 class ErrorItem implements ItemInterface
 {
