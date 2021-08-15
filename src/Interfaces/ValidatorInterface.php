@@ -11,8 +11,7 @@ interface ValidatorInterface
     public function setErrors(ErrorCollectionInterface $collection): void;
     public function getAccessible(): AccessibleCollectionInterface;
     public function getErrors(): ErrorCollectionInterface;
-    public function validateAttributes(): bool;
-    public function validateAttribute(string $attribute): bool;
-    public function customValidate(array $rules): bool;
-    public function loadAccessible(array $data): void;
+
+    public function customValidate(FormInterface $form, array $rules, array $attributes = []): bool;
+    public function validateForm(FormInterface $form, array $attributes = []): bool;
 }

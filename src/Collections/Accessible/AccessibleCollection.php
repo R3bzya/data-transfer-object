@@ -4,7 +4,8 @@ namespace Rbz\Forms\Collections\Accessible;
 
 use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
 use Rbz\Forms\Interfaces\Collections\CollectionInterface;
-use Rbz\Forms\Validator;
+use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\Forms\Validator\Validator;
 
 class AccessibleCollection implements AccessibleCollectionInterface
 {
@@ -58,12 +59,67 @@ class AccessibleCollection implements AccessibleCollectionInterface
         }
 
         if ($this->hasInclude()) {
-            $filtered = $this->filterInclude($this->getAttributes($attributes, $keys));
+            $filtered = $this->filterInclude($this->arrayFlip($attributes, $keys));
         } else {
-            $filtered = $this->filterExcludes($this->getAttributes($attributes, $keys));
+            $filtered = $this->filterExcludes($this->arrayFlip($attributes, $keys));
         }
 
         return $keys ? $this->getOnly($attributes, $filtered) : $filtered;
+    }
+
+    public function filterFormAttributes(FormInterface $form): array
+    {
+        $attributes = [];
+        foreach ($form->getAttributes() as $attribute) {
+            if ($this->isWaitValidation($attribute)) {
+                $attributes[] = $attribute;
+            }
+        }
+        return $attributes;
+    }
+
+    /** ToDo тут мог ошибиться */
+    public function isWaitValidation(string $attribute): bool
+    {
+        if ($this->isEmpty()) {
+            return true;
+        }
+
+        if ($this->hasInclude()) {
+            if ($this->isInclude($attribute)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if ($this->hasExclude()) {
+            if ($this->isExclude($attribute)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function isInclude(string $attribute): bool
+    {
+        foreach ($this->getIncludes() as $include) {
+            if ($include->getAttribute() == $attribute) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function isExclude(string $attribute): bool
+    {
+        foreach ($this->getExcludes() as $exclude) {
+            if ($exclude->getAttribute() == $attribute) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function toArray(): array
@@ -80,7 +136,7 @@ class AccessibleCollection implements AccessibleCollectionInterface
         }
     }
 
-    public function with(CollectionInterface $collection): self
+    public function with(CollectionInterface $collection): AccessibleCollectionInterface
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {
@@ -182,29 +238,8 @@ class AccessibleCollection implements AccessibleCollectionInterface
         });
     }
 
-    private function getAttributes(array $attributes, bool $keys): array
+    private function arrayFlip(array $attributes, bool $keys): array
     {
         return $keys ? array_keys($attributes) : $attributes;
-    }
-
-    public function isWaitValidation(string $attribute): bool
-    {
-        if ($this->isEmpty()) {
-            return true;
-        }
-
-        foreach ($this->getIncludes() as $include) {
-            if ($include->getAttribute() == $attribute) {
-                return true;
-            }
-        }
-
-        foreach ($this->getExcludes() as $exclude) {
-            if ($exclude->getAttribute() == $attribute) {
-                return false;
-            }
-        }
-
-        return false;
     }
 }

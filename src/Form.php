@@ -7,6 +7,7 @@ use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\Forms\Interfaces\FormInterface;
 use Rbz\Forms\Interfaces\ValidatorInterface;
+use Rbz\Forms\Validator\Validator;
 
 abstract class Form extends Attributes
     implements FormInterface
@@ -18,7 +19,7 @@ abstract class Form extends Attributes
     public function validator(): ValidatorInterface
     {
         if (! isset($this->validator)) {
-            $this->validator = new Validator($this);
+            $this->validator = new Validator();
         }
         return $this->validator;
     }
@@ -45,11 +46,9 @@ abstract class Form extends Attributes
 
     public function validate(array $attributes = []): bool
     {
-        $this->validator()->loadAccessible($attributes);
-
-        $validate = $this->validator()->validateAttributes();
+        $validate = $this->validator()->validateForm($this, $attributes);
         if ($validate && $rules = $this->rules()) {
-            return $this->validator()->customValidate($rules);
+            return $this->validator()->customValidate($this, $rules, $attributes);
         }
         return $validate;
     }

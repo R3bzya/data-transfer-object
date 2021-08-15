@@ -5,6 +5,7 @@ namespace Rbz\Forms;
 use DomainException;
 use Rbz\Forms\Collections\Error\ErrorCollection;
 use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\Forms\Validator\Validator;
 
 abstract class CompositeForm extends Form
 {
@@ -105,7 +106,11 @@ abstract class CompositeForm extends Form
 
     public function getErrorCount(): int
     {
-        return $this->getErrors()->count();
+        $count = parent::getErrorCount();
+        foreach ($this->getAdditionalForms() as $form) {
+            $count += $this->getForm($form)->getErrors()->count();
+        }
+        return $count;
     }
 
     public function getFormAttributes(array $attributes): array

@@ -62,7 +62,7 @@ class ErrorCollection implements ErrorCollectionInterface
         return null;
     }
 
-    public function with(CollectionInterface $collection): self
+    public function with(CollectionInterface $collection): ErrorCollectionInterface
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {

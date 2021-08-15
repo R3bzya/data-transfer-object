@@ -1,14 +1,14 @@
 <?php
 
-namespace Rbz\Forms;
+namespace Rbz\Forms\Validator;
 
 use Illuminate\Support\Facades\Validator as CustomValidator;
 use Rbz\Forms\Collections\Error\ErrorCollection;
 use Rbz\Forms\Collections\Accessible\AccessibleCollection;
-use Rbz\Forms\Errors\ErrorMessage;
 use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
 use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\Forms\Interfaces\RulesInterface;
 use Rbz\Forms\Interfaces\ValidatorInterface;
 
 class Validator implements ValidatorInterface
@@ -16,15 +16,15 @@ class Validator implements ValidatorInterface
     const EXCLUSION_SYMBOL = '!';
     const SEPARATION_SYMBOL = '.';
 
-    private FormInterface $form;
     private AccessibleCollectionInterface $accessible;
     private ErrorCollectionInterface $errors;
+    private Rules $rules;
 
-    public function __construct(FormInterface $form)
+    public function __construct()
     {
-        $this->form = $form;
         $this->accessible = new AccessibleCollection();
         $this->errors = new ErrorCollection();
+        $this->rules = new Rules();
     }
 
     public function setAccessible(AccessibleCollectionInterface $collection): void
@@ -57,49 +57,24 @@ class Validator implements ValidatorInterface
         return $this->errors();
     }
 
-    public function validateAttributes(): bool
+    public function rules(): RulesInterface
     {
-        $validate = true;
-        foreach ($this->form->getAttributes() as $attribute) {
-            $validate = $this->validateAttribute($attribute) && $validate;
-        }
-        return $validate;
+        return $this->rules;
     }
 
-    public function validateAttribute(string $attribute): bool
+    public function validateForm(FormInterface $form, array $attributes = []): bool
     {
-        if (! $this->form->hasAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::undefined($attribute));
-            return false;
-        }
-
-        if (! $this->form->isSetAttribute($attribute) && ! $this->form->isNullAttribute($attribute)) {
-            $this->errors()->add($attribute, ErrorMessage::required($attribute));
-            return false;
-        }
-
-        return true;
+        $this->accessible()->load(['in', '!out']);
+        return $this->rules()->check($form, Rules::$checkAvailableAttributes,
+            $this->accessible()->filterFormAttributes($form)
+        );
     }
 
-    public function customValidate(array $rules): bool
+    public function customValidate(FormInterface $form, array $rules, array $attributes = []): bool
     {
-        $messageBag = CustomValidator::make($this->form->toArray(), $rules)->getMessageBag();
+        $this->accessible()->load($attributes);
+        $messageBag = CustomValidator::make($this->accessible()->filter($form->toArray()), $rules)->getMessageBag();
         $this->errors()->load($messageBag->toArray());
         return $messageBag->isEmpty();
-    }
-
-    public function loadAccessible(array $data): void
-    {
-        foreach ($data as $attribute) {
-            if ($this->hasAttribute($attribute)) {
-                $this->accessible()->add($attribute);
-            }
-        }
-    }
-
-    public function hasAttribute(string $attribute): bool
-    {
-        return in_array($attribute, $this->form->getAttributes())
-            || in_array(self::EXCLUSION_SYMBOL.$attribute, $this->form->getAttributes());
     }
 }
