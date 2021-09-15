@@ -36,7 +36,7 @@ class Rules implements RulesInterface
     public static function make(string $rule): RuleInterface
     {
         if (key_exists($rule, self::$rules)) {
-            return app(self::$rules[$rule]);
+            return new self::$rules[$rule];
         }
         throw new DomainException('Rule not found');
     }
@@ -58,7 +58,7 @@ class Rules implements RulesInterface
         $this->initialize($rules);
         foreach ($this->getInitialized() as $rule) {
             foreach ($attributes ?: $form->getAttributes() as $attribute) {
-                $rule->check($form, $attribute);
+                $rule->handle($form, $attribute);
             }
         }
         return $this->getErrors()->isEmpty();
@@ -78,7 +78,7 @@ class Rules implements RulesInterface
     {
         $errors = new ErrorCollection();
         foreach ($this->getInitialized() as $rule) {
-            $errors->with($rule->getErrors());
+            $errors = $errors->with($rule->getErrors());
         }
         return $errors;
     }

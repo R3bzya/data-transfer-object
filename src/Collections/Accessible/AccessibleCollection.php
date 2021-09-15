@@ -3,7 +3,6 @@
 namespace Rbz\Forms\Collections\Accessible;
 
 use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\Forms\Interfaces\Collections\CollectionInterface;
 use Rbz\Forms\Interfaces\FormInterface;
 use Rbz\Forms\Validator\Validator;
 
@@ -136,7 +135,7 @@ class AccessibleCollection implements AccessibleCollectionInterface
         }
     }
 
-    public function with(CollectionInterface $collection): AccessibleCollectionInterface
+    public function with(AccessibleCollectionInterface $collection): AccessibleCollectionInterface
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {

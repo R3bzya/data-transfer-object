@@ -40,15 +40,15 @@ abstract class Form extends Attributes
             $this->errors()->add($this->getFormName(), ErrorMessage::notLoad($this->getFormName()));
             return false;
         }
-
         return $this->setAttributes($data);
     }
 
     public function validate(array $attributes = []): bool
     {
-        $validate = $this->validator()->validateForm($this, $attributes);
+        $this->validator()->setAttributes($attributes);
+        $validate = $this->validator()->validateForm($this);
         if ($validate && $rules = $this->rules()) {
-            return $this->validator()->customValidate($this, $rules, $attributes);
+            return $this->validator()->customValidate($this, $rules);
         }
         return $validate;
     }

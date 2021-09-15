@@ -4,6 +4,9 @@ namespace Rbz\Forms\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @deprecated
+ */
 interface CollectionInterface extends Arrayable
 {
     public function load(array $data): void;

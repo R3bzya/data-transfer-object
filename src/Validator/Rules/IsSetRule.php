@@ -8,7 +8,7 @@ use Rbz\Forms\Interfaces\FormInterface;
 
 class IsSetRule extends Rule
 {
-    public function check(FormInterface $form, string $attribute): bool
+    public function handle(FormInterface $form, string $attribute): bool
     {
         if (! $form->isSetAttribute($attribute)) {
             $this->error()->add($attribute, ErrorMessage::notSet($attribute));

@@ -49,6 +49,7 @@ class Validator implements ValidatorInterface
 
     public function errors(): ErrorCollectionInterface
     {
+        $this->errors = $this->errors->with($this->rules()->getErrors());
         return $this->errors;
     }
 
@@ -62,19 +63,22 @@ class Validator implements ValidatorInterface
         return $this->rules;
     }
 
-    public function validateForm(FormInterface $form, array $attributes = []): bool
+    public function validateForm(FormInterface $form): bool
     {
-        $this->accessible()->load(['in', '!out']);
         return $this->rules()->check($form, Rules::$checkAvailableAttributes,
             $this->accessible()->filterFormAttributes($form)
         );
     }
 
-    public function customValidate(FormInterface $form, array $rules, array $attributes = []): bool
+    public function customValidate(FormInterface $form, array $rules): bool
     {
-        $this->accessible()->load($attributes);
         $messageBag = CustomValidator::make($this->accessible()->filter($form->toArray()), $rules)->getMessageBag();
         $this->errors()->load($messageBag->toArray());
         return $messageBag->isEmpty();
+    }
+
+    public function setAttributes(array $attributes): void
+    {
+        $this->accessible()->load($attributes);
     }
 }

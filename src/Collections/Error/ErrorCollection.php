@@ -2,7 +2,6 @@
 
 namespace Rbz\Forms\Collections\Error;
 
-use Rbz\Forms\Interfaces\Collections\CollectionInterface;
 use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
 
 class ErrorCollection implements ErrorCollectionInterface
@@ -62,7 +61,7 @@ class ErrorCollection implements ErrorCollectionInterface
         return null;
     }
 
-    public function with(CollectionInterface $collection): ErrorCollectionInterface
+    public function with(ErrorCollectionInterface $collection): ErrorCollectionInterface
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {
