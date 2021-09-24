@@ -24,5 +24,10 @@
         "files": [
             "commands.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rbz\\DataTransfer\\Tests\\": "tests"
+        }
     }
 }
