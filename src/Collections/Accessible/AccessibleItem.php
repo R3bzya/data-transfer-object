@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\Forms\Collections\Accessible;
+namespace Rbz\DataTransfer\Collections\Accessible;
 
-use Rbz\Forms\Interfaces\Collections\Items\ItemInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Items\ItemInterface;
 
 class AccessibleItem implements ItemInterface
 {

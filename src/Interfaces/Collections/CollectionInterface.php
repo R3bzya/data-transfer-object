@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Forms\Interfaces\Collections;
+namespace Rbz\DataTransfer\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
 

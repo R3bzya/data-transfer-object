@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Collections\Accessible;
+namespace Rbz\DataTransfer\Collections\Accessible;
 
-use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
-use Rbz\Forms\Validator\Validator;
+use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\DataTransfer\Validator\Validator;
 
 class AccessibleCollection implements AccessibleCollectionInterface
 {
@@ -66,10 +66,10 @@ class AccessibleCollection implements AccessibleCollectionInterface
         return $keys ? $this->getOnly($attributes, $filtered) : $filtered;
     }
 
-    public function filterFormAttributes(FormInterface $form): array
+    public function filterTransferAttributes(TransferInterface $transfer): array
     {
         $attributes = [];
-        foreach ($form->getAttributes() as $attribute) {
+        foreach ($transfer->getAttributes() as $attribute) {
             if ($this->isWaitValidation($attribute)) {
                 $attributes[] = $attribute;
             }

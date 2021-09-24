@@ -1,16 +1,16 @@
 <?php
 
-namespace Rbz\Forms;
+namespace Rbz\DataTransfer;
 
 use Illuminate\Support\Str;
-use Rbz\Forms\Errors\ErrorMessage;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
-use Rbz\Forms\Interfaces\ValidatorInterface;
-use Rbz\Forms\Validator\Validator;
+use Rbz\DataTransfer\Errors\ErrorMessage;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\DataTransfer\Interfaces\ValidatorInterface;
+use Rbz\DataTransfer\Validator\Validator;
 
-abstract class Form extends Attributes
-    implements FormInterface
+abstract class Transfer extends Attributes
+    implements TransferInterface
 {
     private ValidatorInterface $validator;
 
@@ -37,7 +37,7 @@ abstract class Form extends Attributes
     public function load(array $data): bool
     {
         if (empty($data)) {
-            $this->errors()->add($this->getFormName(), ErrorMessage::notLoad($this->getFormName()));
+            $this->errors()->add($this->getTransferName(), ErrorMessage::notLoad($this->getTransferName()));
             return false;
         }
         return $this->setAttributes($data);
@@ -46,7 +46,7 @@ abstract class Form extends Attributes
     public function validate(array $attributes = []): bool
     {
         $this->validator()->setAttributes($attributes);
-        $validate = $this->validator()->validateForm($this);
+        $validate = $this->validator()->validateTransfer($this);
         if ($validate && $rules = $this->rules()) {
             return $this->validator()->customValidate($this, $rules);
         }
@@ -69,7 +69,7 @@ abstract class Form extends Attributes
         return $camelCaseAttributes;
     }
 
-    public function getFormName(): string
+    public function getTransferName(): string
     {
         return get_class_name($this);
     }

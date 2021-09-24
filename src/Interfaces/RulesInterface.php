@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\Forms\Interfaces;
+namespace Rbz\DataTransfer\Interfaces;
 
 interface RulesInterface
 {
     public static function make(string $rule): RuleInterface;
-    public function check(FormInterface $form, array $rules, array $attributes = []): bool;
+    public function check(TransferInterface $transfer, array $rules, array $attributes = []): bool;
 }

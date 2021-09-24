@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Validator\Rules;
+namespace Rbz\DataTransfer\Validator\Rules;
 
-use Rbz\Forms\Collections\Error\ErrorCollection;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\RuleInterface;
+use Rbz\DataTransfer\Collections\Error\ErrorCollection;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\RuleInterface;
 
 abstract class Rule implements RuleInterface
 {

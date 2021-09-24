@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Interfaces;
+namespace Rbz\DataTransfer\Interfaces;
 
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 
-interface FormInterface extends AttributesInterface
+interface TransferInterface extends AttributesInterface
 {
     public function load(array $data): bool;
     public function validate(array $attributes = []): bool;

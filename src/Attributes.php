@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\Forms;
+namespace Rbz\DataTransfer;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\Forms\Interfaces\AttributesInterface;
+use Rbz\DataTransfer\Interfaces\AttributesInterface;
 use ReflectionClass;
 use ReflectionProperty;
 use Throwable;

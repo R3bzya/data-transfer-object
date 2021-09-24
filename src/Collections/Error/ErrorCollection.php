@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\Forms\Collections\Error;
+namespace Rbz\DataTransfer\Collections\Error;
 
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 
 class ErrorCollection implements ErrorCollectionInterface
 {

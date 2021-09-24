@@ -1,16 +1,16 @@
 <?php
 
-namespace Rbz\Forms\Validator\Rules;
+namespace Rbz\DataTransfer\Validator\Rules;
 
-use Rbz\Forms\Errors\ErrorMessage;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\DataTransfer\Errors\ErrorMessage;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 class IsSetRule extends Rule
 {
-    public function handle(FormInterface $form, string $attribute): bool
+    public function handle(TransferInterface $transfer, string $attribute): bool
     {
-        if (! $form->isSetAttribute($attribute)) {
+        if (! $transfer->isSetAttribute($attribute)) {
             $this->error()->add($attribute, ErrorMessage::notSet($attribute));
             return false;
         }

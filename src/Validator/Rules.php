@@ -1,16 +1,16 @@
 <?php
 
-namespace Rbz\Forms\Validator;
+namespace Rbz\DataTransfer\Validator;
 
 use DomainException;
-use Rbz\Forms\Collections\Error\ErrorCollection;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
-use Rbz\Forms\Validator\Rules\IsNullRule;
-use Rbz\Forms\Validator\Rules\IsSetRule;
-use Rbz\Forms\Interfaces\RulesInterface;
-use Rbz\Forms\Interfaces\RuleInterface;
-use Rbz\Forms\Validator\Rules\HasRule;
+use Rbz\DataTransfer\Collections\Error\ErrorCollection;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\DataTransfer\Validator\Rules\IsNullRule;
+use Rbz\DataTransfer\Validator\Rules\IsSetRule;
+use Rbz\DataTransfer\Interfaces\RulesInterface;
+use Rbz\DataTransfer\Interfaces\RuleInterface;
+use Rbz\DataTransfer\Validator\Rules\HasRule;
 
 class Rules implements RulesInterface
 {
@@ -53,12 +53,12 @@ class Rules implements RulesInterface
         }, $rules);
     }
 
-    public function check(FormInterface $form, array $rules, array $attributes = []): bool
+    public function check(TransferInterface $transfer, array $rules, array $attributes = []): bool
     {
         $this->initialize($rules);
         foreach ($this->getInitialized() as $rule) {
-            foreach ($attributes ?: $form->getAttributes() as $attribute) {
-                $rule->handle($form, $attribute);
+            foreach ($attributes ?: $transfer->getAttributes() as $attribute) {
+                $rule->handle($transfer, $attribute);
             }
         }
         return $this->getErrors()->isEmpty();

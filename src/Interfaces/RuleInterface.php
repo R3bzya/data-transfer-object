@@ -1,11 +1,11 @@
 <?php
 
-namespace Rbz\Forms\Interfaces;
+namespace Rbz\DataTransfer\Interfaces;
 
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 
 interface RuleInterface
 {
-    public function handle(FormInterface $form, string $attribute): bool;
+    public function handle(TransferInterface $transfer, string $attribute): bool;
     public function getErrors(): ErrorCollectionInterface;
 }

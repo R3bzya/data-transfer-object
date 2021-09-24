@@ -1,12 +1,12 @@
 {
-    "name": "r3bzya/data-forms",
-    "description": "Laravel data form",
+    "name": "r3bzya/data-transfer-object",
+    "description": "Associative array to Data Transfer Object",
     "type": "library",
-    "keywords": ["laravel", "data", "form"],
-    "homepage": "https://github.com/R3bzya/data-forms",
+    "keywords": ["data", "transfer", "object"],
+    "homepage": "https://github.com/R3bzya/data-transfer-object",
     "require": {
         "php": ">=7.4.0",
-        "laravel/framework": ">=8.0.0"
+        "laravel/framework": ">=5.0.0"
     },
     "license": "MIT",
     "authors": [
@@ -19,7 +19,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Rbz\\Forms\\": "src/"
+            "Rbz\\DataTransfer\\": "src/"
         },
         "files": [
             "commands.php"

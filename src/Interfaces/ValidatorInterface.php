@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\Forms\Interfaces;
+namespace Rbz\DataTransfer\Interfaces;
 
-use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 
 interface ValidatorInterface
 {
@@ -12,8 +12,8 @@ interface ValidatorInterface
     public function getAccessible(): AccessibleCollectionInterface;
     public function getErrors(): ErrorCollectionInterface;
 
-    public function customValidate(FormInterface $form, array $rules): bool;
-    public function validateForm(FormInterface $form): bool;
+    public function customValidate(TransferInterface $transfer, array $rules): bool;
+    public function validateTransfer(TransferInterface $transfer): bool;
 
     public function setAttributes(array $attributes): void;
 }

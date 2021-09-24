@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Forms\Errors;
+namespace Rbz\DataTransfer\Errors;
 
 use DomainException;
 

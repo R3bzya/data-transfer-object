@@ -1,15 +1,15 @@
 <?php
 
-namespace Rbz\Forms\Validator;
+namespace Rbz\DataTransfer\Validator;
 
 use Illuminate\Support\Facades\Validator as CustomValidator;
-use Rbz\Forms\Collections\Error\ErrorCollection;
-use Rbz\Forms\Collections\Accessible\AccessibleCollection;
-use Rbz\Forms\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
-use Rbz\Forms\Interfaces\RulesInterface;
-use Rbz\Forms\Interfaces\ValidatorInterface;
+use Rbz\DataTransfer\Collections\Error\ErrorCollection;
+use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
+use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\DataTransfer\Interfaces\RulesInterface;
+use Rbz\DataTransfer\Interfaces\ValidatorInterface;
 
 class Validator implements ValidatorInterface
 {
@@ -63,16 +63,16 @@ class Validator implements ValidatorInterface
         return $this->rules;
     }
 
-    public function validateForm(FormInterface $form): bool
+    public function validateTransfer(TransferInterface $transfer): bool
     {
-        return $this->rules()->check($form, Rules::$checkAvailableAttributes,
-            $this->accessible()->filterFormAttributes($form)
+        return $this->rules()->check($transfer, Rules::$checkAvailableAttributes,
+            $this->accessible()->filterTransferAttributes($transfer)
         );
     }
 
-    public function customValidate(FormInterface $form, array $rules): bool
+    public function customValidate(TransferInterface $transfer, array $rules): bool
     {
-        $messageBag = CustomValidator::make($this->accessible()->filter($form->toArray()), $rules)->getMessageBag();
+        $messageBag = CustomValidator::make($this->accessible()->filter($transfer->toArray()), $rules)->getMessageBag();
         $this->errors()->load($messageBag->toArray());
         return $messageBag->isEmpty();
     }

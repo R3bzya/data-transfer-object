@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\Forms\Interfaces\Collections;
+namespace Rbz\DataTransfer\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\Forms\Collections\Accessible\AccessibleItem;
-use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\DataTransfer\Collections\Accessible\AccessibleItem;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 interface AccessibleCollectionInterface extends Arrayable
 {
@@ -13,7 +13,7 @@ interface AccessibleCollectionInterface extends Arrayable
     public function hasInclude(): bool;
     public function hasExclude(): bool;
     public function filter(array $attributes, bool $keys = false): array;
-    public function filterFormAttributes(FormInterface $form): array;
+    public function filterTransferAttributes(TransferInterface $transfer): array;
     public function isWaitValidation(string $attribute): bool;
 
     public function load(array $data): void;

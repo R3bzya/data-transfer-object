@@ -1,16 +1,16 @@
 <?php
 
-namespace Rbz\Forms\Validator\Rules;
+namespace Rbz\DataTransfer\Validator\Rules;
 
-use Rbz\Forms\Errors\ErrorMessage;
-use Rbz\Forms\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\Forms\Interfaces\FormInterface;
+use Rbz\DataTransfer\Errors\ErrorMessage;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 class HasRule extends Rule
 {
-    public function handle(FormInterface $form, string $attribute): bool
+    public function handle(TransferInterface $transfer, string $attribute): bool
     {
-        if (! $form->hasAttribute($attribute)) {
+        if (! $transfer->hasAttribute($attribute)) {
             $this->error()->add($attribute, ErrorMessage::undefined($attribute));
             return false;
         }

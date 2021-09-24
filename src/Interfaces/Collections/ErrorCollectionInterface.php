@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\Forms\Interfaces\Collections;
+namespace Rbz\DataTransfer\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\Forms\Collections\Error\ErrorItem;
+use Rbz\DataTransfer\Collections\Error\ErrorItem;
 
 interface ErrorCollectionInterface extends Arrayable
 {
