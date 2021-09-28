@@ -2,9 +2,9 @@
 
 namespace Rbz\DataTransfer\Collections\Error;
 
-use Rbz\DataTransfer\Interfaces\Collections\Items\ItemInterface;
+use Illuminate\Contracts\Support\Arrayable;
 
-class ErrorItem implements ItemInterface
+class ErrorItem implements Arrayable
 {
     private string $attribute;
     private array $messages;

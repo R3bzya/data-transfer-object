@@ -2,9 +2,9 @@
 
 namespace Rbz\DataTransfer\Collections\Accessible;
 
-use Rbz\DataTransfer\Interfaces\Collections\Items\ItemInterface;
+use Illuminate\Contracts\Support\Arrayable;
 
-class AccessibleItem implements ItemInterface
+class AccessibleItem implements Arrayable
 {
     private string $attribute;
     private bool $exclude;

@@ -9,6 +9,7 @@ interface TransferInterface extends AttributesInterface
     public function load(array $data): bool;
     public function validate(array $attributes = []): bool;
     public function getErrors(): ErrorCollectionInterface;
-    public function setValidator(ValidatorInterface $validator): void;
-    public function getValidator(): ValidatorInterface;
+    public function setValidator(TransferValidatorInterface $validator): void;
+    public function getValidator(): TransferValidatorInterface;
+    public function getTransferName(): string;
 }

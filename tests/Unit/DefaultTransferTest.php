@@ -28,9 +28,8 @@ class DefaultTransferTest extends TestCase
         $transfer = new DefaultTransfer();
         $load = $transfer->load($data);
 
-        $this->assertFalse($load);
+        $this->assertEquals($errors['load'], $load);
         $this->assertEquals($errors['count'], $transfer->getErrors()->count());
-        $this->assertTrue($transfer->getErrors()->isNotEmpty());
     }
 
     public function testEmptyFormValidation()
@@ -99,7 +98,17 @@ class DefaultTransferTest extends TestCase
                     'a_three_a' => 123,
                 ],
                 [
+                    'load' => false,
                     'count' => 2
+                ]
+            ],
+            [
+                [
+                    'a_one_s' => 'string',
+                ],
+                [
+                    'load' => true,
+                    'count' => 0
                 ]
             ]
         ];

@@ -6,30 +6,30 @@ use Illuminate\Support\Str;
 use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\ValidatorInterface;
-use Rbz\DataTransfer\Validator\Validator;
+use Rbz\DataTransfer\Interfaces\TransferValidatorInterface;
+use Rbz\DataTransfer\Validators\Validator;
 
 abstract class Transfer extends Attributes
     implements TransferInterface
 {
-    private ValidatorInterface $validator;
+    private TransferValidatorInterface $validator;
 
     abstract public function rules(): array;
 
-    public function validator(): ValidatorInterface
+    public function validator(): TransferValidatorInterface
     {
         if (! isset($this->validator)) {
-            $this->validator = new Validator();
+            $this->validator = new Validator($this);
         }
         return $this->validator;
     }
 
-    public function getValidator(): ValidatorInterface
+    public function getValidator(): TransferValidatorInterface
     {
         return $this->validator();
     }
 
-    public function setValidator(ValidatorInterface $validator): void
+    public function setValidator(TransferValidatorInterface $validator): void
     {
         $this->validator = $validator;
     }
@@ -45,12 +45,7 @@ abstract class Transfer extends Attributes
 
     public function validate(array $attributes = []): bool
     {
-        $this->validator()->setAttributes($attributes);
-        $validate = $this->validator()->validateTransfer($this);
-        if ($validate && $rules = $this->rules()) {
-            return $this->validator()->customValidate($this, $rules);
-        }
-        return $validate;
+        return $this->validator()->setCustomRules($this->rules())->validate($attributes);
     }
 
     protected function toCamelCase(string $value): string
@@ -84,21 +79,18 @@ abstract class Transfer extends Attributes
         return $this->errors();
     }
 
-    public function setErrors(ErrorCollectionInterface $collection): void
-    {
-        $this->validator()->setErrors($collection);
-    }
-
     public function hasErrors(): bool
     {
         return $this->errors()->isNotEmpty();
     }
 
+    /** @deprecated  */
     public function getFirstError(?string $attribute = null): ?string
     {
         return $this->errors()->getFirstMessage($attribute);
     }
 
+    /** @deprecated  */
     public function getErrorCount(): int
     {
         return $this->errors()->count();

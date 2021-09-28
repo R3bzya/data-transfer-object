@@ -2,22 +2,14 @@
 
 namespace Rbz\DataTransfer\Interfaces\Collections;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Rbz\DataTransfer\Collections\Error\ErrorItem;
 
-interface ErrorCollectionInterface extends Arrayable
+interface ErrorCollectionInterface extends CollectionInterface
 {
     public function add(string $attribute, string $message): void;
     public function addItem(ErrorItem $item): void;
     public function getFirstMessage(?string $attribute = null): ?string;
     public function getFirst(string $attribute);
-
-    public function load(array $data): void;
     public function with(ErrorCollectionInterface $collection): ErrorCollectionInterface;
-    public function has(string $attribute): bool;
-    public function get(string $attribute);
-    public function getItems(): array;
-    public function isEmpty(): bool;
-    public function isNotEmpty(): bool;
-    public function count(): int;
+    public function merge(ErrorCollectionInterface $collection): ErrorCollectionInterface;
 }

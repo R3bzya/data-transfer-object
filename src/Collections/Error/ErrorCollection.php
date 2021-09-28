@@ -70,14 +70,22 @@ class ErrorCollection implements ErrorCollectionInterface
         return $clone;
     }
 
+    public function merge(ErrorCollectionInterface $collection): ErrorCollectionInterface
+    {
+        foreach ($collection->getItems() as $item) {
+            $this->addItem($item);
+        }
+        return $this;
+    }
+
     public function isEmpty(): bool
     {
-        return empty($this->items);
+        return $this->count() == 0;
     }
 
     public function isNotEmpty(): bool
     {
-        return ! empty($this->items);
+        return $this->count() > 0;
     }
 
     public function toArray(): array
@@ -100,5 +108,15 @@ class ErrorCollection implements ErrorCollectionInterface
     public function count(): int
     {
         return count($this->items);
+    }
+
+    public function keys(): array
+    {
+        return array_keys($this->items);
+    }
+
+    public function clear(): void
+    {
+        $this->items = [];
     }
 }

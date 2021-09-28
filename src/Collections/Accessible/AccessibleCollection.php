@@ -3,17 +3,16 @@
 namespace Rbz\DataTransfer\Collections\Accessible;
 
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Validator\Validator;
+use Rbz\DataTransfer\Validators\Validator;
 
 class AccessibleCollection implements AccessibleCollectionInterface
 {
     /** @var AccessibleItem[] */
-    private array $accessible = [];
+    private array $items = [];
 
     public function add(string $rule): void
     {
-        if (mb_substr($rule, 0, 1) == Validator::EXCLUSION_SYMBOL) {
+        if (mb_substr($rule, 0, 1) == Validator::SYMBOL_EXCLUSION) {
             $this->addItem(new AccessibleItem(mb_substr($rule, 1), true));
         } else {
             $this->addItem(new AccessibleItem($rule, false));
@@ -27,13 +26,13 @@ class AccessibleCollection implements AccessibleCollectionInterface
                 $this->get($item->getAttribute())->exclude();
             }
         } else {
-            $this->accessible[$item->getAttribute()] = $item;
+            $this->items[$item->getAttribute()] = $item;
         }
     }
 
     public function hasInclude(): bool
     {
-        foreach ($this->accessible as $item) {
+        foreach ($this->items as $item) {
             if ($item->isNotExclude()) {
                 return true;
             }
@@ -43,7 +42,7 @@ class AccessibleCollection implements AccessibleCollectionInterface
 
     public function hasExclude(): bool
     {
-        foreach ($this->accessible as $item) {
+        foreach ($this->items as $item) {
             if ($item->isExclude()) {
                 return true;
             }
@@ -51,81 +50,44 @@ class AccessibleCollection implements AccessibleCollectionInterface
         return false;
     }
 
-    public function filter(array $attributes, bool $keys = false): array
+    public function filterKeys(array $attributes): array
+    {
+        $filtered = $this->filter(array_keys($attributes));
+        return array_filter_keys($attributes, function (string $key) use ($filtered) {
+            return in_array($key, $filtered);
+        });
+    }
+
+    public function filter(array $attributes): array
     {
         if ($this->isEmpty()) {
             return $attributes;
         }
-
         if ($this->hasInclude()) {
-            $filtered = $this->filterInclude($this->arrayFlip($attributes, $keys));
-        } else {
-            $filtered = $this->filterExcludes($this->arrayFlip($attributes, $keys));
+            return $this->filterNotIncluded($attributes);
         }
-
-        return $keys ? $this->getOnly($attributes, $filtered) : $filtered;
+        return $this->filterExcluded($attributes);
     }
 
-    public function filterTransferAttributes(TransferInterface $transfer): array
+    public function filterNotIncluded(array $attributes): array
     {
-        $attributes = [];
-        foreach ($transfer->getAttributes() as $attribute) {
-            if ($this->isWaitValidation($attribute)) {
-                $attributes[] = $attribute;
-            }
-        }
-        return $attributes;
+        return array_filter($attributes, function (string $attribute) {
+            return in_array($attribute, array_keys($this->getIncludes()));
+        });
     }
 
-    /** ToDo тут мог ошибиться */
-    public function isWaitValidation(string $attribute): bool
+    public function filterExcluded(array $attributes): array
     {
-        if ($this->isEmpty()) {
-            return true;
-        }
-
-        if ($this->hasInclude()) {
-            if ($this->isInclude($attribute)) {
-                return true;
-            }
-
-            return false;
-        }
-
-        if ($this->hasExclude()) {
-            if ($this->isExclude($attribute)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function isInclude(string $attribute): bool
-    {
-        foreach ($this->getIncludes() as $include) {
-            if ($include->getAttribute() == $attribute) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function isExclude(string $attribute): bool
-    {
-        foreach ($this->getExcludes() as $exclude) {
-            if ($exclude->getAttribute() == $attribute) {
-                return true;
-            }
-        }
-        return false;
+        return array_filter($attributes, function (string $attribute) {
+            return ! in_array($attribute, array_keys($this->getExcludes()));
+        });
     }
 
     public function toArray(): array
     {
         return array_values(array_map(function (AccessibleItem $item) {
             return $item->toArray();
-        }, $this->accessible));
+        }, $this->items));
     }
 
     public function load(array $data): void
@@ -144,101 +106,72 @@ class AccessibleCollection implements AccessibleCollectionInterface
         return $clone;
     }
 
+    public function merge(AccessibleCollectionInterface $collection): AccessibleCollectionInterface
+    {
+        foreach ($collection->getItems() as $item) {
+            $this->addItem($item);
+        }
+        return $this;
+    }
+
     public function has(string $attribute): bool
     {
-        return key_exists($attribute, $this->accessible);
+        return key_exists($attribute, $this->items);
     }
 
     public function get(string $attribute): ?AccessibleItem
     {
-        return $this->accessible[$attribute] ?? null;
+        return $this->items[$attribute] ?? null;
     }
 
-    private function accessible(): array
+    private function items(): array
     {
-        return $this->accessible;
+        return $this->items;
     }
 
     public function getItems(): array
     {
-        return $this->accessible();
+        return $this->items();
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->accessible);
+        return $this->count() == 0;
     }
 
     public function isNotEmpty(): bool
     {
-        return ! empty($this->accessible);
+        return $this->count() > 0;
     }
 
     public function count(): int
     {
-        return count($this->accessible);
-    }
-
-    private function filterInclude(array $attributes): array
-    {
-        $filtered = [];
-        foreach ($this->getIncludes() as $include) {
-            if (in_array($include->getAttribute(), $attributes)) {
-                $filtered[] = $include->getAttribute();
-            }
-        }
-        return $filtered;
-    }
-
-    private function filterExcludes(array $attributes): array
-    {
-        $filtered = [];
-        foreach ($attributes as $attribute) {
-            if ($this->isNotExclude($attribute)) {
-                $filtered[] = $attribute;
-            }
-        }
-        return $filtered;
+        return count($this->items);
     }
 
     /** @return AccessibleItem[] */
     public function getIncludes(): array
     {
-        $includes = [];
-        foreach ($this->accessible as $item) {
-            if ($item->isNotExclude()) {
-                $includes[] = $item;
-            }
-        }
-        return $includes;
+        return array_filter($this->items(), function (AccessibleItem $item) {
+            return $item->isNotExclude();
+        });
     }
 
     /** @return AccessibleItem[] */
     public function getExcludes(): array
     {
-        $includes = [];
-        foreach ($this->accessible as $item) {
-            if ($item->isExclude()) {
-                $includes[] = $item;
-            }
-        }
-        return $includes;
-    }
-
-    public function isNotExclude(string $attribute): bool
-    {
-        return ! $this->has($attribute) || $this->get($attribute)->isNotExclude();
-    }
-
-    private function getOnly(array $attributes, array $only): array
-    {
-        return array_filter_keys($attributes, function ($attribute) use ($only) {
-            return in_array($attribute, $only);
+        return array_filter($this->items(), function (AccessibleItem $item) {
+            return $item->isExclude();
         });
     }
 
-    private function arrayFlip(array $attributes, bool $keys): array
+    public function keys(): array
     {
-        return $keys ? array_keys($attributes) : $attributes;
+        return array_keys($this->items);
+    }
+
+    public function clear(): void
+    {
+        $this->items = [];
     }
 }
