@@ -38,7 +38,7 @@ class AttributeValidator implements AttributeValidatorInterface
     public function __construct(TransferInterface $transfer, array $rules, array $attributes)
     {
         $this->transfer = $transfer;
-        $this->initializeRules($rules);
+        $this->initialized = $this->initializeRules($rules);
         $this->attributes = $attributes;
     }
 
@@ -78,14 +78,14 @@ class AttributeValidator implements AttributeValidatorInterface
         return $this->errors();
     }
 
-    public function initializeRules(array $rules): void
+    public function initializeRules(array $rules): array
     {
-        foreach ($rules as $rule) {
-            $this->initialized[] = $this->getRule($this->getRuleKey($rule));
-        }
+        return array_map(function (string $rule) {
+            return $this->getRuleClass($this->getRuleKey($rule));
+        }, $rules);
     }
 
-    public function getRule(string $key): string
+    public function getRuleClass(string $key): string
     {
         if ($class = $this->rules[$key] ?? null) {
             return $class;
@@ -127,7 +127,7 @@ class AttributeValidator implements AttributeValidatorInterface
     /**
      * @throws DomainException
      */
-    private function throwRuleNotFound(string $key): void
+    public function throwRuleNotFound(string $key): void
     {
         throw new DomainException("Rule `$key` not found");
     }
