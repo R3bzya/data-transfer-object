@@ -13,10 +13,7 @@ interface TransferValidatorInterface
     public function getErrors(): ErrorCollectionInterface;
 
     public function validate(array $attributes = []): bool;
-    public function validateCustom(TransferInterface $transfer, array $rules): bool;
-    public function validateAttributes(TransferInterface $transfer): bool;
-
-    public function setCustomRules(array $rules): TransferValidatorInterface;
-    public function customRules(): array;
-    public function hasCustomRules(): bool;
+    public function validateCustom(array $data, array $rules): bool;
+    public function validateAttributes(TransferInterface $transfer, array $rules, array $attributes): bool;
+    public function validateTransferLoad(TransferInterface $transfer, array $attributes): bool;
 }

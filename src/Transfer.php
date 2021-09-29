@@ -7,6 +7,7 @@ use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\TransferValidatorInterface;
+use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 use Rbz\DataTransfer\Validators\Validator;
 
 abstract class Transfer extends Attributes
@@ -45,7 +46,7 @@ abstract class Transfer extends Attributes
 
     public function validate(array $attributes = []): bool
     {
-        return $this->validator()->setCustomRules($this->rules())->validate($attributes);
+        return $this->validator()->validate($attributes, $this->rules());
     }
 
     protected function toCamelCase(string $value): string
@@ -99,7 +100,7 @@ abstract class Transfer extends Attributes
     public function setAttribute(string $attribute, $value): bool
     {
         if (! parent::setAttribute($attribute, $value)) {
-            $this->errors()->add($attribute, ErrorMessage::notSet($attribute));
+            $this->validator()->validateAttributes($this, [IsSetRule::class], (array) $attribute);
             return false;
         }
         return true;

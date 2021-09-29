@@ -5,7 +5,7 @@ namespace Rbz\DataTransfer\Tests\Unit;
 use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
 use Rbz\DataTransfer\Tests\TestCase;
 
-class DefaultAccessibleCollectionTest extends TestCase
+class AccessibleCollectionTest extends TestCase
 {
     /**
      * @dataProvider dataFilter

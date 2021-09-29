@@ -3,19 +3,17 @@
 namespace Rbz\DataTransfer\Tests\Unit;
 
 use Rbz\DataTransfer\Tests\TestCase;
-use Rbz\DataTransfer\Tests\Unit\Transfers\DefaultTransfer;
 
-class DefaultTransferTest extends TestCase
+class TransferTest extends TestCase
 {
     /**
      * @dataProvider validData
      */
     public function testValidData(array $data)
     {
-        $transfer = new DefaultTransfer();
-        $load = $transfer->load($data);
+        $transfer = $this->transfer();
 
-        $this->assertTrue($load);
+        $this->assertTrue($transfer->load($data));
         $this->assertEquals($data, $transfer->toArray());
         $this->assertTrue($transfer->getErrors()->isEmpty());
     }
@@ -25,46 +23,40 @@ class DefaultTransferTest extends TestCase
      */
     public function testInvalidData(array $data, array $errors)
     {
-        $transfer = new DefaultTransfer();
-        $load = $transfer->load($data);
+        $transfer = $this->transfer();
 
-        $this->assertEquals($errors['load'], $load);
+        $this->assertEquals($errors['load'], $transfer->load($data));
         $this->assertEquals($errors['count'], $transfer->getErrors()->count());
     }
 
     public function testEmptyFormValidation()
     {
-        $transfer = new DefaultTransfer();
-        $validation = $transfer->validate();
+        $transfer = $this->transfer();
 
-        $this->assertFalse($validation);
+        $this->assertFalse($transfer->validate());
         $this->assertEquals(3, $transfer->getErrors()->count());
     }
 
     public function testLoadedFormValidation()
     {
-        $transfer = new DefaultTransfer();
+        $transfer = $this->transfer();
 
         $transfer->a_one_s = 'string';
         $transfer->a_two_i = 1;
         $transfer->a_three_a = [];
 
-        $validation = $transfer->validate();
-
-        $this->assertTrue($validation);
+        $this->assertTrue($transfer->validate());
         $this->assertTrue($transfer->getErrors()->isEmpty());
         $this->assertEquals(0, $transfer->getErrors()->count());
     }
 
     public function testValidateAttributes()
     {
-        $transfer = new DefaultTransfer();
+        $transfer = $this->transfer();
         $transfer->a_one_s = 'string';
         $transfer->a_two_i = 1;
 
-        $validation = $transfer->validate(['a_two_a']);
-
-        $this->assertFalse($validation);
+        $this->assertFalse($transfer->validate(['a_two_a']));
         $this->assertEquals(1, $transfer->getErrors()->count());
     }
 
