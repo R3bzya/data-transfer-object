@@ -6,18 +6,18 @@ use Illuminate\Support\Str;
 use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\TransferValidatorInterface;
+use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 use Rbz\DataTransfer\Validators\Validator;
 
 abstract class Transfer extends Attributes
     implements TransferInterface
 {
-    private TransferValidatorInterface $validator;
+    private ValidatorInterface $validator;
 
     abstract public function rules(): array;
 
-    public function validator(): TransferValidatorInterface
+    public function validator(): ValidatorInterface
     {
         if (! isset($this->validator)) {
             $this->validator = new Validator($this);
@@ -25,12 +25,12 @@ abstract class Transfer extends Attributes
         return $this->validator;
     }
 
-    public function getValidator(): TransferValidatorInterface
+    public function getValidator(): ValidatorInterface
     {
         return $this->validator();
     }
 
-    public function setValidator(TransferValidatorInterface $validator): void
+    public function setValidator(ValidatorInterface $validator): void
     {
         $this->validator = $validator;
     }

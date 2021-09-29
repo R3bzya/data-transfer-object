@@ -11,9 +11,4 @@ class TestCase extends BaseTestCase
     {
         return new DefaultTransfer();
     }
-
-    public function test_basic_test()
-    {
-        $this->assertTrue(true);
-    }
 }

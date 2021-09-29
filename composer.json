@@ -27,7 +27,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Rbz\\DataTransfer\\Tests\\": "tests"
+            "Rbz\\DataTransfer\\Tests\\": "tests/"
         }
     }
 }

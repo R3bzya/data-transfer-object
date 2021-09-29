@@ -4,15 +4,15 @@ namespace Rbz\DataTransfer\Validators\Rules\Validators;
 
 use DomainException;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
-use Rbz\DataTransfer\Interfaces\RuleInterface;
+use Rbz\DataTransfer\Interfaces\Rules\RuleInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\ValidatorInterface;
+use Rbz\DataTransfer\Interfaces\Validators\AttributeValidatorInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
 use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsNullRule;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 
-class AttributeValidator implements ValidatorInterface
+class AttributeValidator implements AttributeValidatorInterface
 {
     use ErrorCollectionTrait;
 

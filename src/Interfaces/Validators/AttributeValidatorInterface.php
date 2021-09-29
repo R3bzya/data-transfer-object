@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces;
+namespace Rbz\DataTransfer\Interfaces\Validators;
 
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 
-interface ValidatorInterface
+interface AttributeValidatorInterface
 {
     public function validate(): bool;
     public function getErrors(): ErrorCollectionInterface;

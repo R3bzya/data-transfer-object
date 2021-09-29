@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Validator as CustomValidator;
 use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\TransferValidatorInterface;
+use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
 use Rbz\DataTransfer\Validators\Rules\Rules;
 
-class Validator implements TransferValidatorInterface
+class Validator implements ValidatorInterface
 {
     use ErrorCollectionTrait;
 
@@ -46,7 +46,7 @@ class Validator implements TransferValidatorInterface
     public function validate(array $attributes = [], array $customRules = []): bool
     {
         $this->accessible()->load($attributes);
-        $validate = $this->validateTransferLoad($this->transfer,
+        $validate = $this->validateTransferIsLoad($this->transfer,
             $this->accessible()->filter($this->transfer->getAttributes())
         );
         if ($validate && ! empty($customRules)) {
@@ -65,7 +65,7 @@ class Validator implements TransferValidatorInterface
         return $errors->isEmpty();
     }
 
-    public function validateTransferLoad(TransferInterface $transfer, array $attributes): bool
+    public function validateTransferIsLoad(TransferInterface $transfer, array $attributes): bool
     {
         $errors = Rules::load($transfer, $attributes)->getErrors();
         $this->errors()->merge($errors);
