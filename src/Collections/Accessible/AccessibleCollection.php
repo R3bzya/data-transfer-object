@@ -71,23 +71,17 @@ class AccessibleCollection implements AccessibleCollectionInterface
 
     public function filterNotIncluded(array $attributes): array
     {
-        return array_filter($attributes, function (string $attribute) {
-            return in_array($attribute, array_keys($this->getIncludes()));
-        });
+        return array_filter($attributes, fn(string $attribute) => $this->isInclude($attribute));
     }
 
     public function filterExcluded(array $attributes): array
     {
-        return array_filter($attributes, function (string $attribute) {
-            return ! in_array($attribute, array_keys($this->getExcludes()));
-        });
+        return array_filter($attributes, fn(string $attribute) => ! $this->isExclude($attribute));
     }
 
     public function toArray(): array
     {
-        return array_values(array_map(function (AccessibleItem $item) {
-            return $item->toArray();
-        }, $this->items));
+        return array_values(array_map(fn(AccessibleItem $item) => $item->toArray(), $this->items));
     }
 
     public function load(array $data): void
@@ -152,17 +146,13 @@ class AccessibleCollection implements AccessibleCollectionInterface
     /** @return AccessibleItem[] */
     public function getIncludes(): array
     {
-        return array_filter($this->items(), function (AccessibleItem $item) {
-            return $item->isNotExclude();
-        });
+        return array_filter($this->items(), fn(AccessibleItem $item) => $item->isNotExclude());
     }
 
     /** @return AccessibleItem[] */
     public function getExcludes(): array
     {
-        return array_filter($this->items(), function (AccessibleItem $item) {
-            return $item->isExclude();
-        });
+        return array_filter($this->items(), fn(AccessibleItem $item) => $item->isExclude());
     }
 
     public function keys(): array
@@ -173,5 +163,15 @@ class AccessibleCollection implements AccessibleCollectionInterface
     public function clear(): void
     {
         $this->items = [];
+    }
+
+    public function isInclude(string $attribute): bool
+    {
+        return in_array($attribute, array_keys($this->getIncludes()));
+    }
+
+    public function isExclude(string $attribute): bool
+    {
+        return in_array($attribute, array_keys($this->getExcludes()));
     }
 }

@@ -80,9 +80,7 @@ class AttributeValidator implements AttributeValidatorInterface
 
     public function initializeRules(array $rules): array
     {
-        return array_map(function (string $rule) {
-            return $this->getRuleClass($this->getRuleKey($rule));
-        }, $rules);
+        return array_map(fn(string $rule) => $this->getRuleClass($this->getRuleKey($rule)), $rules);
     }
 
     public function getRuleClass(string $key): string

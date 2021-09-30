@@ -90,9 +90,7 @@ class ErrorCollection implements ErrorCollectionInterface
 
     public function toArray(): array
     {
-        return array_values(array_map(function (ErrorItem $item) {
-            return $item->toArray();
-        }, $this->items));
+        return array_values(array_map(fn(ErrorItem $item) => $item->toArray(), $this->items));
     }
 
     public function has(string $attribute): bool

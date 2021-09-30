@@ -16,4 +16,6 @@ interface AccessibleCollectionInterface extends CollectionInterface
     public function filter(array $attributes): array;
     public function with(AccessibleCollectionInterface $collection): AccessibleCollectionInterface;
     public function merge(AccessibleCollectionInterface $collection): AccessibleCollectionInterface;
+    public function isInclude(string $attribute): bool;
+    public function isExclude(string $attribute): bool;
 }

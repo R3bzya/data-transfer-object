@@ -34,7 +34,7 @@ class TransferTest extends TestCase
         $transfer = $this->transfer();
 
         $this->assertFalse($transfer->validate());
-        $this->assertEquals(3, $transfer->getErrors()->count());
+        $this->assertEquals(count($transfer->getAttributes()), $transfer->getErrors()->count());
     }
 
     public function testLoadedFormValidation()
