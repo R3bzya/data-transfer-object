@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer\Properties;
+namespace Rbz\DataTransfer\Traits;
 
 use DomainException;
 
-abstract class Overload
+trait MagicPropertiesTrait
 {
     /**
      * @throws DomainException

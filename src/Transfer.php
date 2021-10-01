@@ -7,7 +7,6 @@ use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
-use Rbz\DataTransfer\Properties\Properties;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 use Rbz\DataTransfer\Validators\Validator;
 

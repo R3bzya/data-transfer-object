@@ -1,15 +1,18 @@
 <?php
 
-namespace Rbz\DataTransfer\Properties;
+namespace Rbz\DataTransfer;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\DataTransfer\Interfaces\PropertiesInterface;
+use Rbz\DataTransfer\Traits\MagicPropertiesTrait;
 use ReflectionClass;
 use ReflectionProperty;
 use Throwable;
 
-abstract class Properties extends Overload implements PropertiesInterface
+abstract class Properties implements PropertiesInterface
 {
+    use MagicPropertiesTrait;
+
     public function setProperties(array $data): bool
     {
         $success = true;
