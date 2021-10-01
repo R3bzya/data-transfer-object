@@ -2,80 +2,131 @@
 
 namespace Rbz\DataTransfer\Validators;
 
-use Illuminate\Support\Facades\Validator as CustomValidator;
-use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
-use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
+use DomainException;
+use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Validators\Rules\RuleInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Rules\Rules;
+use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
+use Rbz\DataTransfer\Validators\Rules\Attribute\IsNullRule;
+use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 
 class Validator implements ValidatorInterface
 {
     use ErrorCollectionTrait;
 
-    const SYMBOL_EXCLUSION = '!';
-    const SYMBOL_SEPARATION = '.';
+    protected array $rules = [
+        'isSet' => IsSetRule::class,
+        'isNull' => IsNullRule::class,
+        'has' => HasRule::class,
+    ];
+
+    protected array $ruleAssociations = [
+        'isSet' => ['isset', 'is_set'],
+        'isNull' => ['isnull', 'is_null'],
+        'has' => ['has'],
+    ];
 
     private TransferInterface $transfer;
-    private AccessibleCollectionInterface $accessible;
 
-    public function __construct(TransferInterface $transfer)
+    /** @var string[] */
+    private array $attributes;
+    /** @var string[] */
+    private array $initialized;
+
+    public function __construct(TransferInterface $transfer, array $rules, array $attributes)
     {
         $this->transfer = $transfer;
+        $this->initialized = $this->initializeRules($rules);
+        $this->attributes = $attributes;
     }
 
-    public function setAccessible(AccessibleCollectionInterface $accessible): void
+    public function validate(): bool
     {
-        $this->accessible = $accessible;
-    }
-
-    public function accessible(): AccessibleCollectionInterface
-    {
-        if (! isset($this->accessible)) {
-            $this->accessible = new AccessibleCollection();
+        foreach ($this->initialized as $rule) {
+            foreach ($this->attributes() as $attribute) {
+                $this->handle($this->make($rule), $this->transfer, $attribute);
+            }
         }
-        return $this->accessible;
+        return $this->errors()->isEmpty();
     }
 
-    public function getAccessible(): AccessibleCollectionInterface
+    public function attributes(): array
     {
-        return $this->accessible();
+        return $this->attributes ?: $this->transfer->getProperties();
     }
 
-    public function validate(array $attributes = [], array $customRules = []): bool
+    public function make(string $ruleClass): RuleInterface
     {
-        $this->accessible()->load($attributes);
-        $validate = $this->validateTransferIsLoad($this->transfer,
-            $this->accessible()->filter($this->transfer->getProperties())
-        );
-        if ($validate && ! empty($customRules)) {
-            return $this->validateCustom(
-                $this->accessible()->filter($this->transfer->toArray()),
-                $this->accessible()->filterKeys($customRules)
-            );
+        if (! class_exists($ruleClass)) {
+            throw new DomainException("Class $ruleClass not found");
         }
-        return $validate;
+        return new $ruleClass;
     }
 
-    public function validateAttributes(TransferInterface $transfer, array $rules, array $attributes): bool
+    private function handle(RuleInterface $rule, TransferInterface $transfer, string $attribute): void
     {
-        $errors = Rules::make($transfer, $rules, $attributes)->getErrors();
-        $this->errors()->merge($errors);
-        return $errors->isEmpty();
+        if (! $rule->handle($transfer, $attribute)) {
+            $this->errors()->merge($rule->getErrors());
+        }
     }
 
-    public function validateTransferIsLoad(TransferInterface $transfer, array $attributes): bool
+    public function getErrors(): ErrorCollectionInterface
     {
-        $errors = Rules::load($transfer, $attributes)->getErrors();
-        $this->errors()->merge($errors);
-        return $errors->isEmpty();
+        $this->validate();
+        return $this->errors();
     }
 
-    public function validateCustom(array $data, array $rules): bool
+    public function initializeRules(array $rules): array
     {
-        $messageBag = CustomValidator::make($data, $rules)->getMessageBag();
-        $this->errors()->load($messageBag->toArray());
-        return $messageBag->isEmpty();
+        return array_map(fn(string $rule) => $this->getRuleClass($this->getRuleKey($rule)), $rules);
+    }
+
+    public function getRuleClass(string $key): string
+    {
+        if ($class = $this->rules[$key] ?? null) {
+            return $class;
+        }
+        $this->throwRuleNotFound($key);
+    }
+
+    public function getRuleKey(string $rule): string
+    {
+        if (($key = $this->findByRuleClass($rule)) || ($key = $this->findInRuleAssociations($rule))) {
+            return $key;
+        }
+        $this->throwRuleNotFound($key);
+    }
+
+    public function findByRuleClass(string $rule): ?string
+    {
+        if (class_exists($rule) && in_array($rule, $this->rules)) {
+            return array_search($rule, $this->rules);
+        }
+        return null;
+    }
+
+    public function findInRuleAssociations(string $rule): ?string
+    {
+        foreach ($this->ruleAssociations as $key => $associations) {
+            if ($this->hasAssociation($rule, $associations)) {
+                return $key;
+            }
+        }
+        return null;
+    }
+
+    public function hasAssociation(string $rule, array $associations): bool
+    {
+        return in_array(mb_strtolower($rule), $associations);
+    }
+
+    /**
+     * @throws DomainException
+     */
+    public function throwRuleNotFound(string $key): void
+    {
+        throw new DomainException("Rule `$key` not found");
     }
 }

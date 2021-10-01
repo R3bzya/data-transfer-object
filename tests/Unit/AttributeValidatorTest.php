@@ -5,39 +5,39 @@ namespace Rbz\DataTransfer\Tests\Unit;
 use Rbz\DataTransfer\Tests\TestCase;
 use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
-use Rbz\DataTransfer\Validators\Rules\Validators\AttributeValidator;
+use Rbz\DataTransfer\Validators\Validator;
 
 class AttributeValidatorTest extends TestCase
 {
     /**
-     * @dataProvider ValidationPassedData
+     * @dataProvider getValidationPassedData
      */
     public function testValidationPassed(array $data, array $rules, array $attributes)
     {
         $transfer = $this->transfer();
         $transfer->load($data);
 
-        $validator = new AttributeValidator($transfer, $rules, $attributes);
+        $validator = new Validator($transfer, $rules, $attributes);
 
         $this->assertTrue($validator->validate());
         $this->assertEquals(0, $validator->getErrors()->count());
     }
 
     /**
-     * @dataProvider ValidationInvalidData
+     * @dataProvider getValidationInvalidData
      */
     public function testValidationFailed(array $data, array $rules, array $attributes, $errors)
     {
         $transfer = $this->transfer();
         $transfer->load($data);
 
-        $validator = new AttributeValidator($transfer, $rules, $attributes);
+        $validator = new Validator($transfer, $rules, $attributes);
 
         $this->assertFalse($validator->validate());
         $this->assertEquals($errors['count'], $validator->getErrors()->count());
     }
 
-    public function ValidationPassedData(): array
+    public function getValidationPassedData(): array
     {
         return [
             [
@@ -83,10 +83,10 @@ class AttributeValidatorTest extends TestCase
         ];
     }
 
-    public function ValidationInvalidData(): array
+    public function getValidationInvalidData(): array
     {
         return [
-            [
+            'not set field, rule class is used' => [
                 [
                     'a_two_i' => 123,
                     'a_three_a' => [],
@@ -104,7 +104,7 @@ class AttributeValidatorTest extends TestCase
                     'count' => 1
                 ]
             ],
-            [
+            'field is undefined, rule alias is used' => [
                 [
                     'a_one_s' => 'sting',
                     'a_two_i' => 123,
@@ -125,7 +125,7 @@ class AttributeValidatorTest extends TestCase
                     'count' => 1
                 ]
             ],
-            [
+            'not set fields, rule mixed aliases is used' => [
                 [
                     'a_one_s' => 'sting',
                 ],

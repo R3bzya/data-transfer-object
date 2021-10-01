@@ -3,7 +3,7 @@
 namespace Rbz\DataTransfer\Collections\Accessible;
 
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\DataTransfer\Validators\Validator;
+use Rbz\DataTransfer\Validators\Facade;
 
 class AccessibleCollection implements AccessibleCollectionInterface
 {
@@ -12,7 +12,7 @@ class AccessibleCollection implements AccessibleCollectionInterface
 
     public function add(string $rule): void
     {
-        if (mb_substr($rule, 0, 1) == Validator::SYMBOL_EXCLUSION) {
+        if (mb_substr($rule, 0, 1) == Facade::SYMBOL_EXCLUSION) {
             $this->addItem(new AccessibleItem(mb_substr($rule, 1), true));
         } else {
             $this->addItem(new AccessibleItem($rule, false));

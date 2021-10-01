@@ -3,12 +3,11 @@
 namespace Rbz\DataTransfer;
 
 use Illuminate\Support\Str;
-use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
-use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
-use Rbz\DataTransfer\Validators\Validator;
+use Rbz\DataTransfer\Interfaces\Validators\FacadeInterface as ValidatorInterface;
+use Rbz\DataTransfer\Validators\Facade as Validator;
+use Throwable;
 
 abstract class Transfer extends Properties
     implements TransferInterface
@@ -37,11 +36,10 @@ abstract class Transfer extends Properties
 
     public function load(array $data): bool
     {
-        if (empty($data)) {
-            $this->errors()->add($this->getTransferName(), ErrorMessage::notLoad($this->getTransferName()));
-            return false;
+        if (! empty($data)) {
+            $this->setProperties($data);
         }
-        return $this->setProperties($data);
+        return $this->validator()->isSetProperties($this, array_keys($data));
     }
 
     public function validate(array $attributes = []): bool
@@ -97,12 +95,10 @@ abstract class Transfer extends Properties
         return $this->errors()->count();
     }
 
-    public function setProperty(string $property, $value): bool
+    public function setProperty(string $property, $value): void
     {
-        if (! parent::setProperty($property, $value)) {
-            $this->validator()->validateAttributes($this, [IsSetRule::class], (array) $property);
-            return false;
-        }
-        return true;
+        try {
+            parent::setProperty($property, $value);
+        } catch (Throwable $e) {}
     }
 }

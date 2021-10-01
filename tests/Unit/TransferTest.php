@@ -7,7 +7,7 @@ use Rbz\DataTransfer\Tests\TestCase;
 class TransferTest extends TestCase
 {
     /**
-     * @dataProvider validData
+     * @dataProvider getValidData
      */
     public function testValidData(array $data)
     {
@@ -19,7 +19,7 @@ class TransferTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidData
+     * @dataProvider getInvalidData
      */
     public function testInvalidData(array $data, array $errors)
     {
@@ -29,7 +29,7 @@ class TransferTest extends TestCase
         $this->assertEquals($errors['count'], $transfer->getErrors()->count());
     }
 
-    public function testEmptyFormValidation()
+    public function testEmptyTransferValidation()
     {
         $transfer = $this->transfer();
 
@@ -37,7 +37,7 @@ class TransferTest extends TestCase
         $this->assertEquals(count($transfer->getProperties()), $transfer->getErrors()->count());
     }
 
-    public function testLoadedFormValidation()
+    public function testLoadedTransferValidation()
     {
         $transfer = $this->transfer();
 
@@ -60,7 +60,7 @@ class TransferTest extends TestCase
         $this->assertEquals(1, $transfer->getErrors()->count());
     }
 
-    public function validData(): array
+    public function getValidData(): array
     {
         return [
             [
@@ -80,10 +80,17 @@ class TransferTest extends TestCase
         ];
     }
 
-    public function invalidData(): array
+    public function getInvalidData(): array
     {
         return [
-            [
+            'empty data' => [
+                [],
+                [
+                    'load' => false,
+                    'count' => 3
+                ]
+            ],
+            'bad types' => [
                 [
                     'a_one_s' => 'string',
                     'a_two_i' => 'string',
@@ -94,7 +101,7 @@ class TransferTest extends TestCase
                     'count' => 2
                 ]
             ],
-            [
+            'not all fields' => [
                 [
                     'a_one_s' => 'string',
                 ],

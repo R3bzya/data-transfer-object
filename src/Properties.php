@@ -7,21 +7,18 @@ use Rbz\DataTransfer\Interfaces\PropertiesInterface;
 use Rbz\DataTransfer\Traits\MagicPropertiesTrait;
 use ReflectionClass;
 use ReflectionProperty;
-use Throwable;
 
 abstract class Properties implements PropertiesInterface
 {
     use MagicPropertiesTrait;
 
-    public function setProperties(array $data): bool
+    public function setProperties(array $data): void
     {
-        $success = true;
         foreach ($data as $property => $value) {
             if ($this->hasProperty($property)) {
-                $success = $this->setProperty($property, $value) && $success;
+                $this->setProperty($property, $value);
             }
         }
-        return $success;
     }
 
     public function getProperties(): array
@@ -43,14 +40,9 @@ abstract class Properties implements PropertiesInterface
         return $this->$property;
     }
 
-    public function setProperty(string $property, $value): bool
+    public function setProperty(string $property, $value): void
     {
-        try {
-            $this->$property = $value;
-            return true;
-        } catch (Throwable $e) {}
-
-        return false;
+        $this->$property = $value;
     }
 
     public function hasProperty(string $property): bool
@@ -86,19 +78,11 @@ abstract class Properties implements PropertiesInterface
 
     public function isNullProperty(string $property): bool
     {
-        try {
-            return is_null($this->getProperty($property));
-        } catch (Throwable $e) {}
-
-        return false;
+        return is_null($this->getProperty($property));
     }
 
     public function isArrayableProperty(string $property): bool
     {
-        try {
-            return $this->getProperty($property) instanceof Arrayable;
-        } catch (Throwable $e) {}
-
-        return false;
+        return $this->getProperty($property) instanceof Arrayable;
     }
 }

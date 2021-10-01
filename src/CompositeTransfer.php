@@ -5,7 +5,7 @@ namespace Rbz\DataTransfer;
 use DomainException;
 use Rbz\DataTransfer\Collections\Error\ErrorCollection;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Validators\Validator;
+use Rbz\DataTransfer\Validators\Facade;
 
 abstract class CompositeTransfer extends Transfer
 {
@@ -27,13 +27,12 @@ abstract class CompositeTransfer extends Transfer
         return $validate;
     }
 
-    public function setProperties(array $data): bool
+    public function setProperties(array $data): void
     {
-        $success = parent::setProperties($this->getThisTransferFields($data));
+        parent::setProperties($this->getThisTransferFields($data));
         foreach ($this->getDataTransfersForThisTransfer($data) as $transfer => $value) {
-            $success = $this->getTransfer($transfer)->load($value) && $success;
+            $this->getTransfer($transfer)->load($value);
         }
-        return $success;
     }
 
     private function getThisTransferFields(array $data): array
@@ -139,12 +138,12 @@ abstract class CompositeTransfer extends Transfer
 
     public function explodeValidationAttributes(string $rule): array
     {
-        return explode(Validator::SYMBOL_SEPARATION, $rule);
+        return explode(Facade::SYMBOL_SEPARATION, $rule);
     }
 
     public function implodeValidationAttributes(array $rule): string
     {
-        return implode(Validator::SYMBOL_SEPARATION, $rule);
+        return implode(Facade::SYMBOL_SEPARATION, $rule);
     }
 
     public function isTransferAttributes(array $rules, string $transfer): bool
