@@ -27,9 +27,9 @@ abstract class CompositeTransfer extends Transfer
         return $validate;
     }
 
-    public function setAttributes(array $data): bool
+    public function setProperties(array $data): bool
     {
-        $success = parent::setAttributes($this->getThisTransferFields($data));
+        $success = parent::setProperties($this->getThisTransferFields($data));
         foreach ($this->getDataTransfersForThisTransfer($data) as $transfer => $value) {
             $success = $this->getTransfer($transfer)->load($value) && $success;
         }
@@ -53,7 +53,7 @@ abstract class CompositeTransfer extends Transfer
     public function getAdditionalTransfers(): array
     {
         $additionalTransfers = [];
-        foreach ($this->getAttributes() as $attribute) {
+        foreach ($this->getProperties() as $attribute) {
             if ($this->isTransferAttribute($attribute)) {
                 $additionalTransfers[] = $attribute;
             }
@@ -63,8 +63,8 @@ abstract class CompositeTransfer extends Transfer
 
     public function isTransferAttribute($attribute): bool
     {
-        if ($this->isSetAttribute($attribute)) {
-            return $this->getAttribute($attribute) instanceof TransferInterface;
+        if ($this->isSetProperty($attribute)) {
+            return $this->getProperty($attribute) instanceof TransferInterface;
         }
         return false;
     }
@@ -82,7 +82,7 @@ abstract class CompositeTransfer extends Transfer
         if (! $this->isTransferAttribute($attribute)) {
             throw new DomainException("Attribute `$attribute` is not implementing TransferInterface");
         }
-        return $this->getAttribute($attribute);
+        return $this->getProperty($attribute);
     }
 
     public function getErrors(): ErrorCollection

@@ -5,7 +5,7 @@ namespace Rbz\DataTransfer\Interfaces;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
 
-interface TransferInterface extends AttributesInterface
+interface TransferInterface extends PropertiesInterface
 {
     public function load(array $data): bool;
     public function validate(array $attributes = []): bool;

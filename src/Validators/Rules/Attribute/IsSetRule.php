@@ -9,7 +9,7 @@ class IsSetRule extends Rule
 {
     public function handle(TransferInterface $transfer, string $attribute): bool
     {
-        if (! $transfer->isSetAttribute($attribute)) {
+        if (! $transfer->isSetProperty($attribute)) {
             $this->errors()->add($attribute, ErrorMessage::notSet($attribute));
             return false;
         }

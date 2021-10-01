@@ -7,10 +7,11 @@ use Rbz\DataTransfer\Errors\ErrorMessage;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
+use Rbz\DataTransfer\Properties\Properties;
 use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 use Rbz\DataTransfer\Validators\Validator;
 
-abstract class Transfer extends Attributes
+abstract class Transfer extends Properties
     implements TransferInterface
 {
     private ValidatorInterface $validator;
@@ -41,7 +42,7 @@ abstract class Transfer extends Attributes
             $this->errors()->add($this->getTransferName(), ErrorMessage::notLoad($this->getTransferName()));
             return false;
         }
-        return $this->setAttributes($data);
+        return $this->setProperties($data);
     }
 
     public function validate(array $attributes = []): bool
@@ -97,10 +98,10 @@ abstract class Transfer extends Attributes
         return $this->errors()->count();
     }
 
-    public function setAttribute(string $attribute, $value): bool
+    public function setProperty(string $property, $value): bool
     {
-        if (! parent::setAttribute($attribute, $value)) {
-            $this->validator()->validateAttributes($this, [IsSetRule::class], (array) $attribute);
+        if (! parent::setProperty($property, $value)) {
+            $this->validator()->validateAttributes($this, [IsSetRule::class], (array) $property);
             return false;
         }
         return true;

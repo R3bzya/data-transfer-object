@@ -54,7 +54,7 @@ class AttributeValidator implements AttributeValidatorInterface
 
     public function attributes(): array
     {
-        return $this->attributes ?: $this->transfer->getAttributes();
+        return $this->attributes ?: $this->transfer->getProperties();
     }
 
     public function make(string $ruleClass): RuleInterface

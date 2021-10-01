@@ -9,7 +9,7 @@ class HasRule extends Rule
 {
     public function handle(TransferInterface $transfer, string $attribute): bool
     {
-        if (! $transfer->hasAttribute($attribute)) {
+        if (! $transfer->hasProperty($attribute)) {
             $this->errors()->add($attribute, ErrorMessage::undefined($attribute));
             return false;
         }

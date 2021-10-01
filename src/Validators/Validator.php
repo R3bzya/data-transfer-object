@@ -47,7 +47,7 @@ class Validator implements ValidatorInterface
     {
         $this->accessible()->load($attributes);
         $validate = $this->validateTransferIsLoad($this->transfer,
-            $this->accessible()->filter($this->transfer->getAttributes())
+            $this->accessible()->filter($this->transfer->getProperties())
         );
         if ($validate && ! empty($customRules)) {
             return $this->validateCustom(
