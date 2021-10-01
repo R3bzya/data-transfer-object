@@ -63,18 +63,10 @@ abstract class Properties implements PropertiesInterface
         $properties = [];
         foreach ($this->getProperties() as $property) {
             $properties[$property] = $this->isArrayableProperty($property)
-                ? $this->getPropertyAsArray($property)
+                ? $this->getProperty($property)->toArray()
                 : $this->getProperty($property);
         }
         return $properties;
-    }
-
-    public function getPropertyAsArray(string $property): array
-    {
-        if ($this->isArrayableProperty($property)) {
-            return $this->getProperty($property)->toArray();
-        }
-        throw new \DomainException('Property not arrayable: ' . get_class($this) . '::' . $property);
     }
 
     public function isSetProperties(): bool
