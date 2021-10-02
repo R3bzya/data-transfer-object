@@ -74,24 +74,39 @@ class Validator implements ValidatorInterface
     {
         $initialized = [];
         foreach ($rules as $property => $propertyRules) {
-            if ($this->transfer->hasProperty($property)) {
-                foreach ($propertyRules as $propertyRule) {
-                    $initialized[$property][] = $this->getRuleClass($this->getRuleKey($propertyRule));
-                }
-                continue;
-            }
-            if (is_array($propertyRules)) {
-                $this->errors()->add($property, 'Unknown property: ' . get_class($this->transfer) . '::' . $property);
-                continue;
-            }
-            foreach ($this->transfer->getProperties() as $transferProperty) {
-                $initialized[$transferProperty][] = $this->getRuleClass($this->getRuleKey($propertyRules));
-            }
+            $initialized = array_merge_recursive($initialized,
+                $this->preparePropertyRules($this->getPropertiesAsArray($property), $this->getRulesAsArray($propertyRules))
+            );
         }
         return $initialized;
     }
 
-    public function getRuleClass(string $key): string
+    public function preparePropertyRules(array $properties, array $rules): array
+    {
+        $prepared = [];
+        foreach ($properties as $property) {
+            foreach ($rules as $rule) {
+                $prepared[$property][] = $this->getRuleClassByKey($this->getRuleKey($rule));
+            }
+        }
+        return $prepared;
+    }
+
+    public function getPropertiesAsArray(string $property): array
+    {
+        return is_numeric($property) ? $this->transfer->getProperties() : (array) $property;
+    }
+
+    /**
+     * @param array|string $propertyRules
+     * @return array
+     */
+    public function getRulesAsArray($propertyRules): array
+    {
+        return is_array($propertyRules) ? $propertyRules : (array) $propertyRules;
+    }
+
+    public function getRuleClassByKey(string $key): string
     {
         if ($class = $this->rules[$key] ?? null) {
             return $class;

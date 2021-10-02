@@ -43,6 +43,16 @@ class ValidatorTest extends TestCase
             [
                 [
                     'a_one_s' => 'string',
+                    'a_two_i' => 123,
+                    'a_three_a' => [],
+                ],
+                [
+                    [IsSetRule::class, HasRule::class],
+                ],
+            ],
+            [
+                [
+                    'a_one_s' => 'string',
                 ],
                 [
                     'a_one_s' => ['isset', 'has'],
