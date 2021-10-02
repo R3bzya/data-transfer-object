@@ -122,7 +122,7 @@ class Validator implements ValidatorInterface
         if (($key = $this->findByRuleClass($rule)) || ($key = $this->findInRuleAssociations($rule))) {
             return $key;
         }
-        throw new DomainException("Rule `$key` not found");
+        throw new DomainException("Rule `$rule` not found");
     }
 
     public function findByRuleClass(string $rule): ?string
