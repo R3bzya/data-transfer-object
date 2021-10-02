@@ -75,7 +75,10 @@ class Validator implements ValidatorInterface
         $initialized = [];
         foreach ($rules as $property => $propertyRules) {
             $initialized = array_merge_recursive($initialized,
-                $this->preparePropertyRules($this->getPropertiesAsArray($property), $this->getRulesAsArray($propertyRules))
+                $this->preparePropertyRules(
+                    $this->getPropertiesAsArray($property),
+                    $this->getRulesAsArray($propertyRules)
+                )
             );
         }
         return $initialized;
