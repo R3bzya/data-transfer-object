@@ -31,30 +31,22 @@ class Validator implements ValidatorInterface
     private TransferInterface $transfer;
 
     /** @var string[] */
-    private array $attributes;
-    /** @var string[] */
     private array $initialized;
 
-    public function __construct(TransferInterface $transfer, array $rules, array $attributes)
+    public function __construct(TransferInterface $transfer, array $rules)
     {
         $this->transfer = $transfer;
         $this->initialized = $this->initializeRules($rules);
-        $this->attributes = $attributes;
     }
 
     public function validate(): bool
     {
-        foreach ($this->initialized as $rule) {
-            foreach ($this->attributes() as $attribute) {
-                $this->handle($this->make($rule), $this->transfer, $attribute);
+        foreach ($this->initialized as $property => $propertyRules) {
+            foreach ($propertyRules as $propertyRule) {
+                $this->handle($this->make($propertyRule), $this->transfer, $property);
             }
         }
         return $this->errors()->isEmpty();
-    }
-
-    public function attributes(): array
-    {
-        return $this->attributes ?: $this->transfer->getProperties();
     }
 
     public function make(string $ruleClass): RuleInterface
@@ -80,7 +72,23 @@ class Validator implements ValidatorInterface
 
     public function initializeRules(array $rules): array
     {
-        return array_map(fn(string $rule) => $this->getRuleClass($this->getRuleKey($rule)), $rules);
+        $initialized = [];
+        foreach ($rules as $property => $propertyRules) {
+            if ($this->transfer->hasProperty($property)) {
+                foreach ($propertyRules as $propertyRule) {
+                    $initialized[$property][] = $this->getRuleClass($this->getRuleKey($propertyRule));
+                }
+                continue;
+            }
+            if (is_array($propertyRules)) {
+                $this->errors()->add($property, 'Unknown property: ' . get_class($this->transfer) . '::' . $property);
+                continue;
+            }
+            foreach ($this->transfer->getProperties() as $transferProperty) {
+                $initialized[$transferProperty][] = $this->getRuleClass($this->getRuleKey($propertyRules));
+            }
+        }
+        return $initialized;
     }
 
     public function getRuleClass(string $key): string
@@ -88,7 +96,7 @@ class Validator implements ValidatorInterface
         if ($class = $this->rules[$key] ?? null) {
             return $class;
         }
-        $this->throwRuleNotFound($key);
+        throw new DomainException("Rule `$key` not found");
     }
 
     public function getRuleKey(string $rule): string
@@ -96,7 +104,7 @@ class Validator implements ValidatorInterface
         if (($key = $this->findByRuleClass($rule)) || ($key = $this->findInRuleAssociations($rule))) {
             return $key;
         }
-        $this->throwRuleNotFound($key);
+        throw new DomainException("Rule `$key` not found");
     }
 
     public function findByRuleClass(string $rule): ?string
@@ -120,13 +128,5 @@ class Validator implements ValidatorInterface
     public function hasAssociation(string $rule, array $associations): bool
     {
         return in_array(mb_strtolower($rule), $associations);
-    }
-
-    /**
-     * @throws DomainException
-     */
-    public function throwRuleNotFound(string $key): void
-    {
-        throw new DomainException("Rule `$key` not found");
     }
 }

@@ -47,7 +47,7 @@ abstract class Properties implements PropertiesInterface
 
     public function hasProperty(string $property): bool
     {
-        return in_array($property, $this->getProperties());
+        return in_array($property, $this->getProperties(), true);
     }
 
     public function toArray(): array
