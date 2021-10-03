@@ -4,11 +4,8 @@ namespace Rbz\DataTransfer;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Rbz\DataTransfer\Collections\Error\ErrorCollection;
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Temp;
 use Rbz\DataTransfer\Validators\ValidatorFactory;
 use Throwable;
 
@@ -17,39 +14,50 @@ abstract class Transfer extends Properties
 {
     use ErrorCollectionTrait;
 
-    private ValidatorFactory $validator;
-
     abstract public function rules(): array;
-
-    public function validator(): ValidatorFactory
-    {
-        if (! isset($this->validator)) {
-            $this->validator = new ValidatorFactory();
-        }
-        return $this->validator;
-    }
-
-    public function getValidator(): ValidatorFactory
-    {
-        return $this->validator();
-    }
-
-    public function setValidator(ValidatorFactory $validator): void
-    {
-        $this->validator = $validator;
-    }
 
     public function load(array $data): bool
     {
         if (! empty($data)) {
             $this->setProperties($data);
         }
-        return $this->validator()->isSetProperties($this, array_keys($data));
+
+        $factory = new ValidatorFactory();
+        $errors = $factory->makeIsLoad($this, array_keys($data))->getErrors();
+
+        if ($errors->isNotEmpty()) {
+            $this->errors()->merge($errors);
+            return false;
+        }
+
+        return true;
     }
 
     public function validate(array $attributes = []): bool
     {
-        return $this->validator()->validate($attributes, $this->rules());
+        if ($this->errors()->isNotEmpty()) {
+            return false;
+        }
+
+        $factory = new ValidatorFactory();
+        $errors = $factory->makeIsLoad($this, $attributes)->getErrors();
+
+        if ($errors->isNotEmpty()) {
+            $this->errors()->merge($errors);
+            return false;
+        }
+
+        if ($this->rules()) {
+            $messageBag = Validator::make($this->getProperties(), $this->rules())->getMessageBag();
+
+            if ($messageBag->isNotEmpty()) {
+                $this->errors()->load($messageBag->toArray());
+            }
+
+            return $messageBag->isEmpty();
+        }
+
+        return true;
     }
 
     protected function toCamelCase(string $value): string
@@ -71,16 +79,6 @@ abstract class Transfer extends Properties
     public function getTransferName(): string
     {
         return get_class_name($this);
-    }
-
-    public function errors(): ErrorCollectionInterface
-    {
-        return new ErrorCollection();
-    }
-
-    public function getErrors(): ErrorCollectionInterface
-    {
-        return $this->errors();
     }
 
     public function hasErrors(): bool

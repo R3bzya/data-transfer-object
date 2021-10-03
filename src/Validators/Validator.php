@@ -147,11 +147,4 @@ class Validator implements ValidatorInterface
     {
         return in_array(mb_strtolower($rule), $associations);
     }
-
-    public function isLoad(array $properties): bool
-    {
-        $this->errors()->clear();
-        $this->initialized = $this->preparePropertyRules($properties ?: $this->transfer->getProperties(), [HasRule::class, IsSetRule::class]);
-        return $this->validate();
-    }
 }

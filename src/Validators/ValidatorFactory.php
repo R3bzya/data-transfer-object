@@ -9,6 +9,11 @@ use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 
 class ValidatorFactory
 {
+    /**
+     * @param TransferInterface $transfer
+     * @param array $properties
+     * @return ValidatorInterface
+     */
     public function makeIsLoad(TransferInterface $transfer, array $properties): ValidatorInterface
     {
         return $this->make($transfer, $this->addRulesToProperties(

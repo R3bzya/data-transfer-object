@@ -8,5 +8,4 @@ interface ValidatorInterface
 {
     public function validate(): bool;
     public function getErrors(): ErrorCollectionInterface;
-    public function isLoad(array $properties): bool;
 }
