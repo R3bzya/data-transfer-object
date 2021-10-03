@@ -3,9 +3,22 @@
 namespace Rbz\DataTransfer\Tests\Unit;
 
 use Rbz\DataTransfer\Tests\TestCase;
+use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
+use Rbz\DataTransfer\Validators\Temp;
 
 class TransferTest extends TestCase
 {
+//    public function testValidator()
+//    {
+//        $transfer = $this->transfer();
+//        $transfer->a_one_s = '1';
+//
+//        $temp = new Temp($transfer);
+//        $validator = $temp->makeTransferValidator($transfer, ['a_one_s' => IsSetRule::class]);
+//
+//        dd($validator->validate(), $validator->getErrors()->toArray());
+//    }
+
     /**
      * @dataProvider getValidData
      */

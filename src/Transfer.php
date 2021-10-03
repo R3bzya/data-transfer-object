@@ -2,34 +2,39 @@
 
 namespace Rbz\DataTransfer;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Rbz\DataTransfer\Collections\Error\ErrorCollection;
 use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\Validators\FacadeInterface as ValidatorInterface;
-use Rbz\DataTransfer\Validators\Facade as Validator;
+use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
+use Rbz\DataTransfer\Validators\Temp;
+use Rbz\DataTransfer\Validators\ValidatorFactory;
 use Throwable;
 
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    private ValidatorInterface $validator;
+    use ErrorCollectionTrait;
+
+    private ValidatorFactory $validator;
 
     abstract public function rules(): array;
 
-    public function validator(): ValidatorInterface
+    public function validator(): ValidatorFactory
     {
         if (! isset($this->validator)) {
-            $this->validator = new Validator($this);
+            $this->validator = new ValidatorFactory();
         }
         return $this->validator;
     }
 
-    public function getValidator(): ValidatorInterface
+    public function getValidator(): ValidatorFactory
     {
         return $this->validator();
     }
 
-    public function setValidator(ValidatorInterface $validator): void
+    public function setValidator(ValidatorFactory $validator): void
     {
         $this->validator = $validator;
     }
@@ -70,7 +75,7 @@ abstract class Transfer extends Properties
 
     public function errors(): ErrorCollectionInterface
     {
-        return $this->validator()->getErrors();
+        return new ErrorCollection();
     }
 
     public function getErrors(): ErrorCollectionInterface

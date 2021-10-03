@@ -101,12 +101,12 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param array|string $propertyRules
+     * @param array|string $rules
      * @return array
      */
-    public function getRulesAsArray($propertyRules): array
+    public function getRulesAsArray($rules): array
     {
-        return is_array($propertyRules) ? $propertyRules : (array) $propertyRules;
+        return is_array($rules) ? $rules : (array) $rules;
     }
 
     public function getRuleClassByKey(string $key): string
@@ -146,5 +146,12 @@ class Validator implements ValidatorInterface
     public function hasAssociation(string $rule, array $associations): bool
     {
         return in_array(mb_strtolower($rule), $associations);
+    }
+
+    public function isLoad(array $properties): bool
+    {
+        $this->errors()->clear();
+        $this->initialized = $this->preparePropertyRules($properties ?: $this->transfer->getProperties(), [HasRule::class, IsSetRule::class]);
+        return $this->validate();
     }
 }
