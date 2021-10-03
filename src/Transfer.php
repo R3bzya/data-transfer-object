@@ -21,7 +21,7 @@ abstract class Transfer extends Properties
         if (! empty($data)) {
             $this->setProperties($data);
         }
-        return $this->isLoadTransfer(array_keys($data));
+        return $this->isLoad(array_keys($data));
     }
 
     public function validate(array $attributes = []): bool
@@ -29,14 +29,15 @@ abstract class Transfer extends Properties
         if ($this->errors()->isNotEmpty()) {
             return false;
         }
-        $validation = $this->isLoadTransfer($attributes ?: $this->getProperties());
+        $validation = $this->isLoad($attributes ?: $this->getProperties());
         if ($validation && $this->rules()) {
+            /** ToDo это работать не будет $attributes ?: $this->getProperties() */
             return $this->validateCustom($attributes ?: $this->getProperties(), $this->rules());
         }
         return $validation;
     }
 
-    public function isLoadTransfer(array $attributes): bool
+    public function isLoad(array $attributes): bool
     {
         $errors = ValidatorFactory::makeIsLoad($this, $attributes)->getErrors();
         $this->errors()->merge($errors);
