@@ -2,6 +2,8 @@
 
 namespace Rbz\DataTransfer;
 
+use DomainException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
@@ -16,8 +18,12 @@ abstract class Transfer extends Properties
 
     abstract public function rules(): array;
 
-    public function load(array $data): bool
+    /**
+     * @throws DomainException
+     */
+    public function load($data): bool
     {
+        $data = $this->dataToArray($data);
         if (! empty($data)) {
             $this->setProperties($data);
         }
@@ -94,5 +100,21 @@ abstract class Transfer extends Properties
         try {
             parent::setProperty($property, $value);
         } catch (Throwable $e) {}
+    }
+
+    /**
+     * @param array|Arrayable $value
+     * @return array
+     * @throws DomainException
+     */
+    public function dataToArray($value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+        if ($value instanceof Arrayable) {
+            return $value->toArray();
+        }
+        throw new DomainException('The data must be an array or an Arrayable instance');
     }
 }

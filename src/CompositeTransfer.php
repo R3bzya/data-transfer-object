@@ -8,8 +8,12 @@ use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 abstract class CompositeTransfer extends Transfer
 {
-    public function load(array $data): bool
+    /**
+     * @throws DomainException
+     */
+    public function load($data): bool
     {
+        $data = $this->dataToArray($data);
         $success = parent::load($data);
         foreach ($this->getAdditionalTransfers() as $transfer) {
             $success = $this->getTransfer($transfer)->load($data[$transfer] ?? $data) && $success;
