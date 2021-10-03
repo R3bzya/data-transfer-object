@@ -2,12 +2,11 @@
 
 namespace Rbz\DataTransfer;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Validator as CustomValidator;
+use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\ValidatorFactory;
+use Rbz\DataTransfer\Validators\Factory as ValidatorFactory;
 use Throwable;
 
 abstract class Transfer extends Properties
@@ -30,24 +29,23 @@ abstract class Transfer extends Properties
         if ($this->errors()->isNotEmpty()) {
             return false;
         }
-        $validation = $this->isLoadTransfer($this->getProperties());
+        $validation = $this->isLoadTransfer($attributes ?: $this->getProperties());
         if ($validation && $this->rules()) {
-            return $this->validateCustom($this->getProperties(), $this->rules());
+            return $this->validateCustom($attributes ?: $this->getProperties(), $this->rules());
         }
         return $validation;
     }
 
     public function isLoadTransfer(array $attributes): bool
     {
-        $factory = new ValidatorFactory();
-        $errors = $factory->makeIsLoad($this, $attributes)->getErrors();
+        $errors = ValidatorFactory::makeIsLoad($this, $attributes)->getErrors();
         $this->errors()->merge($errors);
         return $errors->isEmpty();
     }
 
     public function validateCustom(array $data, array $rules): bool
     {
-        $messageBag = CustomValidator::make($data, $rules)->getMessageBag();
+        $messageBag = CustomValidatorFactory::make($data, $rules)->getMessageBag();
         $this->errors()->load($messageBag->toArray());
         return $messageBag->isEmpty();
     }
