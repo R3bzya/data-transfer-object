@@ -3,6 +3,7 @@
 namespace Rbz\DataTransfer;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator as CustomValidator;
 use Illuminate\Support\Str;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
@@ -21,16 +22,7 @@ abstract class Transfer extends Properties
         if (! empty($data)) {
             $this->setProperties($data);
         }
-
-        $factory = new ValidatorFactory();
-        $errors = $factory->makeIsLoad($this, array_keys($data))->getErrors();
-
-        if ($errors->isNotEmpty()) {
-            $this->errors()->merge($errors);
-            return false;
-        }
-
-        return true;
+        return $this->isLoadTransfer(array_keys($data));
     }
 
     public function validate(array $attributes = []): bool
@@ -38,26 +30,26 @@ abstract class Transfer extends Properties
         if ($this->errors()->isNotEmpty()) {
             return false;
         }
+        $validation = $this->isLoadTransfer($this->getProperties());
+        if ($validation && $this->rules()) {
+            return $this->validateCustom($this->getProperties(), $this->rules());
+        }
+        return $validation;
+    }
 
+    public function isLoadTransfer(array $attributes): bool
+    {
         $factory = new ValidatorFactory();
         $errors = $factory->makeIsLoad($this, $attributes)->getErrors();
+        $this->errors()->merge($errors);
+        return $errors->isEmpty();
+    }
 
-        if ($errors->isNotEmpty()) {
-            $this->errors()->merge($errors);
-            return false;
-        }
-
-        if ($this->rules()) {
-            $messageBag = Validator::make($this->getProperties(), $this->rules())->getMessageBag();
-
-            if ($messageBag->isNotEmpty()) {
-                $this->errors()->load($messageBag->toArray());
-            }
-
-            return $messageBag->isEmpty();
-        }
-
-        return true;
+    public function validateCustom(array $data, array $rules): bool
+    {
+        $messageBag = CustomValidator::make($data, $rules)->getMessageBag();
+        $this->errors()->load($messageBag->toArray());
+        return $messageBag->isEmpty();
     }
 
     protected function toCamelCase(string $value): string
