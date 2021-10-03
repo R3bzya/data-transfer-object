@@ -3,15 +3,36 @@
 namespace Rbz\DataTransfer\Errors;
 
 use DomainException;
+use ReflectionClass;
 
+/**
+ * @method static required(string $property = null)
+ * @method static notLoad(string $property = null)
+ * @method static notSet(string $property = null)
+ * @method static undefined(string $property = null)
+ */
 class ErrorList
 {
     const REQUIRED = 'required';
-
     const NOT_LOAD = 'notLoad';
     const NOT_SET = 'notSet';
-
     const UNDEFINED = 'undefined';
+
+    /**
+     * @throws DomainException
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        if (in_array($name, self::getList())) {
+            return self::getDescriptionByError($name, $arguments[0] ?? '');
+        }
+        throw new DomainException("Call to undefined method: " . self::class . '::' . $name . "()");
+    }
+
+    public static function getList(): array
+    {
+        return (new ReflectionClass(static::class))->getConstants();
+    }
 
     public static function getListDescription(string $property = ''): array
     {
