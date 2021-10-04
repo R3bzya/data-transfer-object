@@ -7,6 +7,6 @@ use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 interface RuleInterface
 {
-    public function handle(TransferInterface $transfer, string $attribute): bool;
+    public function handle(TransferInterface $transfer, string $property): bool;
     public function getErrors(): ErrorCollectionInterface;
 }

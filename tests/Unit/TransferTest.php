@@ -2,9 +2,9 @@
 
 namespace Rbz\DataTransfer\Tests\Unit;
 
-use Rbz\DataTransfer\Tests\TestCase;
+use Rbz\DataTransfer\Tests\BaseCase;
 
-class TransferTest extends TestCase
+class TransferTest extends BaseCase
 {
     /**
      * @dataProvider getValidData
@@ -29,6 +29,18 @@ class TransferTest extends TestCase
         $this->assertEquals($errors['count'], $transfer->getErrors()->count());
     }
 
+    /**
+     * @dataProvider getCustomRulesData
+     */
+    public function testCustomRules(array $data, array $properties, array $errors)
+    {
+        $transfer = $this->transferWithCustomRules();
+        $transfer->load($data);
+
+        $this->assertEquals($errors['validate'], $transfer->validate($properties));
+        $this->assertEquals($errors['count'], $transfer->getErrors()->count());
+    }
+
     public function testEmptyTransferValidation()
     {
         $transfer = $this->transfer();
@@ -40,7 +52,6 @@ class TransferTest extends TestCase
     public function testLoadedTransferValidation()
     {
         $transfer = $this->transfer();
-
         $transfer->a_one_s = 'string';
         $transfer->a_two_i = 1;
         $transfer->a_three_a = [];
@@ -56,7 +67,7 @@ class TransferTest extends TestCase
         $transfer->a_one_s = 'string';
         $transfer->a_two_i = 1;
 
-        $this->assertFalse($transfer->validate(['a_two_a']));
+        $this->assertFalse($transfer->validate(['undefined_property']));
         $this->assertEquals(1, $transfer->getErrors()->count());
     }
 
@@ -110,6 +121,78 @@ class TransferTest extends TestCase
                     'count' => 0
                 ]
             ]
+        ];
+    }
+
+    public function getCustomRulesData(): array
+    {
+        return [
+            [
+                [
+                    'a_one_s' => 'string',
+                    'a_two_i' => 1,
+                    'a_three_a' => [],
+                ],
+                [
+                    'a_one_s',
+                ],
+                [
+                    'validate' => true,
+                    'count' => 0
+                ]
+            ],
+            [
+                [
+                    'a_one_s' => 'st',
+                    'a_two_i' => 1,
+                    'a_three_a' => [],
+                ],
+                [
+                    'a_two_i',
+                ],
+                [
+                    'validate' => true,
+                    'count' => 0
+                ]
+            ],
+            [
+                [
+                    'a_one_s' => 'string',
+                    'a_two_i' => 1,
+                    'a_three_a' => [],
+                ],
+                [],
+                [
+                    'validate' => true,
+                    'count' => 0
+                ]
+            ],
+            [
+                [
+                    'a_one_s' => 'st',
+                    'a_two_i' => 1,
+                    'a_three_a' => [],
+                ],
+                [
+                    'a_one_s',
+                ],
+                [
+                    'validate' => false,
+                    'count' => 1
+                ]
+            ],
+            [
+                [
+                    'a_one_s' => 'st',
+                    'a_two_i' => 1,
+                    'a_three_a' => [],
+                ],
+                [],
+                [
+                    'validate' => false,
+                    'count' => 1
+                ]
+            ],
         ];
     }
 }

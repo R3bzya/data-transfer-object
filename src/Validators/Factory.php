@@ -4,9 +4,8 @@ namespace Rbz\DataTransfer\Validators;
 
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
-use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
-use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
 
+/** ToDo не уверен в этом классе */
 class Factory
 {
     /**
@@ -16,9 +15,7 @@ class Factory
      */
     public static function makeIsLoad(TransferInterface $transfer, array $properties): ValidatorInterface
     {
-        return self::make($transfer, self::addRulesToProperties(
-            $properties ?: $transfer->getProperties(), [HasRule::class, IsSetRule::class]
-        ));
+        return self::make($transfer, self::addRulesToProperties($properties, ['has', 'isset']));
     }
 
     public static function make(TransferInterface $transfer, array $rules): ValidatorInterface

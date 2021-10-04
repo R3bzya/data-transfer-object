@@ -101,6 +101,7 @@ abstract class CompositeTransfer extends Transfer
         return $this->getErrors()->isNotEmpty();
     }
 
+    /** @deprecated  */
     public function getTransferAttributes(array $attributes): array
     {
         $rules = [];
@@ -112,6 +113,7 @@ abstract class CompositeTransfer extends Transfer
         return $rules;
     }
 
+    /** @deprecated  */
     public function getAttributesForTransfer(array $attributes, string $transfer): array
     {
         $rules = [];
@@ -125,21 +127,25 @@ abstract class CompositeTransfer extends Transfer
         return $rules;
     }
 
+    /** @deprecated  */
     public function explodeValidationAttributes(string $rule): array
     {
         return explode('.', $rule);
     }
 
+    /** @deprecated  */
     public function implodeValidationAttributes(array $rule): string
     {
         return implode('.', $rule);
     }
 
+    /** @deprecated  */
     public function isTransferAttributes(array $rules, string $transfer): bool
     {
         return count($rules) > 1 && $rules[0] == $transfer;
     }
 
+    /** @deprecated  */
     public function unsetTransferAttribute(array &$exploded, string $transfer): void
     {
         unset($exploded[array_search($transfer, $exploded)]);

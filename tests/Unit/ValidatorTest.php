@@ -2,12 +2,12 @@
 
 namespace Rbz\DataTransfer\Tests\Unit;
 
-use Rbz\DataTransfer\Tests\TestCase;
-use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
-use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
+use Rbz\DataTransfer\Tests\BaseCase;
+use Rbz\DataTransfer\Validators\Rules\Property\HasRule;
+use Rbz\DataTransfer\Validators\Rules\Property\IsSetRule;
 use Rbz\DataTransfer\Validators\Validator;
 
-class ValidatorTest extends TestCase
+class ValidatorTest extends BaseCase
 {
     /**
      * @dataProvider getValidationPassedData

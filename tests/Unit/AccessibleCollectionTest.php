@@ -3,9 +3,9 @@
 namespace Rbz\DataTransfer\Tests\Unit;
 
 use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
-use Rbz\DataTransfer\Tests\TestCase;
+use Rbz\DataTransfer\Tests\BaseCase;
 
-class AccessibleCollectionTest extends TestCase
+class AccessibleCollectionTest extends BaseCase
 {
     /**
      * @dataProvider dataFilter

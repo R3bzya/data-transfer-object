@@ -8,9 +8,9 @@ use Rbz\DataTransfer\Interfaces\Validators\RuleInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Rules\Attribute\HasRule;
-use Rbz\DataTransfer\Validators\Rules\Attribute\IsNullRule;
-use Rbz\DataTransfer\Validators\Rules\Attribute\IsSetRule;
+use Rbz\DataTransfer\Validators\Rules\Property\HasRule;
+use Rbz\DataTransfer\Validators\Rules\Property\IsNullRule;
+use Rbz\DataTransfer\Validators\Rules\Property\IsSetRule;
 
 class Validator implements ValidatorInterface
 {
@@ -57,9 +57,9 @@ class Validator implements ValidatorInterface
         return new $ruleClass;
     }
 
-    private function handle(RuleInterface $rule, TransferInterface $transfer, string $attribute): void
+    public function handle(RuleInterface $rule, TransferInterface $transfer, string $property): void
     {
-        if (! $rule->handle($transfer, $attribute)) {
+        if (! $rule->handle($transfer, $property)) {
             $this->errors()->merge($rule->getErrors());
         }
     }

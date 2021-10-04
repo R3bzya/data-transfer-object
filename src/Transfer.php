@@ -28,7 +28,7 @@ abstract class Transfer extends Properties
     {
         $data = $this->makeArray($data);
         $this->setProperties($data);
-        return $this->isLoad(array_keys($data));
+        return $this->isLoad(array_keys($data) ?: $this->getProperties());
     }
 
     public function validate(array $attributes = []): bool
@@ -38,10 +38,31 @@ abstract class Transfer extends Properties
         }
         $validation = $this->isLoad($attributes ?: $this->getProperties());
         if ($validation && $this->rules()) {
-            /** ToDo это работать не будет $attributes ?: $this->getProperties() */
-            return $this->validateCustom($attributes ?: $this->getProperties(), $this->rules());
+            /** ToDo не уверен в этих двух методах getTransferData, getFilteredRules */
+            return $this->validateCustom(
+                $this->getTransferData($attributes ?: $this->getProperties()),
+                $this->getFilteredRules($this->rules(), $attributes ?: $this->getProperties())
+            );
         }
         return $validation;
+    }
+
+    public function getTransferData(array $properties): array
+    {
+        $tests = [];
+        foreach ($this->getProperties() as $property) {
+            if (in_array($property, $properties)) {
+                $tests[$property] = $this->getProperty($property);
+            }
+        }
+        return $tests;
+    }
+
+    public function getFilteredRules(array $rules, array $attributes): array
+    {
+        return array_filter_keys($rules, function (string $property) use ($attributes) {
+            return in_array($property, $attributes);
+        });
     }
 
     public function isLoad(array $attributes): bool
