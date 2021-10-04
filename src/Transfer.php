@@ -16,17 +16,18 @@ abstract class Transfer extends Properties
 {
     use ErrorCollectionTrait;
 
-    abstract public function rules(): array;
+    public function rules(): array
+    {
+        return [];
+    }
 
     /**
      * @throws DomainException
      */
     public function load($data): bool
     {
-        $data = $this->dataToArray($data);
-        if (! empty($data)) {
-            $this->setProperties($data);
-        }
+        $data = $this->makeArray($data);
+        $this->setProperties($data);
         return $this->isLoad(array_keys($data));
     }
 
@@ -83,18 +84,6 @@ abstract class Transfer extends Properties
         return $this->errors()->isNotEmpty();
     }
 
-    /** @deprecated  */
-    public function getFirstError(?string $attribute = null): ?string
-    {
-        return $this->errors()->getFirstMessage($attribute);
-    }
-
-    /** @deprecated  */
-    public function getErrorCount(): int
-    {
-        return $this->errors()->count();
-    }
-
     public function setProperty(string $property, $value): void
     {
         try {
@@ -107,7 +96,7 @@ abstract class Transfer extends Properties
      * @return array
      * @throws DomainException
      */
-    public function dataToArray($value): array
+    public function makeArray($value): array
     {
         if (is_array($value)) {
             return $value;

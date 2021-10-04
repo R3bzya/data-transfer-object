@@ -13,7 +13,7 @@ abstract class CompositeTransfer extends Transfer
      */
     public function load($data): bool
     {
-        $data = $this->dataToArray($data);
+        $data = $this->makeArray($data);
         $success = parent::load($data);
         foreach ($this->getAdditionalTransfers() as $transfer) {
             $success = $this->getTransfer($transfer)->load($data[$transfer] ?? $data) && $success;
@@ -99,20 +99,6 @@ abstract class CompositeTransfer extends Transfer
     public function hasErrors(): bool
     {
         return $this->getErrors()->isNotEmpty();
-    }
-
-    public function getFirstError(?string $attribute = null): ?string
-    {
-        return $this->getErrors()->getFirstMessage($attribute);
-    }
-
-    public function getErrorCount(): int
-    {
-        $count = parent::getErrorCount();
-        foreach ($this->getAdditionalTransfers() as $transfer) {
-            $count += $this->getTransfer($transfer)->getErrors()->count();
-        }
-        return $count;
     }
 
     public function getTransferAttributes(array $attributes): array
