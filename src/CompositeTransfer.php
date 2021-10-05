@@ -13,7 +13,7 @@ abstract class CompositeTransfer extends Transfer
      */
     public function load($data): bool
     {
-        $data = $this->makeArray($data);
+        $data = $this->normalizeData($data);
         $success = parent::load($data);
         foreach ($this->getAdditionalTransfers() as $transfer) {
             $success = $this->getTransfer($transfer)->load($data[$transfer] ?? $data) && $success;

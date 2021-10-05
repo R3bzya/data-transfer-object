@@ -40,6 +40,24 @@ class ValidatorTest extends BaseCase
     public function getValidationPassedData(): array
     {
         return [
+//            [
+//                [
+//                    'a_two_i' => 123,
+//                    'a_three_a' => []
+//                ],
+//                [
+//                    '!a_two_i'
+//                ]
+//            ],
+//            [
+//                [
+//                    'a_one_s' => 'string',
+//                ],
+//                [
+//                    '!a_two_i',
+//                    '!a_three_a'
+//                ],
+//            ],
             [
                 [
                     'a_one_s' => 'string',

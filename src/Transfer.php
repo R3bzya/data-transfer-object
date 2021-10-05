@@ -26,7 +26,7 @@ abstract class Transfer extends Properties
      */
     public function load($data): bool
     {
-        $data = $this->makeArray($data);
+        $data = $this->normalizeData($data);
         $this->setProperties($data);
         return $this->isLoad(array_keys($data) ?: $this->getProperties());
     }
@@ -117,7 +117,7 @@ abstract class Transfer extends Properties
      * @return array
      * @throws DomainException
      */
-    public function makeArray($value): array
+    public function normalizeData($value): array
     {
         if (is_array($value)) {
             return $value;

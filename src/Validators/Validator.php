@@ -74,6 +74,10 @@ class Validator implements ValidatorInterface
     {
         $initialized = [];
         foreach ($rules as $property => $propertyRules) {
+            if ($this->shouldBeExcluded($property) ||
+                $this->shouldBeExcluded($propertyRules)) {
+                continue;
+            }
             $initialized = array_merge_recursive($initialized,
                 $this->preparePropertyRules(
                     $this->getPropertiesAsArray($property),
@@ -114,7 +118,7 @@ class Validator implements ValidatorInterface
         if ($class = $this->rules[$key] ?? null) {
             return $class;
         }
-        throw new DomainException("Rule `$key` not found");
+        throw new DomainException("Rule class not found for `$key`");
     }
 
     public function getRuleKey(string $rule): string
@@ -146,5 +150,14 @@ class Validator implements ValidatorInterface
     public function hasAssociation(string $rule, array $associations): bool
     {
         return in_array(mb_strtolower($rule), $associations);
+    }
+
+    /**
+     * @param mixed $property
+     * @return bool
+     */
+    public function shouldBeExcluded($property): bool
+    {
+        return is_string($property) && mb_substr($property, 0, 1) == '!';
     }
 }
