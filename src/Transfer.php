@@ -8,15 +8,14 @@ use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Traits\FilterTrait;
+use Rbz\DataTransfer\Validators\FilterFactory;
 use Rbz\DataTransfer\Validators\Validator;
 use Throwable;
 
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    use ErrorCollectionTrait,
-        FilterTrait;
+    use ErrorCollectionTrait;
 
     public function rules(): array
     {
@@ -30,23 +29,35 @@ abstract class Transfer extends Properties
     {
         $data = $this->normalizeData($data);
         $this->setProperties($data);
-        return $this->isLoad(array_keys($data) ?: $this->getProperties());
+        return $this->validateIsLoad(array_keys($data) ?: $this->getProperties());
+    }
+
+    public function filterFactory(): FilterFactory
+    {
+        return new FilterFactory();
     }
 
     public function validate(array $properties = []): bool
     {
-        if ($this->errors()->isNotEmpty()) {
+        $filter = $this->filterFactory()->make($this->getProperties(), $properties);
+        if (! $this->validateHas($filter->getRules()) && $this->errors()->isNotEmpty()) {
             return false;
         }
-        $filter = $this->makeFilter($this->getProperties(), $properties);
-        $validation = $this->isLoad($filter->getProperties());
+        $validation = $this->validateIsLoad($filter->filter());
         if ($validation && $this->rules()) {
-            return $this->validateCustom($filter->transferData($this), $filter->array($this->rules()));
+            return $this->validateCustom($filter->filterTransfer($this), $filter->filterArrayKeys($this->rules()));
         }
         return $validation;
     }
 
-    public function isLoad(array $properties): bool
+    public function validateHas(array $properties): bool
+    {
+        $errors = Validator::makeHas($this, $properties)->getErrors();
+        $this->errors()->merge($errors);
+        return $errors->isEmpty();
+    }
+
+    public function validateIsLoad(array $properties): bool
     {
         $errors = Validator::makeIsLoad($this, $properties)->getErrors();
         $this->errors()->merge($errors);

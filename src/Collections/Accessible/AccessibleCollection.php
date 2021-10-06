@@ -4,6 +4,7 @@ namespace Rbz\DataTransfer\Collections\Accessible;
 
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
 
+/** @deprecated  */
 class AccessibleCollection implements AccessibleCollectionInterface
 {
     /** @var AccessibleItem[] */

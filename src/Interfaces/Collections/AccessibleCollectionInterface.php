@@ -4,6 +4,7 @@ namespace Rbz\DataTransfer\Interfaces\Collections;
 
 use Rbz\DataTransfer\Collections\Accessible\AccessibleItem;
 
+/** @deprecated  */
 interface AccessibleCollectionInterface extends CollectionInterface
 {
     public function add(string $rule): void;

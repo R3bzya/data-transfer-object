@@ -4,6 +4,7 @@ namespace Rbz\DataTransfer\Collections\Accessible;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/** @deprecated  */
 class AccessibleItem implements Arrayable
 {
     private string $attribute;

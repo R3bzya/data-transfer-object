@@ -5,6 +5,7 @@ namespace Rbz\DataTransfer\Traits;
 use Rbz\DataTransfer\Collections\Accessible\AccessibleCollection;
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
 
+/** @deprecated  */
 trait AccessibleCollectionTrait
 {
     private AccessibleCollectionInterface $accessibleCollection;

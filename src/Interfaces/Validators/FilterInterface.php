@@ -6,9 +6,10 @@ use Rbz\DataTransfer\Transfer;
 
 interface FilterInterface
 {
-    public function setProperties(array $properties): FilterInterface;
-    public function setRules(array $properties): FilterInterface;
-    public function getProperties(): array;
-    public function transferData(Transfer $transfer): array;
-    public function array(array $data): array;
+    public function filterTransfer(Transfer $transfer): array;
+    public function filterArray(array $array): array;
+    public function filterArrayKeys(array $data): array;
+    public function all(): array;
+    public function getRules();
+    public function filter(): array;
 }

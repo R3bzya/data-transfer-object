@@ -39,16 +39,6 @@ class Validator implements ValidatorInterface
         $this->initialized = $this->initializeRules($rules);
     }
 
-    public static function makeIsLoad(TransferInterface $transfer, array $properties): ValidatorInterface
-    {
-        return self::make($transfer, self::addRulesToProperties($properties, ['has', 'isset']));
-    }
-
-    public static function make(TransferInterface $transfer, array $rules): ValidatorInterface
-    {
-        return new self($transfer, $rules);
-    }
-
     public static function addRulesToProperties(array $properties, array $rules): array
     {
         $prepared = [];
@@ -56,6 +46,21 @@ class Validator implements ValidatorInterface
             $prepared[$property] = $rules;
         }
         return $prepared;
+    }
+
+    public static function makeIsLoad(TransferInterface $transfer, array $properties): self
+    {
+        return self::make($transfer, self::addRulesToProperties($properties, ['has', 'isset']));
+    }
+
+    public static function make(TransferInterface $transfer, array $rules): self
+    {
+        return new self($transfer, $rules);
+    }
+
+    public static function makeHas(TransferInterface $transfer, array $properties): self
+    {
+        return self::make($transfer, self::addRulesToProperties($properties, ['has']));
     }
 
     public function validate(): bool
@@ -176,6 +181,6 @@ class Validator implements ValidatorInterface
      */
     public function shouldBeExcluded($property): bool
     {
-        return is_string($property) && mb_substr($property, 0, 1) == '!';
+        return is_string($property) && mb_substr($property, 0, 1) == Filter::SYMBOL_EXCLUDE;
     }
 }
