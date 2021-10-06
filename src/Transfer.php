@@ -8,13 +8,15 @@ use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Factory as ValidatorFactory;
+use Rbz\DataTransfer\Traits\FilterTrait;
+use Rbz\DataTransfer\Validators\Validator;
 use Throwable;
 
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    use ErrorCollectionTrait;
+    use ErrorCollectionTrait,
+        FilterTrait;
 
     public function rules(): array
     {
@@ -31,43 +33,22 @@ abstract class Transfer extends Properties
         return $this->isLoad(array_keys($data) ?: $this->getProperties());
     }
 
-    public function validate(array $attributes = []): bool
+    public function validate(array $properties = []): bool
     {
         if ($this->errors()->isNotEmpty()) {
             return false;
         }
-        $validation = $this->isLoad($attributes ?: $this->getProperties());
+        $filter = $this->makeFilter($this->getProperties(), $properties);
+        $validation = $this->isLoad($filter->getProperties());
         if ($validation && $this->rules()) {
-            /** ToDo не уверен в этих двух методах getTransferData, getFilteredRules */
-            return $this->validateCustom(
-                $this->getTransferData($attributes ?: $this->getProperties()),
-                $this->getFilteredRules($this->rules(), $attributes ?: $this->getProperties())
-            );
+            return $this->validateCustom($filter->transferData($this), $filter->array($this->rules()));
         }
         return $validation;
     }
 
-    public function getTransferData(array $properties): array
+    public function isLoad(array $properties): bool
     {
-        $tests = [];
-        foreach ($this->getProperties() as $property) {
-            if (in_array($property, $properties)) {
-                $tests[$property] = $this->getProperty($property);
-            }
-        }
-        return $tests;
-    }
-
-    public function getFilteredRules(array $rules, array $attributes): array
-    {
-        return array_filter_keys($rules, function (string $property) use ($attributes) {
-            return in_array($property, $attributes);
-        });
-    }
-
-    public function isLoad(array $attributes): bool
-    {
-        $errors = ValidatorFactory::makeIsLoad($this, $attributes)->getErrors();
+        $errors = Validator::makeIsLoad($this, $properties)->getErrors();
         $this->errors()->merge($errors);
         return $errors->isEmpty();
     }

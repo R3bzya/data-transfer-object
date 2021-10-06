@@ -40,24 +40,16 @@ class ValidatorTest extends BaseCase
     public function getValidationPassedData(): array
     {
         return [
-//            [
-//                [
-//                    'a_two_i' => 123,
-//                    'a_three_a' => []
-//                ],
-//                [
-//                    '!a_two_i'
-//                ]
-//            ],
-//            [
-//                [
-//                    'a_one_s' => 'string',
-//                ],
-//                [
-//                    '!a_two_i',
-//                    '!a_three_a'
-//                ],
-//            ],
+            [
+                [
+                    'a_one_s' => 'string',
+                ],
+                [
+                    'a_one_s' => [IsSetRule::class, HasRule::class],
+                    '!a_two_i' => [IsSetRule::class, HasRule::class],
+                    '!a_three_a' => [IsSetRule::class, HasRule::class]
+                ],
+            ],
             [
                 [
                     'a_one_s' => 'string',
@@ -137,7 +129,7 @@ class ValidatorTest extends BaseCase
                 [
                     'isset',
                     'has',
-                    'a_four_not_found' => ['has', 'isset'],
+                    'undefined_property' => ['has', 'isset'],
                 ],
                 [
                     'count' => 1

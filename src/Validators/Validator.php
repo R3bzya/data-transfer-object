@@ -39,17 +39,36 @@ class Validator implements ValidatorInterface
         $this->initialized = $this->initializeRules($rules);
     }
 
+    public static function makeIsLoad(TransferInterface $transfer, array $properties): ValidatorInterface
+    {
+        return self::make($transfer, self::addRulesToProperties($properties, ['has', 'isset']));
+    }
+
+    public static function make(TransferInterface $transfer, array $rules): ValidatorInterface
+    {
+        return new self($transfer, $rules);
+    }
+
+    public static function addRulesToProperties(array $properties, array $rules): array
+    {
+        $prepared = [];
+        foreach ($properties as $property) {
+            $prepared[$property] = $rules;
+        }
+        return $prepared;
+    }
+
     public function validate(): bool
     {
         foreach ($this->initialized as $property => $propertyRules) {
             foreach ($propertyRules as $propertyRule) {
-                $this->handle($this->make($propertyRule), $this->transfer, $property);
+                $this->handle($this->makeRule($propertyRule), $this->transfer, $property);
             }
         }
         return $this->errors()->isEmpty();
     }
 
-    public function make(string $ruleClass): RuleInterface
+    public function makeRule(string $ruleClass): RuleInterface
     {
         if (! class_exists($ruleClass)) {
             throw new DomainException("Class $ruleClass not found");
@@ -74,8 +93,7 @@ class Validator implements ValidatorInterface
     {
         $initialized = [];
         foreach ($rules as $property => $propertyRules) {
-            if ($this->shouldBeExcluded($property) ||
-                $this->shouldBeExcluded($propertyRules)) {
+            if ($this->shouldBeExcluded($property)) {
                 continue;
             }
             $initialized = array_merge_recursive($initialized,

@@ -21,11 +21,11 @@ abstract class CompositeTransfer extends Transfer
         return $success;
     }
 
-    public function validate(array $attributes = []): bool
+    public function validate(array $properties = []): bool
     {
-        $validate = parent::validate($this->getTransferAttributes($attributes));
+        $validate = parent::validate($this->getTransferAttributes($properties));
         foreach ($this->getAdditionalTransfers() as $transfer) {
-            $validate = $this->getTransfer($transfer)->validate($this->getAttributesForTransfer($attributes, $transfer)) && $validate;
+            $validate = $this->getTransfer($transfer)->validate($this->getAttributesForTransfer($properties, $transfer)) && $validate;
         }
         return $validate;
     }

@@ -12,7 +12,7 @@ interface TransferInterface extends PropertiesInterface
      * @return bool
      */
     public function load($data): bool;
-    public function validate(array $attributes = []): bool;
+    public function validate(array $properties = []): bool;
     public function getErrors(): ErrorCollectionInterface;
     public function getTransferName(): string;
 }
