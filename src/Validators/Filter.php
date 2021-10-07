@@ -74,12 +74,12 @@ class Filter implements FilterInterface
 
     public function isInclude(string $rule): bool
     {
-        return mb_substr($rule, 0, 1) != self::SYMBOL_EXCLUDE;
+        return ! str_starts_with($rule, self::SYMBOL_EXCLUDE);
     }
 
     public function isExclude(string $rule): bool
     {
-        return mb_substr($rule, 0, 1) == self::SYMBOL_EXCLUDE;
+        return str_starts_with($rule, self::SYMBOL_EXCLUDE);
     }
 
     public function hasInclude(): bool
