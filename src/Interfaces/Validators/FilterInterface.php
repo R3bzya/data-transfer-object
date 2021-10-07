@@ -11,5 +11,5 @@ interface FilterInterface
     public function filterArrayKeys(array $data): array;
     public function all(): array;
     public function getRules();
-    public function filter(): array;
+    public function filtered(): array;
 }

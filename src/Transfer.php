@@ -40,10 +40,10 @@ abstract class Transfer extends Properties
     public function validate(array $properties = []): bool
     {
         $filter = $this->filterFactory()->make($this->getProperties(), $properties);
-        if (! $this->validateHas($filter->getRules()) && $this->errors()->isNotEmpty()) {
+        if (! $this->validateHas($filter->getRules()) || $this->errors()->isNotEmpty()) {
             return false;
         }
-        $validation = $this->validateIsLoad($filter->filter());
+        $validation = $this->validateIsLoad($filter->filtered());
         if ($validation && $this->rules()) {
             return $this->validateCustom($filter->filterTransfer($this), $filter->filterArrayKeys($this->rules()));
         }

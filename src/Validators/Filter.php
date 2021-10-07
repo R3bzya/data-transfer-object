@@ -21,14 +21,14 @@ class Filter implements FilterInterface
     public function __construct(array $properties, array $rules)
     {
         $this->properties = $properties;
-        $this->exclude = $this->prepareExclude($rules);
-        $this->include = $this->prepareInclude($rules);
+        $this->exclude = $this->getExcludeFrom($rules);
+        $this->include = $this->getIncludeFrom($rules);
     }
 
     public function filterTransfer(Transfer $transfer): array
     {
         $array = [];
-        foreach ($this->filter() as $property) {
+        foreach ($this->filtered() as $property) {
             $array[$property] = $transfer->getProperty($property);
         }
         return $array;
@@ -38,35 +38,38 @@ class Filter implements FilterInterface
     public function filterArray(array $array): array
     {
         return array_filter($array, function ($value) {
-            return in_array($value, $this->filter());
+            return in_array($value, $this->filtered());
         });
     }
 
     public function filterArrayKeys(array $data): array
     {
         return array_filter_keys($data, function (string $property) {
-            return in_array($property, $this->filter());
+            return in_array($property, $this->filtered());
         });
     }
 
-    public function filter(): array
+    public function filtered(): array
     {
         if ($this->hasInclude()) {
-            return $this->filterInclude($this->properties());
+            return $this->filterNotInclude($this->properties());
         }
         return $this->filterExclude($this->properties());
     }
 
-    public function prepareExclude(array $rules): array
+    public function getExcludeFrom(array $data): array
     {
-        return array_map(fn(string $rule) => mb_substr($rule, 1),
-            array_filter($rules, fn(string $rule) => $this->isExclude($rule))
-        );
+        return array_map(fn(string $rule) => mb_substr($rule, 1), $this->getRawExcludeFrom($data));
     }
 
-    public function prepareInclude(array $rules): array
+    public function getRawExcludeFrom(array $data): array
     {
-        return array_filter($rules, fn(string $rule) => $this->isInclude($rule));
+        return array_filter($data, fn(string $rule) => $this->isExclude($rule));
+    }
+
+    public function getIncludeFrom(array $data): array
+    {
+        return array_filter($data, fn(string $rule) => $this->isInclude($rule));
     }
 
     public function isInclude(string $rule): bool
@@ -89,7 +92,7 @@ class Filter implements FilterInterface
         return count($this->exclude());
     }
 
-    public function filterInclude(array $properties): array
+    public function filterNotInclude(array $properties): array
     {
         return array_filter($properties, fn(string $property) => $this->inInclude($property));
     }

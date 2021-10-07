@@ -32,7 +32,7 @@ class FilterTest extends BaseCase
     {
         $filter = new Filter($properties, $rules);
 
-        $this->assertEquals($result, $filter->filter());
+        $this->assertEquals($result, $filter->filtered());
     }
 
     public function getData(): array
