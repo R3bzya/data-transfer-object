@@ -26,4 +26,9 @@ trait ErrorCollectionTrait
     {
         return $this->errors();
     }
+
+    public function hasErrors(): bool
+    {
+        return $this->errors()->isNotEmpty();
+    }
 }

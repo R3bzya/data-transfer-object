@@ -52,9 +52,9 @@ class ErrorList
      */
     public static function getDescriptionByError(string $error, string $property = ''): string
     {
-        if (key_exists($error, self::getListDescription())) {
-            return str_replace( '  ', ' ', self::getListDescription($property)[$error]);
+        if (! key_exists($error, self::getListDescription())) {
+            throw new DomainException('Error description not found');
         }
-        throw new DomainException('Error description not found');
+        return str_replace( '  ', ' ', self::getListDescription($property)[$error]);
     }
 }
