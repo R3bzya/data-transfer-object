@@ -1,12 +1,12 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Validators;
+namespace Rbz\DataTransfer\Interfaces\Components;
 
-use Rbz\DataTransfer\Transfer;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 interface FilterInterface
 {
-    public function filterTransfer(Transfer $transfer): array;
+    public function filterTransfer(TransferInterface $transfer): array;
     public function filterArray(array $array): array;
     public function filterArrayKeys(array $data): array;
     public function all(): array;

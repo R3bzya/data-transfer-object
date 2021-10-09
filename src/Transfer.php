@@ -6,10 +6,10 @@ use DomainException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
+use Rbz\DataTransfer\Components\Filter;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Traits\CombinatorTrait;
 use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\FilterFactory;
 use Rbz\DataTransfer\Validators\Validator;
 use Throwable;
 
@@ -44,15 +44,9 @@ abstract class Transfer extends Properties
         return $this->validateIsLoad(array_keys($data) ?: $this->getProperties());
     }
 
-    /** ToDo зачем? */
-    public function filterFactory(): FilterFactory
-    {
-        return new FilterFactory();
-    }
-
     public function validate(array $properties = []): bool
     {
-        $filter = $this->filterFactory()->make($this->getProperties(), $properties);
+        $filter = Filter::make($this->getProperties(), $properties);
         if (! $this->validateHas($filter->getRules()) || $this->errors()->isNotEmpty()) {
             return false;
         }
@@ -111,7 +105,7 @@ abstract class Transfer extends Properties
     public function setProperty(string $property, $value): void
     {
         try {
-            if ($this->combinator()->isCombined($property)) {
+            if ($this->combinator()->canCombine($property)) {
                 $value = $this->combinator()->combine($property, $value);
             }
             parent::setProperty($property, $value);

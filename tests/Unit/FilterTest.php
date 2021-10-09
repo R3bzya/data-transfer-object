@@ -3,7 +3,7 @@
 namespace Rbz\DataTransfer\Tests\Unit;
 
 use Rbz\DataTransfer\Tests\BaseCase;
-use Rbz\DataTransfer\Validators\Filter;
+use Rbz\DataTransfer\Components\Filter;
 
 /** ToDo удалить testTemp */
 class FilterTest extends BaseCase

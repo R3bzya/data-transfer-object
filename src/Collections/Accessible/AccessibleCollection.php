@@ -3,7 +3,7 @@
 namespace Rbz\DataTransfer\Collections\Accessible;
 
 use Rbz\DataTransfer\Interfaces\Collections\AccessibleCollectionInterface;
-use Rbz\DataTransfer\Validators\Filter;
+use Rbz\DataTransfer\Components\Filter;
 
 /** @deprecated  */
 class AccessibleCollection implements AccessibleCollectionInterface

@@ -25,11 +25,6 @@ class Combinator implements CombinatorInterface
         return $this->combinations();
     }
 
-    public function isCombined(string $property): bool
-    {
-        return key_exists($property, $this->combinations());
-    }
-
     public function getTransferClassByProperty(string $property): string
     {
         if (! $this->hasProperty($property)) {
@@ -61,6 +56,11 @@ class Combinator implements CombinatorInterface
     public function hasProperty(string $property): bool
     {
         return key_exists($property, $this->combinations());
+    }
+
+    public function canCombine(string $property): bool
+    {
+        return $this->hasProperty($property);
     }
 
     public function getLoadedTransfer(TransferInterface $transfer, array $data): TransferInterface

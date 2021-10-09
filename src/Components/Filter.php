@@ -1,10 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Validators;
+namespace Rbz\DataTransfer\Components;
 
-use Rbz\DataTransfer\Interfaces\Validators\FilterInterface;
-use Rbz\DataTransfer\Transfer;
-use function array_filter_keys;
+use Rbz\DataTransfer\Interfaces\Components\FilterInterface;
+use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 class Filter implements FilterInterface
 {
@@ -25,7 +24,12 @@ class Filter implements FilterInterface
         $this->include = $this->getIncludeFrom($rules);
     }
 
-    public function filterTransfer(Transfer $transfer): array
+    public static function make(array $properties, array $exclude): FilterInterface
+    {
+        return new self($properties, $exclude);
+    }
+
+    public function filterTransfer(TransferInterface $transfer): array
     {
         $array = [];
         foreach ($this->filtered() as $property) {
