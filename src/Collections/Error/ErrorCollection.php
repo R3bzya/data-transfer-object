@@ -2,24 +2,29 @@
 
 namespace Rbz\DataTransfer\Collections\Error;
 
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorItemInterface;
 
 class ErrorCollection implements ErrorCollectionInterface
 {
-    /** @var ErrorItem[] */
+    /** @var ErrorItemInterface[] */
     private array $items = [];
 
-    public function add(string $attribute, string $message): void
+    /**
+     * @param array|string $attribute
+     * @param string $messages
+     */
+    public function add(string $attribute, $messages): void
     {
-        $this->addItem(new ErrorItem($attribute, (array) $message));
+        $this->addItem(new ErrorItem($attribute, is_array($messages) ? $messages : (array) $messages));
     }
 
-    public function addItem(ErrorItem $item): void
+    public function addItem(ErrorItemInterface $item): void
     {
-        if ($this->has($item->getAttribute())) {
-            $this->get($item->getAttribute())->addMessages($item->getMessages());
+        if ($this->has($item->getProperty())) {
+            $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
-            $this->items[$item->getAttribute()] = $item;
+            $this->items[$item->getProperty()] = $item;
         }
     }
 
@@ -40,7 +45,7 @@ class ErrorCollection implements ErrorCollectionInterface
         return $this->items();
     }
 
-    public function getFirst(?string $attribute = null): ?ErrorItem
+    public function getFirst(?string $attribute = null): ?ErrorItemInterface
     {
         if ($attribute) {
             return $this->get($attribute);
@@ -98,9 +103,12 @@ class ErrorCollection implements ErrorCollectionInterface
         return key_exists($attribute, $this->items);
     }
 
-    public function get(string $attribute): ?ErrorItem
+    public function get(string $attribute): ErrorItemInterface
     {
-        return $this->items[$attribute] ?? null;
+        if (! $this->has($attribute)) {
+            throw new \DomainException("Property $attribute not found");
+        }
+        return $this->items[$attribute];
     }
 
     public function count(): int

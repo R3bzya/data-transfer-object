@@ -1,12 +1,13 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Collections;
+namespace Rbz\DataTransfer\Interfaces\Collections\Error;
 
 use Rbz\DataTransfer\Collections\Error\ErrorItem;
+use Rbz\DataTransfer\Interfaces\Collections\CollectionInterface;
 
 interface ErrorCollectionInterface extends CollectionInterface
 {
-    public function add(string $attribute, string $message): void;
+    public function add(string $attribute, $messages): void;
     public function addItem(ErrorItem $item): void;
     public function getFirstMessage(?string $attribute = null): ?string;
     public function getFirst(string $attribute);

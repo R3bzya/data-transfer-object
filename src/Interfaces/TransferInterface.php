@@ -3,7 +3,7 @@
 namespace Rbz\DataTransfer\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\Components\CombinatorInterface;
 
 interface TransferInterface extends PropertiesInterface

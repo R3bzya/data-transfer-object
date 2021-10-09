@@ -3,7 +3,7 @@
 namespace Rbz\DataTransfer\Traits;
 
 use Rbz\DataTransfer\Collections\Error\ErrorCollection;
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
 
 trait ErrorCollectionTrait
 {

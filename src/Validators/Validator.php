@@ -4,7 +4,7 @@ namespace Rbz\DataTransfer\Validators;
 
 use DomainException;
 use Rbz\DataTransfer\Components\Filter;
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\Validators\RuleInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;

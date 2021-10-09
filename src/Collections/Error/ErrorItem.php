@@ -2,9 +2,9 @@
 
 namespace Rbz\DataTransfer\Collections\Error;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorItemInterface;
 
-class ErrorItem implements Arrayable
+class ErrorItem implements ErrorItemInterface
 {
     private string $attribute;
     private array $messages;
@@ -19,14 +19,19 @@ class ErrorItem implements Arrayable
         $this->messages = $messages;
     }
 
-    public function getAttribute(): string
+    public function messages(): array
+    {
+        return $this->messages;
+    }
+
+    public function getProperty(): string
     {
         return $this->attribute;
     }
 
     public function getMessages(): array
     {
-        return $this->messages;
+        return $this->messages();
     }
 
     public function toArray(): array
@@ -50,5 +55,10 @@ class ErrorItem implements Arrayable
     public function getMessage(): string
     {
         return $this->messages[0] ?? '';
+    }
+
+    public function count(): int
+    {
+        return count($this->messages);
     }
 }

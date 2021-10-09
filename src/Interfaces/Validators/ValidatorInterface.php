@@ -2,7 +2,7 @@
 
 namespace Rbz\DataTransfer\Interfaces\Validators;
 
-use Rbz\DataTransfer\Interfaces\Collections\ErrorCollectionInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\DataTransfer\Interfaces\TransferInterface;
 
 interface ValidatorInterface
