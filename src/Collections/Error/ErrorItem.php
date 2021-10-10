@@ -6,16 +6,16 @@ use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorItemInterface;
 
 class ErrorItem implements ErrorItemInterface
 {
-    private string $attribute;
+    private string $property;
     private array $messages;
 
     /**
-     * @param string $attribute
+     * @param string $property
      * @param array $messages
      */
-    public function __construct(string $attribute, array $messages)
+    public function __construct(string $property, array $messages)
     {
-        $this->attribute = $attribute;
+        $this->property = $property;
         $this->messages = $messages;
     }
 
@@ -26,7 +26,7 @@ class ErrorItem implements ErrorItemInterface
 
     public function getProperty(): string
     {
-        return $this->attribute;
+        return $this->property;
     }
 
     public function getMessages(): array
@@ -37,7 +37,7 @@ class ErrorItem implements ErrorItemInterface
     public function toArray(): array
     {
         return [
-            'attribute' => $this->attribute,
+            'property' => $this->property,
             'messages' => $this->messages,
         ];
     }

@@ -11,12 +11,12 @@ class ErrorCollection implements ErrorCollectionInterface
     private array $items = [];
 
     /**
-     * @param array|string $attribute
+     * @param array|string $property
      * @param string $messages
      */
-    public function add(string $attribute, $messages): void
+    public function add(string $property, $messages): void
     {
-        $this->addItem(new ErrorItem($attribute, is_array($messages) ? $messages : (array) $messages));
+        $this->addItem(new ErrorItem($property, is_array($messages) ? $messages : (array) $messages));
     }
 
     public function addItem(ErrorItemInterface $item): void
@@ -30,8 +30,8 @@ class ErrorCollection implements ErrorCollectionInterface
 
     public function load(array $data): void
     {
-        foreach ($data as $attribute => $messages) {
-            $this->addItem(new ErrorItem($attribute, $messages));
+        foreach ($data as $property => $messages) {
+            $this->addItem(new ErrorItem($property, $messages));
         }
     }
 
@@ -45,10 +45,10 @@ class ErrorCollection implements ErrorCollectionInterface
         return $this->items();
     }
 
-    public function getFirst(?string $attribute = null): ?ErrorItemInterface
+    public function getFirst(?string $property = null): ?ErrorItemInterface
     {
-        if ($attribute) {
-            return $this->get($attribute);
+        if ($property) {
+            return $this->get($property);
         }
 
         foreach ($this->items as $item) {
@@ -58,9 +58,9 @@ class ErrorCollection implements ErrorCollectionInterface
         return null;
     }
 
-    public function getFirstMessage(?string $attribute = null): ?string
+    public function getFirstMessage(?string $property = null): ?string
     {
-        if ($error = $this->getFirst($attribute)) {
+        if ($error = $this->getFirst($property)) {
             return $error->getMessage();
         }
         return null;
@@ -98,17 +98,17 @@ class ErrorCollection implements ErrorCollectionInterface
         return array_values(array_map(fn(ErrorItem $item) => $item->toArray(), $this->items));
     }
 
-    public function has(string $attribute): bool
+    public function has(string $property): bool
     {
-        return key_exists($attribute, $this->items);
+        return key_exists($property, $this->items);
     }
 
-    public function get(string $attribute): ErrorItemInterface
+    public function get(string $property): ErrorItemInterface
     {
-        if (! $this->has($attribute)) {
-            throw new \DomainException("Property $attribute not found");
+        if (! $this->has($property)) {
+            throw new \DomainException("Property $property not found");
         }
-        return $this->items[$attribute];
+        return $this->items[$property];
     }
 
     public function count(): int

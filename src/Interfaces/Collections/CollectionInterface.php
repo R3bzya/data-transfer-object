@@ -7,9 +7,9 @@ use Illuminate\Contracts\Support\Arrayable;
 interface CollectionInterface extends Arrayable
 {
     public function load(array $data): void;
-    public function has(string $attribute): bool;
+    public function has(string $property): bool;
     public function keys(): array;
-    public function get(string $attribute);
+    public function get(string $property);
     public function getItems(): array;
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
