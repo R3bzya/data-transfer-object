@@ -3,14 +3,17 @@
 namespace Rbz\DataTransfer\Interfaces\Collections\Error;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects\PathInterface;
 
 interface ErrorItemInterface extends Arrayable
 {
-    public static function make(string $property, array $messages): ErrorItemInterface;
+    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface;
     public function getProperty(): string;
     public function getMessages(): array;
+    public function getPath(): PathInterface;
     public function addMessage(string $message): void;
     public function addMessages(array $messages): void;
     public function getMessage(): string;
     public function count(): int;
+    public function getFullPath(): string;
 }

@@ -3,35 +3,45 @@
 namespace Rbz\DataTransfer\Collections\Error;
 
 use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorItemInterface;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects\PathInterface;
 
 class ErrorItem implements ErrorItemInterface
 {
     private string $property;
     private array $messages;
+    private PathInterface $path;
 
     /**
      * @param string $property
      * @param array $messages
+     * @param PathInterface $path
      */
-    public function __construct(string $property, array $messages)
+    public function __construct(string $property, array $messages, PathInterface $path)
     {
         $this->property = $property;
         $this->messages = $messages;
+        $this->path = $path;
     }
 
     /**
      * @param string $property
      * @param array $messages
+     * @param PathInterface $path
      * @return ErrorItemInterface
      */
-    public static function make(string $property, array $messages): ErrorItemInterface
+    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface
     {
-        return new self($property, $messages);
+        return new self($property, $messages, $path);
     }
 
     public function messages(): array
     {
         return $this->messages;
+    }
+
+    public function getMessages(): array
+    {
+        return $this->messages();
     }
 
     public function property(): string
@@ -44,9 +54,14 @@ class ErrorItem implements ErrorItemInterface
         return $this->property();
     }
 
-    public function getMessages(): array
+    public function path(): PathInterface
     {
-        return $this->messages();
+        return $this->path;
+    }
+
+    public function getPath(): PathInterface
+    {
+        return $this->path();
     }
 
     public function toArray(): array
@@ -54,6 +69,7 @@ class ErrorItem implements ErrorItemInterface
         return [
             'property' => $this->property(),
             'messages' => $this->messages(),
+            'path' => $this->path()->asString(),
         ];
     }
 
@@ -75,5 +91,13 @@ class ErrorItem implements ErrorItemInterface
     public function count(): int
     {
         return count($this->messages());
+    }
+
+    public function getFullPath(): string
+    {
+        if ($this->path()->isInternal()) {
+            return $this->path()->withString($this->property())->asString();
+        }
+        return $this->property();
     }
 }

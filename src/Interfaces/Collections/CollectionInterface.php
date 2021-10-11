@@ -3,6 +3,7 @@
 namespace Rbz\DataTransfer\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects\PathInterface;
 
 interface CollectionInterface extends Arrayable
 {
@@ -11,6 +12,7 @@ interface CollectionInterface extends Arrayable
     public function keys(): array;
     public function get(string $property);
     public function getItems(): array;
+    public function getPath(): PathInterface;
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function count(): int;

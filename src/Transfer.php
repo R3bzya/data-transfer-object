@@ -13,8 +13,7 @@ use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
 use Rbz\DataTransfer\Validators\Validator;
 use Throwable;
 
-abstract class Transfer extends Properties
-    implements TransferInterface
+abstract class Transfer extends Properties implements TransferInterface
 {
     use ErrorCollectionTrait,
         CombinatorTrait;
@@ -81,25 +80,15 @@ abstract class Transfer extends Properties
         return $messageBag->isEmpty();
     }
 
-    protected function toCamelCase(string $value): string
-    {
-        return Str::camel($value);
-    }
-
     public function toCamelCaseKeys(array $data): array
     {
         $camelCaseAttributes = [];
         foreach ($data as $attribute => $value) {
-            $camelCaseAttributes[$this->toCamelCase($attribute)] = is_array($value)
+            $camelCaseAttributes[Str::camel($attribute)] = is_array($value)
                 ? $this->toCamelCaseKeys($value)
                 : $value;
         }
         return $camelCaseAttributes;
-    }
-
-    public function getTransferName(): string
-    {
-        return get_class_name($this);
     }
 
     public function setProperty(string $property, $value): void

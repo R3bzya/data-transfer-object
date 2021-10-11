@@ -16,6 +16,7 @@ interface TransferInterface extends PropertiesInterface
     public function validate(array $properties = []): bool;
     public function getErrors(): ErrorCollectionInterface;
     public function getCombinator(): CombinatorInterface;
+    public function setTransferName(string $name): TransferInterface;
     public function getTransferName(): string;
     public function hasErrors(): bool;
 }
