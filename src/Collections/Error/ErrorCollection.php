@@ -31,7 +31,7 @@ class ErrorCollection implements ErrorCollectionInterface
     public function load(array $data): void
     {
         foreach ($data as $property => $messages) {
-            $this->addItem(new ErrorItem($property, $messages));
+            $this->add($property, $messages);
         }
     }
 

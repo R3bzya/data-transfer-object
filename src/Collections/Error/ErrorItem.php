@@ -19,14 +19,29 @@ class ErrorItem implements ErrorItemInterface
         $this->messages = $messages;
     }
 
+    /**
+     * @param string $property
+     * @param array $messages
+     * @return ErrorItemInterface
+     */
+    public static function make(string $property, array $messages): ErrorItemInterface
+    {
+        return new self($property, $messages);
+    }
+
     public function messages(): array
     {
         return $this->messages;
     }
 
-    public function getProperty(): string
+    public function property(): string
     {
         return $this->property;
+    }
+
+    public function getProperty(): string
+    {
+        return $this->property();
     }
 
     public function getMessages(): array
@@ -37,8 +52,8 @@ class ErrorItem implements ErrorItemInterface
     public function toArray(): array
     {
         return [
-            'property' => $this->property,
-            'messages' => $this->messages,
+            'property' => $this->property(),
+            'messages' => $this->messages(),
         ];
     }
 
@@ -49,7 +64,7 @@ class ErrorItem implements ErrorItemInterface
 
     public function addMessages(array $messages): void
     {
-        $this->messages = array_unique(array_merge($this->messages, $messages));
+        $this->messages = array_unique(array_merge($this->messages(), $messages));
     }
 
     public function getMessage(): string
@@ -59,6 +74,6 @@ class ErrorItem implements ErrorItemInterface
 
     public function count(): int
     {
-        return count($this->messages);
+        return count($this->messages());
     }
 }

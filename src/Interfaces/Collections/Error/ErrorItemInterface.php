@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 
 interface ErrorItemInterface extends Arrayable
 {
+    public static function make(string $property, array $messages): ErrorItemInterface;
     public function getProperty(): string;
     public function getMessages(): array;
     public function addMessage(string $message): void;
