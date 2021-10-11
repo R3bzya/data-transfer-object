@@ -1,9 +1,13 @@
 <?php
 
 if (! function_exists('get_class_name')) {
-    function get_class_name(object $class): string
+    /**
+     * @param object|string $class
+     * @return string
+     */
+    function get_class_name($class): string
     {
-        $className = get_class($class);
+        $className = is_object($class) ? get_class($class) : $class;
 
         if ($position = strrpos($className, '\\')) {
             return substr($className, $position + 1);

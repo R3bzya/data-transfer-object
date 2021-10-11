@@ -17,4 +17,5 @@ interface TransferInterface extends PropertiesInterface
     public function getErrors(): ErrorCollectionInterface;
     public function getCombinator(): CombinatorInterface;
     public function getTransferName(): string;
+    public function hasErrors(): bool;
 }
