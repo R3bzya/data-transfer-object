@@ -33,7 +33,7 @@ abstract class Properties implements PropertiesInterface
     public function getProperty(string $property)
     {
         if (! $this->isPublicProperty($property)) {
-            throw new \DomainException('Getting private property:' . get_class($this) . '::' . $property);
+            $this->throwGettingPrivatePropertyException($property);
         }
         return $this->$property;
     }
@@ -41,7 +41,7 @@ abstract class Properties implements PropertiesInterface
     public function setProperty(string $property, $value): void
     {
         if (! $this->isPublicProperty($property)) {
-            throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
+            $this->throwSettingPrivatePropertyException($property);
         }
         $this->$property = $value;
     }
@@ -74,6 +74,9 @@ abstract class Properties implements PropertiesInterface
 
     public function isSetProperty(string $property): bool
     {
+        if (! $this->isPublicProperty($property)) {
+            $this->throwGettingPrivatePropertyException($property);
+        }
         return isset($this->$property);
     }
 
@@ -95,5 +98,15 @@ abstract class Properties implements PropertiesInterface
     public function isPublicProperty(string $property): bool
     {
         return $this->getReflectionInstance()->getProperty($property)->isPublic();
+    }
+
+    private function throwGettingPrivatePropertyException(string $property): void
+    {
+        throw new \DomainException('Getting private property:' . get_class($this) . '::' . $property);
+    }
+
+    private function throwSettingPrivatePropertyException(string $property): void
+    {
+        throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
     }
 }
