@@ -93,6 +93,13 @@ class ErrorItem implements ErrorItemInterface
         return count($this->messages());
     }
 
+    public function withPath(PathInterface $path): ErrorItemInterface
+    {
+        $clone = clone $this;
+        $clone->path = $path;
+        return $clone;
+    }
+
     public function getFullPath(): string
     {
         if ($this->path()->isInternal()) {
