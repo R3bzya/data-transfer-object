@@ -45,9 +45,7 @@ class Path implements PathInterface
 
     public function with(PathInterface $path): PathInterface
     {
-        $clone = clone $this;
-        $clone->path = $this->asString().self::separator().$path->asString();
-        return $clone;
+        return $this->withString($path->asString());
     }
 
     public static function toString(array $path): string
@@ -63,7 +61,7 @@ class Path implements PathInterface
     public function withString(string $path, bool $separator = true): PathInterface
     {
         $clone = clone $this;
-        $clone->path = $separator ? $clone->asString().self::separator().$path : $path;
+        $clone->path = $separator ? $this->asString().self::separator().$path : $this->asString().$path;
         return $clone;
     }
 }
