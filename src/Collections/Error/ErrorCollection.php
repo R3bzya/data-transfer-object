@@ -86,18 +86,16 @@ class ErrorCollection implements ErrorCollectionInterface
     public function with(ErrorCollectionInterface $collection): ErrorCollectionInterface
     {
         $clone = clone $this;
-        $clone->path = $this->path()->with($collection->getPath());
         foreach ($collection->getItems() as $item) {
-            $clone->addItem($item->withPath($this->path()));
+            $clone->addItem($item->withPath($this->path()->with($item->getPath())));
         }
         return $clone;
     }
 
     public function merge(ErrorCollectionInterface $collection): ErrorCollectionInterface
     {
-        $this->path = $this->path()->with($collection->getPath());
         foreach ($collection->getItems() as $item) {
-            $this->addItem($item->withPath($this->path()));
+            $this->addItem($item->withPath($this->path()->with($item->getPath())));
         }
         return $this;
     }

@@ -16,5 +16,5 @@ interface ErrorItemInterface extends Arrayable
     public function getMessage(): string;
     public function count(): int;
     public function getFullPath(): string;
-    public function withPath(PathInterface $path);
+    public function withPath(PathInterface $path): ErrorItemInterface;
 }

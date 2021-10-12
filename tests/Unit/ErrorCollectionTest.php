@@ -19,50 +19,101 @@ class ErrorCollectionTest extends BaseCase
         $collection_2 = new ErrorCollection(Path::make('collection_2'));
         $collection_3 = new ErrorCollection(Path::make('collection_3'));
 
-        $collection_1->add('1_1', ['какая-то ошибка']);
-        $collection_1->add('1_2', ['какая-то ошибка']);
+        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
+        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
 
-        $collection_2->add('2_1', ['какая-то ошибка']);
-        $collection_2->add('2_2', ['какая-то ошибка']);
+        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
+        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
 
-        $collection_3->add('3_1', ['какая-то ошибка']);
-        $collection_3->add('3_2', ['какая-то ошибка']);
-
+        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
+        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
 
         $collection_1->merge($collection_2)->merge($collection_3);
 
-        dd($collection_1->toArray());
+        $this->assertEquals([
+            "1_1" => [
+                "property" => "1_1",
+                "messages" => ["какая-то ошибка 1_1"],
+                "path" => "collection_1",
+            ],
+                "1_2" => [
+                "property" => "1_2",
+                "messages" => ["какая-то ошибка 1_2"],
+                "path" => "collection_1",
+            ],
+                "collection_1.collection_2.2_1" => [
+                "property" => "2_1",
+                "messages" => ["какая-то ошибка 2_1"],
+                "path" => "collection_1.collection_2",
+            ],
+                "collection_1.collection_2.2_2" => [
+                "property" => "2_2",
+                "messages" => ["какая-то ошибка 2_2"],
+                "path" => "collection_1.collection_2",
+            ],
+                "collection_1.collection_3.3_1" => [
+                "property" => "3_1",
+                "messages" => ["какая-то ошибка 3_1"],
+                "path" => "collection_1.collection_3",
+            ],
+                "collection_1.collection_3.3_2" => [
+                "property" => "3_2",
+                "messages" => ["какая-то ошибка 3_2"],
+                "path" => "collection_1.collection_3"
+            ]
+        ], $collection_1->toArray());
+    }
 
-        //dd($collection->merge($collection_2));
-//
-//        $huita = [
-//            'a_1.name' => 'test_value_1',
-//            'a_2.name' => 'test_value_2',
-//        ];
-//
-//        $huita->get('name');
+    public function testTemp_2()
+    {
+        $collection_1 = new ErrorCollection(Path::make('collection_1'));
+        $collection_2 = new ErrorCollection(Path::make('collection_2'));
+        $collection_3 = new ErrorCollection(Path::make('collection_3'));
 
-//        $validator = Validator::make([
-//            'a_1' => [
-//                'name' => 'test_value_1'
-//            ],
-//            'a_2' => [
-//                'name' => 'test_value_2'
-//            ],
-//        ], [
-//            'a_1.name' => 'required',
-//            'a_2.name' => 'required',
-//        ]);
-//
-//        dd($validator->errors()->keys());
+        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
+        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
 
-//        $transfer = $this->compositeTransfer();
-//        $transfer->validate();
-//        dd($transfer->defaultTransfer->getErrors(), $transfer->getErrors());
-//
-//        $transfer->transfer->errors()->add('test', 'huite');
-//
-//        dd($transfer->getErrors()->toArray());
+        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
+        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
+
+        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
+        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
+
+        $collection_2->merge($collection_3);
+        $collection_1->merge($collection_2);
+
+        $this->assertEquals([
+            "1_1" => [
+                "property" => "1_1",
+                "messages" => ["какая-то ошибка 1_1"],
+                "path" => "collection_1",
+            ],
+            "1_2" => [
+                "property" => "1_2",
+                "messages" => ["какая-то ошибка 1_2"],
+                "path" => "collection_1",
+            ],
+            "collection_1.collection_2.2_1" => [
+                "property" => "2_1",
+                "messages" => ["какая-то ошибка 2_1"],
+                "path" => "collection_1.collection_2",
+            ],
+            "collection_1.collection_2.2_2" => [
+                "property" => "2_2",
+                "messages" => ["какая-то ошибка 2_2"],
+                "path" => "collection_1.collection_2",
+            ],
+            "collection_1.collection_2.collection_3.3_1" => [
+                "property" => "3_1",
+                "messages" => ["какая-то ошибка 3_1"],
+                "path" => "collection_1.collection_2.collection_3",
+            ],
+            "collection_1.collection_2.collection_3.3_2" => [
+                "property" => "3_2",
+                "messages" => ["какая-то ошибка 3_2"],
+                "path" => "collection_1.collection_2.collection_3"
+            ]
+        ], $collection_1->toArray());
     }
 
     public function testIsEmpty()
