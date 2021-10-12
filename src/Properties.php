@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer;
+namespace Rbz\Data;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\DataTransfer\Interfaces\PropertiesInterface;
-use Rbz\DataTransfer\Traits\MagicPropertiesTrait;
+use Rbz\Data\Interfaces\PropertiesInterface;
+use Rbz\Data\Traits\MagicPropertiesTrait;
 use ReflectionClass;
 use ReflectionProperty;
 

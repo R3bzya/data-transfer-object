@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects;
+namespace Rbz\Data\Interfaces\Collections\Error\ValueObjects;
 
 interface PathInterface
 {

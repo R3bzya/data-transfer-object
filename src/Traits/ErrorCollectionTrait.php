@@ -1,11 +1,11 @@
 <?php
 
-namespace Rbz\DataTransfer\Traits;
+namespace Rbz\Data\Traits;
 
-use Rbz\DataTransfer\Collections\Error\ErrorCollection;
-use Rbz\DataTransfer\Collections\Error\ValueObjects\Path;
-use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Collections\Error\ValueObjects\Path;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 
 trait ErrorCollectionTrait
 {

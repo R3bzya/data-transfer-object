@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Components;
+namespace Rbz\Data\Interfaces\Components;
 
 interface CombinatorInterface
 {

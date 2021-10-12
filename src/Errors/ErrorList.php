@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\DataTransfer\Errors;
+namespace Rbz\Data\Errors;
 
 use DomainException;
 use ReflectionClass;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit;
+namespace Rbz\Data\Tests\Unit;
 
-use Rbz\DataTransfer\Tests\BaseCase;
-use Rbz\DataTransfer\Validators\Rules\Property\HasRule;
-use Rbz\DataTransfer\Validators\Rules\Property\IsSetRule;
-use Rbz\DataTransfer\Validators\Validator;
+use Rbz\Data\Tests\BaseCase;
+use Rbz\Data\Validators\Rules\Property\HasRule;
+use Rbz\Data\Validators\Rules\Property\IsSetRule;
+use Rbz\Data\Validators\Validator;
 
 class ValidatorTest extends BaseCase
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests;
+namespace Rbz\Data\Tests;
 
-use Rbz\DataTransfer\Collections\Error\ErrorCollection;
-use Rbz\DataTransfer\Collections\Error\ValueObjects\Path;
-use Rbz\DataTransfer\Tests\Unit\Transfers\CombinedTransfer;
-use Rbz\DataTransfer\Tests\Unit\Transfers\CustomRulesTransfer;
-use Rbz\DataTransfer\Tests\Unit\Transfers\DefaultCompositeTransfer;
-use Rbz\DataTransfer\Tests\Unit\Transfers\DefaultTransfer;
+use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Collections\Error\ValueObjects\Path;
+use Rbz\Data\Tests\Unit\Transfers\CombinedTransfer;
+use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
+use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;
+use Rbz\Data\Tests\Unit\Transfers\DefaultTransfer;
 use Tests\TestCase;
 
 class BaseCase extends TestCase

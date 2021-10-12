@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Traits;
+namespace Rbz\Data\Traits;
 
-use Rbz\DataTransfer\Components\Combinator;
-use Rbz\DataTransfer\Interfaces\Components\CombinatorInterface;
+use Rbz\Data\Components\Combinator;
+use Rbz\Data\Interfaces\Components\CombinatorInterface;
 
 trait CombinatorTrait
 {

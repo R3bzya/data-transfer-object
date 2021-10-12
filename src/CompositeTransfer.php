@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer;
+namespace Rbz\Data;
 
 use DomainException;
-use Rbz\DataTransfer\Collections\Error\ErrorCollection;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Interfaces\TransferInterface;
 
 abstract class CompositeTransfer extends Transfer
 {

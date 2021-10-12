@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Collections\Error;
+namespace Rbz\Data\Interfaces\Collections\Error;
 
-use Rbz\DataTransfer\Collections\Error\ErrorItem;
-use Rbz\DataTransfer\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Collections\Error\ErrorItem;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 
 interface ErrorCollectionInterface extends CollectionInterface
 {

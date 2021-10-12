@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit;
+namespace Rbz\Data\Tests\Unit;
 
-use Rbz\DataTransfer\Tests\BaseCase;
-use Rbz\DataTransfer\Components\Filter;
+use Rbz\Data\Tests\BaseCase;
+use Rbz\Data\Components\Filter;
 
 /** ToDo удалить testTemp */
 class FilterTest extends BaseCase

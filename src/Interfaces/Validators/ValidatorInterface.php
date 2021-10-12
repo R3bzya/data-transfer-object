@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Validators;
+namespace Rbz\Data\Interfaces\Validators;
 
-use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 
 interface ValidatorInterface
 {

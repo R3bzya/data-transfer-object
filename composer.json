@@ -19,7 +19,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Rbz\\DataTransfer\\": "src/"
+            "Rbz\\Data\\": "src/"
         },
         "files": [
             "commands.php"
@@ -27,7 +27,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Rbz\\DataTransfer\\Tests\\": "tests/"
+            "Rbz\\Data\\Tests\\": "tests/"
         }
     }
 }

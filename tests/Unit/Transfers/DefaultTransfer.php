@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit\Transfers;
+namespace Rbz\Data\Tests\Unit\Transfers;
 
-use Rbz\DataTransfer\Transfer;
+use Rbz\Data\Transfer;
 
 class DefaultTransfer extends Transfer
 {

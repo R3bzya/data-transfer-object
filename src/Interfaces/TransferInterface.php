@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces;
+namespace Rbz\Data\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
-use Rbz\DataTransfer\Interfaces\Components\CombinatorInterface;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Components\CombinatorInterface;
 
 interface TransferInterface extends PropertiesInterface
 {

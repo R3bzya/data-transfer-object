@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Components;
+namespace Rbz\Data\Components;
 
-use Rbz\DataTransfer\Interfaces\Components\FilterInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\Data\Interfaces\Components\FilterInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 
 class Filter implements FilterInterface
 {

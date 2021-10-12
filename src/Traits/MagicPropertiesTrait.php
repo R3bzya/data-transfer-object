@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\DataTransfer\Traits;
+namespace Rbz\Data\Traits;
 
 use DomainException;
 

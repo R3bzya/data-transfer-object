@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit\Transfers;
+namespace Rbz\Data\Tests\Unit\Transfers;
 
-use Rbz\DataTransfer\CompositeTransfer;
+use Rbz\Data\CompositeTransfer;
 
 class DefaultCompositeTransfer extends CompositeTransfer
 {

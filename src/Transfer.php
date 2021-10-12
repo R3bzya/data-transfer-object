@@ -1,16 +1,16 @@
 <?php
 
-namespace Rbz\DataTransfer;
+namespace Rbz\Data;
 
 use DomainException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
-use Rbz\DataTransfer\Components\Filter;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Traits\CombinatorTrait;
-use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Validator;
+use Rbz\Data\Components\Filter;
+use Rbz\Data\Interfaces\TransferInterface;
+use Rbz\Data\Traits\CombinatorTrait;
+use Rbz\Data\Traits\ErrorCollectionTrait;
+use Rbz\Data\Validators\Validator;
 use Throwable;
 
 abstract class Transfer extends Properties implements TransferInterface

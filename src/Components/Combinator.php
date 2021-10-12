@@ -1,10 +1,10 @@
 <?php
 
-namespace Rbz\DataTransfer\Components;
+namespace Rbz\Data\Components;
 
 use DomainException;
-use Rbz\DataTransfer\Interfaces\Components\CombinatorInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
+use Rbz\Data\Interfaces\Components\CombinatorInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 
 class Combinator implements CombinatorInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\DataTransfer\Collections\Error\ValueObjects;
+namespace Rbz\Data\Collections\Error\ValueObjects;
 
-use Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
 
 class Path implements PathInterface
 {

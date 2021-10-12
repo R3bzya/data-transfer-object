@@ -1,8 +1,8 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit;
+namespace Rbz\Data\Tests\Unit;
 
-use Rbz\DataTransfer\Tests\BaseCase;
+use Rbz\Data\Tests\BaseCase;
 
 class TransferTest extends BaseCase
 {

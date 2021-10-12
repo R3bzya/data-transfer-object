@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\DataTransfer\Interfaces\Collections\Error;
+namespace Rbz\Data\Interfaces\Collections\Error;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\DataTransfer\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
 
 interface ErrorItemInterface extends Arrayable
 {

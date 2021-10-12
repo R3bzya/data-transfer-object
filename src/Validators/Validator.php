@@ -1,17 +1,17 @@
 <?php
 
-namespace Rbz\DataTransfer\Validators;
+namespace Rbz\Data\Validators;
 
 use DomainException;
-use Rbz\DataTransfer\Components\Filter;
-use Rbz\DataTransfer\Interfaces\Collections\Error\ErrorCollectionInterface;
-use Rbz\DataTransfer\Interfaces\Validators\RuleInterface;
-use Rbz\DataTransfer\Interfaces\TransferInterface;
-use Rbz\DataTransfer\Interfaces\Validators\ValidatorInterface;
-use Rbz\DataTransfer\Traits\ErrorCollectionTrait;
-use Rbz\DataTransfer\Validators\Rules\Property\HasRule;
-use Rbz\DataTransfer\Validators\Rules\Property\IsNullRule;
-use Rbz\DataTransfer\Validators\Rules\Property\IsSetRule;
+use Rbz\Data\Components\Filter;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Validators\RuleInterface;
+use Rbz\Data\Interfaces\TransferInterface;
+use Rbz\Data\Interfaces\Validators\ValidatorInterface;
+use Rbz\Data\Traits\ErrorCollectionTrait;
+use Rbz\Data\Validators\Rules\Property\HasRule;
+use Rbz\Data\Validators\Rules\Property\IsNullRule;
+use Rbz\Data\Validators\Rules\Property\IsSetRule;
 
 class Validator implements ValidatorInterface
 {

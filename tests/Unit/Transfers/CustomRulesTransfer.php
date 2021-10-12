@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\DataTransfer\Tests\Unit\Transfers;
+namespace Rbz\Data\Tests\Unit\Transfers;
 
 class CustomRulesTransfer extends DefaultTransfer
 {
