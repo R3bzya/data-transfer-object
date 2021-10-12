@@ -15,33 +15,34 @@ abstract class Properties implements PropertiesInterface
     public function setProperties(array $data): void
     {
         foreach ($data as $property => $value) {
-            if ($this->hasProperty($property)) {
-                $this->setProperty($property, $value);
-            }
+            $this->setProperty($property, $value);
         }
     }
 
     public function getProperties(): array
     {
-        $reflection = new ReflectionClass($this);
-
         $properties = [];
-        foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+        foreach ($this->getReflectionInstance()->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (! $property->isStatic()) {
                 $properties[] = $property->getName();
             }
         }
-
         return $properties;
     }
 
     public function getProperty(string $property)
     {
+        if (! $this->isPublicProperty($property)) {
+            throw new \DomainException('Getting private property:' . get_class($this) . '::' . $property);
+        }
         return $this->$property;
     }
 
     public function setProperty(string $property, $value): void
     {
+        if (! $this->isPublicProperty($property)) {
+            throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
+        }
         $this->$property = $value;
     }
 
@@ -84,5 +85,15 @@ abstract class Properties implements PropertiesInterface
     public function isArrayableProperty(string $property): bool
     {
         return $this->getProperty($property) instanceof Arrayable;
+    }
+
+    public function getReflectionInstance(): ReflectionClass
+    {
+        return new ReflectionClass($this);
+    }
+
+    public function isPublicProperty(string $property): bool
+    {
+        return $this->getReflectionInstance()->getProperty($property)->isPublic();
     }
 }

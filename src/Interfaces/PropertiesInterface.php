@@ -15,4 +15,5 @@ interface PropertiesInterface extends Arrayable
     public function isSetProperty(string $property): bool;
     public function isNullProperty(string $property): bool;
     public function isArrayableProperty(string $property): bool;
+    public function isPublicProperty(string $property): bool;
 }

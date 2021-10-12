@@ -91,6 +91,11 @@ abstract class Transfer extends Properties implements TransferInterface
         return $camelCaseAttributes;
     }
 
+    public function setProperties(array $data): void
+    {
+        parent::setProperties(array_filter_keys($data, fn(string $property) => $this->hasProperty($property)));
+    }
+
     public function setProperty(string $property, $value): void
     {
         try {
