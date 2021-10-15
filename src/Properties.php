@@ -109,4 +109,13 @@ abstract class Properties implements PropertiesInterface
     {
         throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
     }
+
+    public function getOnly(array $properties): array
+    {
+        $only = [];
+        foreach ($properties as $property) {
+            $only[$property] = $this->getProperty($property);
+        }
+        return $only;
+    }
 }
