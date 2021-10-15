@@ -2,8 +2,10 @@
 
 namespace Rbz\Data\Components;
 
+use ArrayIterator;
 use DomainException;
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Interfaces\Components\PathInterface;
 use Rbz\Data\Interfaces\Components\DataInterface;
 
 class Data implements DataInterface
@@ -33,7 +35,7 @@ class Data implements DataInterface
     public function add(string $key, $value = null): void
     {
         if ($this->has($key)) {
-            throw new \DomainException("The key `$key` exists");
+            throw new DomainException("The key `$key` exists");
         }
         $this->data[$key] = $value;
     }
@@ -41,7 +43,7 @@ class Data implements DataInterface
     public function set(string $key, $value = null): void
     {
         if (! $this->has($key)) {
-            throw new \DomainException("Key `$key` not exists");
+            throw new DomainException("The key `$key` not exists");
         }
         $this->data[$key] = $value;
     }
@@ -58,26 +60,22 @@ class Data implements DataInterface
 
     public function get(string $key, $default = null)
     {
-        return $this->all()[$key] ?? $default;
+        return $this->getByPath($this->all(), Path::make($key), $default);
     }
 
     public function has(string $key): bool
     {
-        return in_array($key, $this->keys());
+        return in_array($key, $this->keys()->all());
     }
 
-    public function only(array $keys): array
+    public function only(array $keys): DataInterface
     {
-        $only = [];
-        foreach ($keys as $key) {
-            $only[$key] = $this->get($key);
-        }
-        return $only;
+        return self::make(array_filter_keys($this->all(), fn(string $key) => in_array($key, $keys)));
     }
 
-    public function except(array $keys): array
+    public function except(array $keys): DataInterface
     {
-        return array_filter_keys($this->all(), fn(string $key) => ! in_array($key, $keys));
+        return self::make(array_filter_keys($this->all(), fn(string $key) => ! in_array($key, $keys)));
     }
 
     public function replace(array $data): DataInterface
@@ -106,8 +104,24 @@ class Data implements DataInterface
         return $this->all();
     }
 
-    public function keys(): array
+    public function keys(): DataInterface
     {
-        return array_keys($this->all());
+        return new self(array_keys($this->all()));
+    }
+
+    /** TODO не нравится этот метод */
+    public function getByPath(array $data, PathInterface $path,  $default)
+    {
+        foreach ($path as $key) {
+            if ($this->has($key) && $path->isInternal()) {
+                return $this->getByPath($this->get($key), $path->next(), $default);
+            }
+        }
+        return $data[$path->asString()] ?? $default;
+    }
+
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->all());
     }
 }

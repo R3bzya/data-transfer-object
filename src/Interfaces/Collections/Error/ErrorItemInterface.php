@@ -3,7 +3,7 @@
 namespace Rbz\Data\Interfaces\Collections\Error;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use Rbz\Data\Interfaces\Components\PathInterface;
 
 interface ErrorItemInterface extends Arrayable
 {

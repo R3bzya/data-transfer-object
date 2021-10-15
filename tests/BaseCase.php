@@ -3,7 +3,7 @@
 namespace Rbz\Data\Tests;
 
 use Rbz\Data\Collections\Error\ErrorCollection;
-use Rbz\Data\Collections\Error\ValueObjects\Path;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Components\Data;
 use Rbz\Data\Interfaces\Components\DataInterface;
 use Rbz\Data\Tests\Unit\Transfers\CombinedTransfer;

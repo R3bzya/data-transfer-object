@@ -4,7 +4,7 @@ namespace Rbz\Data\Tests\Unit;
 
 use Rbz\Data\Collections\Error\ErrorCollection;
 use Rbz\Data\Collections\Error\ErrorItem;
-use Rbz\Data\Collections\Error\ValueObjects\Path;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 
 class ErrorCollectionTest extends BaseCase

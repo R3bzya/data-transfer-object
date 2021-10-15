@@ -51,9 +51,13 @@ class DataTest extends BaseCase
 
     public function testGet()
     {
-        $data = $this->data(['test' => 'test_2']);
+        $data = $this->data([
+            'test' => [
+                'test_2' => 'test_3'
+            ]
+        ]);
 
-        $this->assertEquals('test_2', $data->get('test'));
+        $this->assertEquals('test_3', $data->get('test.test_2'));
     }
 
     public function testHas()
@@ -68,14 +72,14 @@ class DataTest extends BaseCase
     {
         $data = $this->data(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test' => 'test_2'], $data->only(['test']));
+        $this->assertEquals(['test' => 'test_2'], $data->only(['test'])->all());
     }
 
     public function testExcept()
     {
         $data = $this->data(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test_3' => 'test_4'], $data->except(['test']));
+        $this->assertEquals(['test_3' => 'test_4'], $data->except(['test'])->all());
     }
 
     public function testReplace()
@@ -97,6 +101,6 @@ class DataTest extends BaseCase
     {
         $data = $this->data(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test', 'test_3'], $data->keys());
+        $this->assertEquals(['test', 'test_3'], $data->keys()->toArray());
     }
 }

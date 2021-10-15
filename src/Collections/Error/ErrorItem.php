@@ -3,7 +3,7 @@
 namespace Rbz\Data\Collections\Error;
 
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
-use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use Rbz\Data\Interfaces\Components\PathInterface;
 
 class ErrorItem implements ErrorItemInterface
 {

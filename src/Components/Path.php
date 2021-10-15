@@ -1,8 +1,9 @@
 <?php
 
-namespace Rbz\Data\Collections\Error\ValueObjects;
+namespace Rbz\Data\Components;
 
-use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use ArrayIterator;
+use Rbz\Data\Interfaces\Components\PathInterface;
 
 class Path implements PathInterface
 {
@@ -35,7 +36,7 @@ class Path implements PathInterface
 
     public function asArray(): array
     {
-        return self::toArray($this->asString());
+        return explode(self::separator(), $this->asString());
     }
 
     public function isInternal(): bool
@@ -48,14 +49,19 @@ class Path implements PathInterface
         return $this->withString($path->asString());
     }
 
-    public static function toString(array $path): string
+    public static function makeString(array $path): string
     {
         return implode(self::separator(), $path);
     }
 
-    public static function toArray(string $path): array
+    public static function makeArray(string $path): array
     {
         return explode(self::separator(), $path);
+    }
+
+    public function toArray(): array
+    {
+        return $this->asArray();
     }
 
     public function withString(string $path, bool $separator = true): PathInterface
@@ -63,5 +69,19 @@ class Path implements PathInterface
         $clone = clone $this;
         $clone->path = $separator ? $this->asString().self::separator().$path : $this->asString().$path;
         return $clone;
+    }
+
+    public function next(): PathInterface
+    {
+        $clone = clone $this;
+        if ($position = strpos($this->asString(), self::separator())) {
+            $clone->path = substr($this->asString(), $position + 1);
+        }
+        return $clone;
+    }
+
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator(self::asArray());
     }
 }

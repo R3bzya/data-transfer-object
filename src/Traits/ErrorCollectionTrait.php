@@ -3,7 +3,7 @@
 namespace Rbz\Data\Traits;
 
 use Rbz\Data\Collections\Error\ErrorCollection;
-use Rbz\Data\Collections\Error\ValueObjects\Path;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 

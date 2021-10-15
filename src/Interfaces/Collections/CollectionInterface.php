@@ -4,7 +4,7 @@ namespace Rbz\Data\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
-use Rbz\Data\Interfaces\Collections\Error\ValueObjects\PathInterface;
+use Rbz\Data\Interfaces\Components\PathInterface;
 
 interface CollectionInterface extends Arrayable
 {
