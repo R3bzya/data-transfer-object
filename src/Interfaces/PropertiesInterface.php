@@ -3,6 +3,7 @@
 namespace Rbz\Data\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Interfaces\Components\DataInterface;
 
 interface PropertiesInterface extends Arrayable
 {
@@ -14,7 +15,6 @@ interface PropertiesInterface extends Arrayable
     public function isSetProperties(): bool;
     public function isSetProperty(string $property): bool;
     public function isNullProperty(string $property): bool;
-    public function isArrayableProperty(string $property): bool;
     public function isPublicProperty(string $property): bool;
-    public function getOnly(array $properties): array;
+    public function getData(): DataInterface;
 }

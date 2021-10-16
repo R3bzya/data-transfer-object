@@ -2,7 +2,8 @@
 
 namespace Rbz\Data;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Components\Data;
+use Rbz\Data\Interfaces\Components\DataInterface;
 use Rbz\Data\Interfaces\PropertiesInterface;
 use Rbz\Data\Traits\MagicPropertiesTrait;
 use ReflectionClass;
@@ -53,13 +54,7 @@ abstract class Properties implements PropertiesInterface
 
     public function toArray(): array
     {
-        $properties = [];
-        foreach ($this->getProperties() as $property) {
-            $properties[$property] = $this->isArrayableProperty($property)
-                ? $this->getProperty($property)->toArray()
-                : $this->getProperty($property);
-        }
-        return $properties;
+        return $this->getData()->toArray();
     }
 
     public function isSetProperties(): bool
@@ -85,11 +80,6 @@ abstract class Properties implements PropertiesInterface
         return is_null($this->getProperty($property));
     }
 
-    public function isArrayableProperty(string $property): bool
-    {
-        return $this->getProperty($property) instanceof Arrayable;
-    }
-
     public function getReflectionInstance(): ReflectionClass
     {
         return new ReflectionClass($this);
@@ -110,12 +100,12 @@ abstract class Properties implements PropertiesInterface
         throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
     }
 
-    public function getOnly(array $properties): array
+    public function getData(): DataInterface
     {
-        $only = [];
-        foreach ($properties as $property) {
-            $only[$property] = $this->getProperty($property);
+        $data = new Data([]);
+        foreach ($this->getProperties() as $property) {
+            $data->add($property, $this->getProperty($property));
         }
-        return $only;
+        return $data;
     }
 }
