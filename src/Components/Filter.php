@@ -7,8 +7,6 @@ use Rbz\Data\Interfaces\TransferInterface;
 
 class Filter implements FilterInterface
 {
-    const SYMBOL_EXCLUDE = '!';
-
     private array $properties;
 
     /** @var string[] */
@@ -27,6 +25,16 @@ class Filter implements FilterInterface
     public static function make(array $properties, array $exclude): FilterInterface
     {
         return new self($properties, $exclude);
+    }
+
+    public static function separator(): string
+    {
+        return '!';
+    }
+
+    public static function getSeparator(): string
+    {
+        return self::separator();
     }
 
     public function filterTransfer(TransferInterface $transfer): array
@@ -78,12 +86,12 @@ class Filter implements FilterInterface
 
     public function isInclude(string $rule): bool
     {
-        return ! str_starts_with($rule, self::SYMBOL_EXCLUDE);
+        return ! str_starts_with($rule, self::separator());
     }
 
     public function isExclude(string $rule): bool
     {
-        return str_starts_with($rule, self::SYMBOL_EXCLUDE);
+        return str_starts_with($rule, self::separator());
     }
 
     public function hasInclude(): bool
@@ -131,14 +139,9 @@ class Filter implements FilterInterface
         return in_array($property, $this->exclude());
     }
 
-    /**
-     * ToDo пока не понятно что с этим делать
-     * @return array
-     */
     public function all(): array
     {
         return $this->properties();
-        //return array_unique(array_merge($this->properties(), $this->include()));
     }
 
     public function getRules(): array

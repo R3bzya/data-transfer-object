@@ -17,7 +17,6 @@ interface DataInterface extends Arrayable, IteratorAggregate
     public function remove(string $key): void;
     public function all(): array;
     public function get(string $key, $default = null);
-    public function getByPath(array $data, PathInterface $path,  $default);
     public function has(string $key): bool;
     public function only(array $keys): DataInterface;
     public function except(array $keys): DataInterface;

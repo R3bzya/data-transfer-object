@@ -60,7 +60,7 @@ class Data implements DataInterface
 
     public function get(string $key, $default = null)
     {
-        return $this->getByPath($this->all(), Path::make($key), $default);
+        return $this->all()[$key] ?? $default;
     }
 
     public function has(string $key): bool
@@ -109,7 +109,10 @@ class Data implements DataInterface
         return new self(array_keys($this->all()));
     }
 
-    /** TODO не нравится этот метод */
+    /**
+     * TODO не нравится этот метод
+     * @deprecated
+     */
     public function getByPath(array $data, PathInterface $path,  $default)
     {
         foreach ($path as $key) {

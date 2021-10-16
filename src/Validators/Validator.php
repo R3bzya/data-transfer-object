@@ -182,6 +182,6 @@ class Validator implements ValidatorInterface
      */
     public function shouldBeExcluded($property): bool
     {
-        return is_string($property) && str_starts_with($property, Filter::SYMBOL_EXCLUDE);
+        return is_string($property) && str_starts_with($property, Filter::getSeparator());
     }
 }
