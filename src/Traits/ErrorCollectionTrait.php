@@ -21,7 +21,7 @@ trait ErrorCollectionTrait
     public function errors(): ErrorCollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = new ErrorCollection(Path::make($this->getTransferName()));
+            $this->errorCollection = (new ErrorCollection([]))->withPath(Path::make($this->getTransferName()));
         }
         return $this->errorCollection;
     }

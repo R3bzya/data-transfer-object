@@ -32,6 +32,7 @@ class ValidatorTest extends BaseCase
         $transfer->load($data);
 
         $validator = new Validator($transfer, $rules);
+        $validator->validate();
 
         $this->assertFalse($validator->validate());
         $this->assertEquals($errors['count'], $validator->getErrors()->count());
@@ -107,19 +108,6 @@ class ValidatorTest extends BaseCase
     public function getValidationInvalidData(): array
     {
         return [
-            'not set field, rule class is used' => [
-                [
-                    'a_two_i' => 123,
-                    'a_three_a' => [],
-                ],
-                [
-                    IsSetRule::class,
-                    HasRule::class,
-                ],
-                [
-                    'count' => 1
-                ]
-            ],
             'field is undefined, rule alias is used' => [
                 [
                     'a_one_s' => 'string',
@@ -130,6 +118,19 @@ class ValidatorTest extends BaseCase
                     'isset',
                     'has',
                     'undefined_property' => ['has', 'isset'],
+                ],
+                [
+                    'count' => 1
+                ]
+            ],
+            'not set field, rule class is used' => [
+                [
+                    'a_two_i' => 123,
+                    'a_three_a' => [],
+                ],
+                [
+                    IsSetRule::class,
+                    HasRule::class,
                 ],
                 [
                     'count' => 1

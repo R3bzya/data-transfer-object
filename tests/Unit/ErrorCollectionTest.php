@@ -13,108 +13,108 @@ class ErrorCollectionTest extends BaseCase
     const PROPERTY_SECOND = 'second_property';
     const MESSAGE_ERROR = 'Error message';
 
-    public function testTemp()
-    {
-        $collection_1 = new ErrorCollection(Path::make('collection_1'));
-        $collection_2 = new ErrorCollection(Path::make('collection_2'));
-        $collection_3 = new ErrorCollection(Path::make('collection_3'));
-
-        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
-        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
-
-        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
-        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
-
-        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
-        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
-
-        $collection_1->merge($collection_2)->merge($collection_3);
-
-        $this->assertEquals([
-            "1_1" => [
-                "property" => "1_1",
-                "messages" => ["какая-то ошибка 1_1"],
-                "path" => "collection_1",
-            ],
-                "1_2" => [
-                "property" => "1_2",
-                "messages" => ["какая-то ошибка 1_2"],
-                "path" => "collection_1",
-            ],
-                "collection_1.collection_2.2_1" => [
-                "property" => "2_1",
-                "messages" => ["какая-то ошибка 2_1"],
-                "path" => "collection_1.collection_2",
-            ],
-                "collection_1.collection_2.2_2" => [
-                "property" => "2_2",
-                "messages" => ["какая-то ошибка 2_2"],
-                "path" => "collection_1.collection_2",
-            ],
-                "collection_1.collection_3.3_1" => [
-                "property" => "3_1",
-                "messages" => ["какая-то ошибка 3_1"],
-                "path" => "collection_1.collection_3",
-            ],
-                "collection_1.collection_3.3_2" => [
-                "property" => "3_2",
-                "messages" => ["какая-то ошибка 3_2"],
-                "path" => "collection_1.collection_3"
-            ]
-        ], $collection_1->toArray());
-    }
-
-    public function testTemp_2()
-    {
-        $collection_1 = new ErrorCollection(Path::make('collection_1'));
-        $collection_2 = new ErrorCollection(Path::make('collection_2'));
-        $collection_3 = new ErrorCollection(Path::make('collection_3'));
-
-        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
-        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
-
-        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
-        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
-
-        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
-        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
-
-        $collection_2->merge($collection_3);
-        $collection_1->merge($collection_2);
-
-        $this->assertEquals([
-            "1_1" => [
-                "property" => "1_1",
-                "messages" => ["какая-то ошибка 1_1"],
-                "path" => "collection_1",
-            ],
-            "1_2" => [
-                "property" => "1_2",
-                "messages" => ["какая-то ошибка 1_2"],
-                "path" => "collection_1",
-            ],
-            "collection_1.collection_2.2_1" => [
-                "property" => "2_1",
-                "messages" => ["какая-то ошибка 2_1"],
-                "path" => "collection_1.collection_2",
-            ],
-            "collection_1.collection_2.2_2" => [
-                "property" => "2_2",
-                "messages" => ["какая-то ошибка 2_2"],
-                "path" => "collection_1.collection_2",
-            ],
-            "collection_1.collection_2.collection_3.3_1" => [
-                "property" => "3_1",
-                "messages" => ["какая-то ошибка 3_1"],
-                "path" => "collection_1.collection_2.collection_3",
-            ],
-            "collection_1.collection_2.collection_3.3_2" => [
-                "property" => "3_2",
-                "messages" => ["какая-то ошибка 3_2"],
-                "path" => "collection_1.collection_2.collection_3"
-            ]
-        ], $collection_1->toArray());
-    }
+//    public function testTemp()
+//    {
+//        $collection_1 = new ErrorCollection(Path::make('collection_1'));
+//        $collection_2 = new ErrorCollection(Path::make('collection_2'));
+//        $collection_3 = new ErrorCollection(Path::make('collection_3'));
+//
+//        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
+//        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
+//
+//        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
+//        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
+//
+//        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
+//        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
+//
+//        $collection_1->merge($collection_2)->merge($collection_3);
+//
+//        $this->assertEquals([
+//            "1_1" => [
+//                "property" => "1_1",
+//                "messages" => ["какая-то ошибка 1_1"],
+//                "path" => "collection_1",
+//            ],
+//                "1_2" => [
+//                "property" => "1_2",
+//                "messages" => ["какая-то ошибка 1_2"],
+//                "path" => "collection_1",
+//            ],
+//                "collection_1.collection_2.2_1" => [
+//                "property" => "2_1",
+//                "messages" => ["какая-то ошибка 2_1"],
+//                "path" => "collection_1.collection_2",
+//            ],
+//                "collection_1.collection_2.2_2" => [
+//                "property" => "2_2",
+//                "messages" => ["какая-то ошибка 2_2"],
+//                "path" => "collection_1.collection_2",
+//            ],
+//                "collection_1.collection_3.3_1" => [
+//                "property" => "3_1",
+//                "messages" => ["какая-то ошибка 3_1"],
+//                "path" => "collection_1.collection_3",
+//            ],
+//                "collection_1.collection_3.3_2" => [
+//                "property" => "3_2",
+//                "messages" => ["какая-то ошибка 3_2"],
+//                "path" => "collection_1.collection_3"
+//            ]
+//        ], $collection_1->toArray());
+//    }
+//
+//    public function testTemp_2()
+//    {
+//        $collection_1 = new ErrorCollection(Path::make('collection_1'));
+//        $collection_2 = new ErrorCollection(Path::make('collection_2'));
+//        $collection_3 = new ErrorCollection(Path::make('collection_3'));
+//
+//        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
+//        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
+//
+//        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
+//        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
+//
+//        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
+//        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
+//
+//        $collection_2->merge($collection_3);
+//        $collection_1->merge($collection_2);
+//
+//        $this->assertEquals([
+//            "1_1" => [
+//                "property" => "1_1",
+//                "messages" => ["какая-то ошибка 1_1"],
+//                "path" => "collection_1",
+//            ],
+//            "1_2" => [
+//                "property" => "1_2",
+//                "messages" => ["какая-то ошибка 1_2"],
+//                "path" => "collection_1",
+//            ],
+//            "collection_1.collection_2.2_1" => [
+//                "property" => "2_1",
+//                "messages" => ["какая-то ошибка 2_1"],
+//                "path" => "collection_1.collection_2",
+//            ],
+//            "collection_1.collection_2.2_2" => [
+//                "property" => "2_2",
+//                "messages" => ["какая-то ошибка 2_2"],
+//                "path" => "collection_1.collection_2",
+//            ],
+//            "collection_1.collection_2.collection_3.3_1" => [
+//                "property" => "3_1",
+//                "messages" => ["какая-то ошибка 3_1"],
+//                "path" => "collection_1.collection_2.collection_3",
+//            ],
+//            "collection_1.collection_2.collection_3.3_2" => [
+//                "property" => "3_2",
+//                "messages" => ["какая-то ошибка 3_2"],
+//                "path" => "collection_1.collection_2.collection_3"
+//            ]
+//        ], $collection_1->toArray());
+//    }
 
     public function testIsEmpty()
     {
@@ -246,6 +246,6 @@ class ErrorCollectionTest extends BaseCase
         $collection = $this->errorCollection();
         $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
-        $this->assertEquals([self::PROPERTY_FIRST], $collection->keys());
+        $this->assertEquals([self::PROPERTY_FIRST], $collection->keys()->toArray());
     }
 }

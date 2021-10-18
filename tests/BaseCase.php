@@ -3,9 +3,9 @@
 namespace Rbz\Data\Tests;
 
 use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
-use Rbz\Data\Components\Data;
-use Rbz\Data\Interfaces\Components\DataInterface;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Tests\Unit\Transfers\CombinedTransfer;
 use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;
@@ -36,11 +36,11 @@ class BaseCase extends TestCase
 
     public function errorCollection(): ErrorCollection
     {
-        return new ErrorCollection(Path::make('BaseCase'));
+        return (new ErrorCollection([]))->withPath(Path::make('BaseCase'));
     }
 
-    public function data(array $data = []): DataInterface
+    public function collection(array $data = []): CollectionInterface
     {
-        return new Data($data);
+        return new Collection($data);
     }
 }

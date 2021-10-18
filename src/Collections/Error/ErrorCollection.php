@@ -2,30 +2,22 @@
 
 namespace Rbz\Data\Collections\Error;
 
+use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Interfaces\Components\PathInterface;
 
-class ErrorCollection implements ErrorCollectionInterface
+class ErrorCollection extends Collection implements ErrorCollectionInterface
 {
     private PathInterface $path;
 
-    /** @var ErrorItemInterface[] */
-    private array $items = [];
-
-    public function __construct(PathInterface $path)
-    {
-        $this->path = $path;
-    }
-
     /**
-     * @param string $property
-     * @param array|string $messages
+     * @param string $key
+     * @param null $value
      */
-    public function add(string $property, $messages): void
+    public function add(string $key, $value = null): void
     {
-        $messages = is_array($messages) ? $messages : (array) $messages;
-        $this->addItem(ErrorItem::make($property, $messages, $this->path()));
+        $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), $this->path()));
     }
 
     public function addItem(ErrorItemInterface $item): void
@@ -33,7 +25,7 @@ class ErrorCollection implements ErrorCollectionInterface
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
-            $this->items[$item->getFullPath()] = $item;
+            parent::add($item->getFullPath(), $item);
         }
     }
 
@@ -44,9 +36,10 @@ class ErrorCollection implements ErrorCollectionInterface
         }
     }
 
-    public function items(): array
+    public function withPath(PathInterface $path): ErrorCollectionInterface
     {
-        return $this->items;
+        $this->path = $path;
+        return $this;
     }
 
     public function path(): PathInterface
@@ -69,7 +62,7 @@ class ErrorCollection implements ErrorCollectionInterface
         if (! is_null($property)) {
             return $this->get($property);
         }
-        foreach ($this->items as $item) {
+        foreach ($this->items() as $item) {
             return $item;
         }
         return null;
@@ -100,43 +93,8 @@ class ErrorCollection implements ErrorCollectionInterface
         return $this;
     }
 
-    public function isEmpty(): bool
-    {
-        return $this->count() == 0;
-    }
-
-    public function isNotEmpty(): bool
-    {
-        return $this->count() > 0;
-    }
-
     public function toArray(): array
     {
-        return array_map(fn(ErrorItem $item) => $item->toArray(), $this->items);
-    }
-
-    public function has(string $property): bool
-    {
-        return key_exists($property, $this->items);
-    }
-
-    public function get(string $property): ?ErrorItemInterface
-    {
-        return $this->items[$property] ?? null;
-    }
-
-    public function count(): int
-    {
-        return count($this->items);
-    }
-
-    public function keys(): array
-    {
-        return array_keys($this->items);
-    }
-
-    public function clear(): void
-    {
-        $this->items = [];
+        return array_map(fn(ErrorItem $item) => $item->toArray(), $this->items());
     }
 }

@@ -3,16 +3,22 @@
 namespace Rbz\Data\Interfaces\Collections;
 
 use Illuminate\Contracts\Support\Arrayable;
+use IteratorAggregate;
 
-interface CollectionInterface extends Arrayable
+interface CollectionInterface extends Arrayable, IteratorAggregate
 {
     public function load(array $data): void;
-    public function has(string $property): bool;
-    public function keys(): array;
-    public function get(string $property);
+    public function add(string $key, $value = null): void;
+    public function remove(string $key): void;
+    public function get(string $key, $default = null);
     public function getItems(): array;
+    public function has(string $key): bool;
+    public function only(array $keys): CollectionInterface;
+    public function except(array $keys): CollectionInterface;
+    public function count(): int;
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
-    public function count(): int;
+    public function keys(): CollectionInterface;
     public function clear(): void;
+    public function filterKeys(?callable $callable): CollectionInterface;
 }

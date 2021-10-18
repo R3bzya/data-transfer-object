@@ -2,8 +2,8 @@
 
 namespace Rbz\Data;
 
-use Rbz\Data\Components\Data;
-use Rbz\Data\Interfaces\Components\DataInterface;
+use Rbz\Data\Collections\Collection;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\PropertiesInterface;
 use Rbz\Data\Traits\MagicPropertiesTrait;
 use ReflectionClass;
@@ -34,7 +34,7 @@ abstract class Properties implements PropertiesInterface
     public function getProperty(string $property)
     {
         if (! $this->isPublicProperty($property)) {
-            $this->throwGettingPrivatePropertyException($property);
+            throw new \DomainException('Getting private property:' . get_class($this) . '::' . $property);
         }
         return $this->$property;
     }
@@ -42,7 +42,7 @@ abstract class Properties implements PropertiesInterface
     public function setProperty(string $property, $value): void
     {
         if (! $this->isPublicProperty($property)) {
-            $this->throwSettingPrivatePropertyException($property);
+            throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
         }
         $this->$property = $value;
     }
@@ -54,7 +54,7 @@ abstract class Properties implements PropertiesInterface
 
     public function toArray(): array
     {
-        return $this->getData()->toArray();
+        return $this->getCollection()->toArray();
     }
 
     public function isSetProperties(): bool
@@ -69,9 +69,6 @@ abstract class Properties implements PropertiesInterface
 
     public function isSetProperty(string $property): bool
     {
-        if (! $this->isPublicProperty($property)) {
-            $this->throwGettingPrivatePropertyException($property);
-        }
         return isset($this->$property);
     }
 
@@ -87,25 +84,18 @@ abstract class Properties implements PropertiesInterface
 
     public function isPublicProperty(string $property): bool
     {
+        if (! $this->getReflectionInstance()->hasProperty($property)) {
+            return false;
+        }
         return $this->getReflectionInstance()->getProperty($property)->isPublic();
     }
 
-    private function throwGettingPrivatePropertyException(string $property): void
+    public function getCollection(): CollectionInterface
     {
-        throw new \DomainException('Getting private property:' . get_class($this) . '::' . $property);
-    }
-
-    private function throwSettingPrivatePropertyException(string $property): void
-    {
-        throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
-    }
-
-    public function getData(): DataInterface
-    {
-        $data = new Data([]);
+        $collection = new Collection([]);
         foreach ($this->getProperties() as $property) {
-            $data->add($property, $this->getProperty($property));
+            $collection->add($property, $this->getProperty($property));
         }
-        return $data;
+        return $collection;
     }
 }
