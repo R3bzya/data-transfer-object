@@ -123,4 +123,14 @@ abstract class Transfer extends Properties implements TransferInterface
         }
         throw new DomainException('The data must be an array or an Arrayable instance');
     }
+
+    public function className(): string
+    {
+        return get_class_name($this);
+    }
+
+    public function getClassName(): string
+    {
+        return $this->className();
+    }
 }
