@@ -34,11 +34,6 @@ class Path implements PathInterface
         return $this->path;
     }
 
-    public function asArray(): array
-    {
-        return explode(self::separator(), $this->asString());
-    }
-
     public function isInternal(): bool
     {
         return strpos($this->asString(), self::separator());
@@ -63,7 +58,7 @@ class Path implements PathInterface
 
     public function toArray(): array
     {
-        return $this->asArray();
+        return explode(self::separator(), $this->asString());
     }
 
     public function next(): PathInterface
@@ -77,6 +72,6 @@ class Path implements PathInterface
 
     public function getIterator(): ArrayIterator
     {
-        return new ArrayIterator(self::asArray());
+        return new ArrayIterator($this->toArray());
     }
 }

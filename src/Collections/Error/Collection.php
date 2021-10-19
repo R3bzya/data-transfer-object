@@ -3,6 +3,7 @@
 namespace Rbz\Data\Collections\Error;
 
 use Rbz\Data\Collections\Collection as BaseCollection;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
 use Rbz\Data\Interfaces\Components\PathInterface;
@@ -17,7 +18,7 @@ class Collection extends BaseCollection implements CollectionInterface
      */
     public function add(string $key, $value = null): void
     {
-        $this->addItem(Item::make($key, $this->getArrayFrom($value), $this->path()));
+        $this->addItem(Item::make($key, $this->getArrayFrom($value), Path::make($key)));
     }
 
     public function addItem(ItemInterface $item): void
@@ -25,7 +26,7 @@ class Collection extends BaseCollection implements CollectionInterface
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
-            parent::add($item->getFullPath(), $item);
+            parent::add($item->getPath()->asString(), $item);
         }
     }
 
@@ -52,11 +53,6 @@ class Collection extends BaseCollection implements CollectionInterface
         return $this->path();
     }
 
-    public function getItems(): array
-    {
-        return $this->items();
-    }
-
     public function getFirst(?string $property = null): ?ItemInterface
     {
         if (! is_null($property)) {
@@ -78,11 +74,7 @@ class Collection extends BaseCollection implements CollectionInterface
 
     public function with(CollectionInterface $collection): CollectionInterface
     {
-        $clone = clone $this;
-        foreach ($collection->getItems() as $item) {
-            $clone->addItem($item->withPath($this->path()->with($item->getPath())));
-        }
-        return $clone;
+        return (clone $this)->merge($collection);
     }
 
     public function merge(CollectionInterface $collection): CollectionInterface

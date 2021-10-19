@@ -14,9 +14,9 @@ class ErrorCollectionTest extends BaseCase
 
 //    public function testTemp()
 //    {
-//        $collection_1 = new ErrorCollection(Path::make('collection_1'));
-//        $collection_2 = new ErrorCollection(Path::make('collection_2'));
-//        $collection_3 = new ErrorCollection(Path::make('collection_3'));
+//        $collection_1 = new Collection(Path::make('collection_1'));
+//        $collection_2 = new Collection(Path::make('collection_2'));
+//        $collection_3 = new Collection(Path::make('collection_3'));
 //
 //        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
 //        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
@@ -65,9 +65,9 @@ class ErrorCollectionTest extends BaseCase
 //
 //    public function testTemp_2()
 //    {
-//        $collection_1 = new ErrorCollection(Path::make('collection_1'));
-//        $collection_2 = new ErrorCollection(Path::make('collection_2'));
-//        $collection_3 = new ErrorCollection(Path::make('collection_3'));
+//        $collection_1 = new Collection(Path::make('collection_1'));
+//        $collection_2 = new Collection(Path::make('collection_2'));
+//        $collection_3 = new Collection(Path::make('collection_3'));
 //
 //        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
 //        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
@@ -158,11 +158,11 @@ class ErrorCollectionTest extends BaseCase
     public function testAddItem()
     {
         $collection = $this->errorCollection();
-        $collection->addItem(new Item(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR, Path::make('BaseCase')));
+        $collection->addItem(new Item(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_FIRST)));
 
         $this->assertEquals(1, $collection->count());
 
-        $collection->addItem(new Item(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR, Path::make('BaseCase')));
+        $collection->addItem(new Item(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_SECOND)));
 
         $this->assertEquals(2, $collection->count());
     }

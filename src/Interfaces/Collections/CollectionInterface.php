@@ -2,10 +2,11 @@
 
 namespace Rbz\Data\Interfaces\Collections;
 
+use Countable;
 use Illuminate\Contracts\Support\Arrayable;
 use IteratorAggregate;
 
-interface CollectionInterface extends Arrayable, IteratorAggregate
+interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
 {
     public function load(array $data): void;
     public function add(string $key, $value = null): void;
@@ -32,7 +33,6 @@ interface CollectionInterface extends Arrayable, IteratorAggregate
      */
     public function filterKeys(?callable $callable);
 
-    public function count(): int;
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;

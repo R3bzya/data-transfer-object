@@ -17,6 +17,6 @@ interface TransferInterface extends PropertiesInterface
     public function getErrors(): CollectionInterface;
     public function getCombinator(): CombinatorInterface;
     public function setTransferName(string $name): TransferInterface;
-    public function getTransferName(): string;
+    public function getClassName(): string;
     public function hasErrors(): bool;
 }

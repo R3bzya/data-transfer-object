@@ -9,11 +9,12 @@ interface PathInterface extends Arrayable, IteratorAggregate
 {
     public static function make(string $path): PathInterface;
     public function asString(): string;
-    public function asArray(): array;
     public function isInternal(): bool;
     public function with(PathInterface $path): PathInterface;
     public static function makeString(array $path): string;
     public static function makeArray(string $path): array;
     public static function getSeparator(): string;
+
+    /** @deprecated */
     public function next(): PathInterface;
 }

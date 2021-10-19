@@ -21,7 +21,7 @@ trait ErrorCollectionTrait
     public function errors(): CollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = (new Collection([]))->withPath(Path::make($this->getTransferName()));
+            $this->errorCollection = (new Collection([]))->withPath(Path::make($this->getClassName()));
         }
         return $this->errorCollection;
     }
@@ -42,13 +42,13 @@ trait ErrorCollectionTrait
         return $this;
     }
 
-    public function transferName(): string
+    public function className(): string
     {
         return $this->transferName ?? get_class_name($this);
     }
 
-    public function getTransferName(): string
+    public function getClassName(): string
     {
-        return $this->transferName();
+        return $this->className();
     }
 }
