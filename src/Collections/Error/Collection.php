@@ -30,13 +30,6 @@ class Collection extends BaseCollection implements CollectionInterface
         }
     }
 
-    public function load(array $data): void
-    {
-        foreach ($data as $property => $messages) {
-            $this->add($property, $messages);
-        }
-    }
-
     public function withPath(PathInterface $path): CollectionInterface
     {
         $this->path = $path;
