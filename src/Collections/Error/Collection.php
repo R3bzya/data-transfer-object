@@ -53,6 +53,11 @@ class Collection extends BaseCollection implements CollectionInterface
         return $this->path();
     }
 
+    public function hasPath(): bool
+    {
+        return isset($this->path);
+    }
+
     public function getFirst(?string $property = null): ?ItemInterface
     {
         if (! is_null($property)) {
@@ -80,7 +85,11 @@ class Collection extends BaseCollection implements CollectionInterface
     public function merge(CollectionInterface $collection): CollectionInterface
     {
         foreach ($collection->getItems() as $item) {
-            $this->addItem($item->withPath($this->path()->with($item->getPath())));
+            if ($collection->hasPath()) {
+                $this->addItem($item->withPath($collection->getPath()->with($item->getPath())));
+            } else {
+                $this->addItem($item);
+            }
         }
         return $this;
     }

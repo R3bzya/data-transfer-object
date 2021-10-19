@@ -5,7 +5,6 @@ namespace Rbz\Data\Collections;
 use ArrayIterator;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
 
 class Collection implements CollectionInterface
 {

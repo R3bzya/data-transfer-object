@@ -3,7 +3,6 @@
 namespace Rbz\Data\Traits;
 
 use Rbz\Data\Collections\Error\Collection;
-use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
@@ -21,7 +20,7 @@ trait ErrorCollectionTrait
     public function errors(): CollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = (new Collection([]))->withPath(Path::make($this->getClassName()));
+            $this->errorCollection = new Collection([]);
         }
         return $this->errorCollection;
     }

@@ -69,6 +69,7 @@ class TransferTest extends BaseCase
 
         $this->assertFalse($transfer->validate(['undefined_property']));
         $this->assertEquals(1, $transfer->getErrors()->count());
+
         $this->assertNotNull($transfer->getErrors()->get('undefined_property'));
     }
 

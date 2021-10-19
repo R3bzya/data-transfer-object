@@ -4,6 +4,7 @@ namespace Rbz\Data;
 
 use DomainException;
 use Rbz\Data\Collections\Error\Collection;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\TransferInterface;
 
 abstract class CompositeTransfer extends Transfer
@@ -91,7 +92,7 @@ abstract class CompositeTransfer extends Transfer
     {
         $collection = parent::getErrors();
         foreach ($this->getAdditionalTransfers() as $transfer) {
-            $collection->merge($this->getTransfer($transfer)->getErrors());
+            $collection->merge($this->getTransfer($transfer)->getErrors()->withPath(Path::make($transfer)));
         }
         return $collection;
     }
