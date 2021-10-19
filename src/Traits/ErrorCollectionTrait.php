@@ -2,31 +2,31 @@
 
 namespace Rbz\Data\Traits;
 
-use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Collections\Error\Collection;
 use Rbz\Data\Components\Path;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 trait ErrorCollectionTrait
 {
-    private ErrorCollectionInterface $errorCollection;
+    private CollectionInterface $errorCollection;
 
     protected string $transferName;
 
-    public function setErrors(ErrorCollectionInterface $collection): void
+    public function setErrors(CollectionInterface $collection): void
     {
         $this->errorCollection = $collection;
     }
 
-    public function errors(): ErrorCollectionInterface
+    public function errors(): CollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = (new ErrorCollection([]))->withPath(Path::make($this->getTransferName()));
+            $this->errorCollection = (new Collection([]))->withPath(Path::make($this->getTransferName()));
         }
         return $this->errorCollection;
     }
 
-    public function getErrors(): ErrorCollectionInterface
+    public function getErrors(): CollectionInterface
     {
         return $this->errors();
     }

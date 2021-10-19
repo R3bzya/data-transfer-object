@@ -3,7 +3,7 @@
 namespace Rbz\Data;
 
 use DomainException;
-use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Collections\Error\Collection;
 use Rbz\Data\Interfaces\TransferInterface;
 
 abstract class CompositeTransfer extends Transfer
@@ -87,7 +87,7 @@ abstract class CompositeTransfer extends Transfer
         return $this->getProperty($attribute);
     }
 
-    public function getErrors(): ErrorCollection
+    public function getErrors(): Collection
     {
         $collection = parent::getErrors();
         foreach ($this->getAdditionalTransfers() as $transfer) {

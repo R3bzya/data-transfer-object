@@ -74,11 +74,6 @@ class Collection implements CollectionInterface
         return new ArrayIterator($this->items());
     }
 
-    public function filterKeys(?callable $callable): CollectionInterface
-    {
-        return new static(array_filter($this->items(), $callable, ARRAY_FILTER_USE_KEY));
-    }
-
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
@@ -91,14 +86,19 @@ class Collection implements CollectionInterface
         return $this->items();
     }
 
-    public function only(array $keys): CollectionInterface
+    public function only(array $keys)
     {
         return new static(array_filter_keys($this->items(), fn(string $key) => in_array($key, $keys)));
     }
 
-    public function except(array $keys): CollectionInterface
+    public function except(array $keys)
     {
         return new static(array_filter_keys($this->items(), fn(string $key) => ! in_array($key, $keys)));
+    }
+
+    public function filterKeys(?callable $callable)
+    {
+        return new static(array_filter($this->items(), $callable, ARRAY_FILTER_USE_KEY));
     }
 
     public function clear(): void

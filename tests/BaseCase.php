@@ -2,8 +2,8 @@
 
 namespace Rbz\Data\Tests;
 
-use Rbz\Data\Collections\Error\ErrorCollection;
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Collections\Error\Collection as ErrorCollection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Tests\Unit\Transfers\CombinedTransfer;

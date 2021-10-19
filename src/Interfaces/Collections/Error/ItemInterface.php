@@ -5,9 +5,9 @@ namespace Rbz\Data\Interfaces\Collections\Error;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Components\PathInterface;
 
-interface ErrorItemInterface extends Arrayable
+interface ItemInterface extends Arrayable
 {
-    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface;
+    public static function make(string $property, array $messages, PathInterface $path): ItemInterface;
     public function getProperty(): string;
     public function getMessages(): array;
     public function getPath(): PathInterface;
@@ -16,5 +16,5 @@ interface ErrorItemInterface extends Arrayable
     public function getMessage(): string;
     public function count(): int;
     public function getFullPath(): string;
-    public function withPath(PathInterface $path): ErrorItemInterface;
+    public function withPath(PathInterface $path): ItemInterface;
 }

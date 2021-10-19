@@ -4,7 +4,7 @@ namespace Rbz\Data\Validators;
 
 use DomainException;
 use Rbz\Data\Components\Filter;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
 use Rbz\Data\Interfaces\Validators\RuleInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Interfaces\Validators\ValidatorInterface;
@@ -89,7 +89,7 @@ class Validator implements ValidatorInterface
         }
     }
 
-    public function getErrors(): ErrorCollectionInterface
+    public function getErrors(): CollectionInterface
     {
         $this->validate();
         return $this->errors();

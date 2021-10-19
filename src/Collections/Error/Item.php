@@ -2,10 +2,10 @@
 
 namespace Rbz\Data\Collections\Error;
 
-use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
+use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
 use Rbz\Data\Interfaces\Components\PathInterface;
 
-class ErrorItem implements ErrorItemInterface
+class Item implements ItemInterface
 {
     private string $property;
     private array $messages;
@@ -27,9 +27,9 @@ class ErrorItem implements ErrorItemInterface
      * @param string $property
      * @param array $messages
      * @param PathInterface $path
-     * @return ErrorItemInterface
+     * @return ItemInterface
      */
-    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface
+    public static function make(string $property, array $messages, PathInterface $path): ItemInterface
     {
         return new self($property, $messages, $path);
     }
@@ -93,7 +93,7 @@ class ErrorItem implements ErrorItemInterface
         return count($this->messages());
     }
 
-    public function withPath(PathInterface $path): ErrorItemInterface
+    public function withPath(PathInterface $path): ItemInterface
     {
         $clone = clone $this;
         $clone->path = $path;

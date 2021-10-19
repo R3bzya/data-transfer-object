@@ -2,12 +2,12 @@
 
 namespace Rbz\Data\Collections\Error;
 
-use Rbz\Data\Collections\Collection;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
-use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
+use Rbz\Data\Collections\Collection as BaseCollection;
+use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
 use Rbz\Data\Interfaces\Components\PathInterface;
 
-class ErrorCollection extends Collection implements ErrorCollectionInterface
+class Collection extends BaseCollection implements CollectionInterface
 {
     private PathInterface $path;
 
@@ -17,10 +17,10 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
      */
     public function add(string $key, $value = null): void
     {
-        $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), $this->path()));
+        $this->addItem(Item::make($key, $this->getArrayFrom($value), $this->path()));
     }
 
-    public function addItem(ErrorItemInterface $item): void
+    public function addItem(ItemInterface $item): void
     {
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
@@ -36,7 +36,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
         }
     }
 
-    public function withPath(PathInterface $path): ErrorCollectionInterface
+    public function withPath(PathInterface $path): CollectionInterface
     {
         $this->path = $path;
         return $this;
@@ -57,7 +57,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
         return $this->items();
     }
 
-    public function getFirst(?string $property = null): ?ErrorItemInterface
+    public function getFirst(?string $property = null): ?ItemInterface
     {
         if (! is_null($property)) {
             return $this->get($property);
@@ -76,7 +76,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
         return null;
     }
 
-    public function with(ErrorCollectionInterface $collection): ErrorCollectionInterface
+    public function with(CollectionInterface $collection): CollectionInterface
     {
         $clone = clone $this;
         foreach ($collection->getItems() as $item) {
@@ -85,7 +85,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
         return $clone;
     }
 
-    public function merge(ErrorCollectionInterface $collection): ErrorCollectionInterface
+    public function merge(CollectionInterface $collection): CollectionInterface
     {
         foreach ($collection->getItems() as $item) {
             $this->addItem($item->withPath($this->path()->with($item->getPath())));
@@ -95,6 +95,6 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
 
     public function toArray(): array
     {
-        return array_map(fn(ErrorItem $item) => $item->toArray(), $this->items());
+        return array_map(fn(Item $item) => $item->toArray(), $this->items());
     }
 }

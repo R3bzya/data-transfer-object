@@ -13,12 +13,28 @@ interface CollectionInterface extends Arrayable, IteratorAggregate
     public function get(string $key, $default = null);
     public function getItems(): array;
     public function has(string $key): bool;
-    public function only(array $keys): CollectionInterface;
-    public function except(array $keys): CollectionInterface;
+
+    /**
+     * @param array $keys
+     * @return static
+     */
+    public function only(array $keys);
+
+    /**
+     * @param array $keys
+     * @return static
+     */
+    public function except(array $keys);
+
+    /**
+     * @param callable|null $callable
+     * @return static
+     */
+    public function filterKeys(?callable $callable);
+
     public function count(): int;
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
-    public function filterKeys(?callable $callable): CollectionInterface;
 }
