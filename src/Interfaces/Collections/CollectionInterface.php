@@ -37,4 +37,5 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
+    public static function getArrayFrom($value): array;
 }

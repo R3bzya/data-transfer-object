@@ -12,7 +12,7 @@ class Collection implements CollectionInterface
 
     public function __construct($value = [])
     {
-        $this->items = $this->getArrayFrom($value);
+        $this->items = self::getArrayFrom($value);
     }
 
     public function add(string $key, $value = null): void
@@ -105,7 +105,7 @@ class Collection implements CollectionInterface
         $this->items = [];
     }
 
-    protected function getArrayFrom($value): array
+    public static function getArrayFrom($value): array
     {
         if (is_array($value)) {
             return $value;
