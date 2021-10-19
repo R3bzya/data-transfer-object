@@ -2,6 +2,7 @@
 
 namespace Rbz\Data\Collections\Error;
 
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
 use Rbz\Data\Interfaces\Components\PathInterface;
 
@@ -103,7 +104,7 @@ class Item implements ItemInterface
     public function getFullPath(): string
     {
         if ($this->path()->isInternal()) {
-            return $this->path()->withString($this->property())->asString();
+            return $this->path()->with(Path::make($this->property()))->asString();
         }
         return $this->property();
     }
