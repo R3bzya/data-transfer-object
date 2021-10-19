@@ -36,7 +36,7 @@ trait ErrorCollectionTrait
         return $this->errors()->isNotEmpty();
     }
 
-    public function setTransferName(string $name): TransferInterface
+    public function setClassName(string $name): TransferInterface
     {
         $this->transferName = $name;
         return $this;
