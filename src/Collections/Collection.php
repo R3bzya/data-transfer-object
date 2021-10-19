@@ -106,20 +106,6 @@ class Collection implements CollectionInterface
         $this->items = [];
     }
 
-    /**
-     * TODO не нравится этот метод
-     * @deprecated
-     */
-    public function getByPath(array $data, PathInterface $path,  $default = null)
-    {
-        foreach ($path as $key) {
-            if ($this->has($key) && $path->isInternal()) {
-                return $this->getByPath($this->get($key), $path->next(), $default);
-            }
-        }
-        return $data[$path->asString()] ?? $default;
-    }
-
     protected function getArrayFrom($value): array
     {
         if (is_array($value)) {

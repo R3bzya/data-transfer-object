@@ -14,7 +14,4 @@ interface PathInterface extends Arrayable, IteratorAggregate
     public static function makeString(array $path): string;
     public static function makeArray(string $path): array;
     public static function getSeparator(): string;
-
-    /** @deprecated */
-    public function next(): PathInterface;
 }

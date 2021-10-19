@@ -61,15 +61,6 @@ class Path implements PathInterface
         return explode(self::separator(), $this->asString());
     }
 
-    public function next(): PathInterface
-    {
-        $clone = clone $this;
-        if ($position = strpos($this->asString(), self::separator())) {
-            $clone->path = substr($this->asString(), $position + 1);
-        }
-        return $clone;
-    }
-
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->toArray());
