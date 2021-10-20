@@ -6,10 +6,10 @@ use DomainException;
 use ReflectionClass;
 
 /**
- * @method string required(string $property = null)
- * @method string notLoad(string $property = null)
- * @method string notSet(string $property = null)
- * @method string undefined(string $property = null)
+ * @method static string required(string $property = null)
+ * @method static string notLoad(string $property = null)
+ * @method static string notSet(string $property = null)
+ * @method static string undefined(string $property = null)
  */
 class ErrorList
 {
