@@ -10,17 +10,17 @@ class Collection implements CollectionInterface
 {
     private array $items;
 
-    public function __construct(array $data)
+    public function __construct($data)
     {
-        $this->items = $data;
+        $this->items = $this->getArrayFrom($data);
     }
 
     public static function make($data = [])
     {
-        return new static(static::getArrayFrom($data));
+        return new static($data);
     }
 
-    public static function getArrayFrom($value): array
+    public function getArrayFrom($value): array
     {
         if (is_array($value)) {
             return $value;

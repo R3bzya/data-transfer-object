@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Filter;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CombinatorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
@@ -27,6 +28,15 @@ abstract class Transfer extends Properties implements TransferInterface
         return parent::__get($name);
     }
 
+    public static function make($data = []): TransferInterface
+    {
+        $transfer = new static();
+        if (! empty($data)) {
+            $transfer->load($data);
+        }
+        return $transfer;
+    }
+
     public function rules(): array
     {
         return [];
@@ -36,7 +46,7 @@ abstract class Transfer extends Properties implements TransferInterface
     {
         $data = Collection::make($data)->toArray();
         $this->setProperties($data);
-        return $this->validateIsLoad(array_keys($data) ?: $this->getProperties());
+        return $this->validateIsLoad($this->onlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties());
     }
 
     public function validate(array $properties = []): bool
@@ -89,7 +99,7 @@ abstract class Transfer extends Properties implements TransferInterface
 
     public function setProperties(array $data): void
     {
-        parent::setProperties(array_filter_keys($data, fn(string $property) => $this->hasProperty($property)));
+        parent::setProperties($this->onlyTransferProperties($data)->toArray());
     }
 
     public function setProperty(string $property, $value): void
@@ -112,5 +122,10 @@ abstract class Transfer extends Properties implements TransferInterface
     public function getClassName(): string
     {
         return $this->className();
+    }
+
+    public function onlyTransferProperties(array $data): CollectionInterface
+    {
+        return Collection::make($data)->only($this->getProperties());
     }
 }

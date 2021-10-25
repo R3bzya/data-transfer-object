@@ -8,6 +8,8 @@ use Rbz\Data\Interfaces\Components\CombinatorInterface;
 
 interface TransferInterface extends PropertiesInterface
 {
+    public static function make($data = []): TransferInterface;
+
     /**
      * @param array|Arrayable $data
      * @return bool

@@ -18,7 +18,7 @@ class Collection extends BaseCollection implements CollectionInterface
      */
     public function add(string $key, $value = null): void
     {
-        $this->addItem(Item::make($key, self::getArrayFrom($value), Path::make($key)));
+        $this->addItem(Item::make($key, $this->getArrayFrom($value), Path::make($key)));
     }
 
     public function addItem(ItemInterface $item): void
