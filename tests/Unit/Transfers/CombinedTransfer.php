@@ -10,6 +10,6 @@ class CombinedTransfer extends Transfer
     public array $combined = [];
 
     protected array $combinations = [
-        'combined' => 123131313,
+        'combined' => DefaultTransfer::class,
     ];
 }
