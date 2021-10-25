@@ -73,6 +73,38 @@ class TransferTest extends BaseCase
         $this->assertNotNull($transfer->getErrors()->get('undefined_property'));
     }
 
+    public function testConsistentLoading()
+    {
+        $transfer = $this->transfer();
+        $transfer->load([]);
+
+        $this->assertEquals(3, $transfer->getErrors()->count());
+
+        $transfer->load([
+            'a_one_s' => 'sting',
+            'a_two_i' => 123,
+            'a_three_a' => [],
+        ]);
+
+        $this->assertEquals(0, $transfer->getErrors()->count());
+    }
+
+    public function testConsistentValidation()
+    {
+        $transfer = $this->transfer();
+        $transfer->validate();
+
+        $this->assertEquals(3, $transfer->getErrors()->count());
+
+        $transfer->a_one_s = 'string';
+        $transfer->a_two_i = 1;
+        $transfer->a_three_a = [];
+
+        $transfer->validate();
+
+        $this->assertEquals(0, $transfer->getErrors()->count());
+    }
+
     public function getValidData(): array
     {
         return [
