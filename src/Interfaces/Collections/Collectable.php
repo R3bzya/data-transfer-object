@@ -4,5 +4,5 @@ namespace Rbz\Data\Interfaces\Collections;
 
 interface Collectable
 {
-    public function getCollection();
+    public function toCollection(): CollectionInterface;
 }

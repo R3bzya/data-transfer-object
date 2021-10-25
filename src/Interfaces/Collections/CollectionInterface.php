@@ -8,6 +8,12 @@ use IteratorAggregate;
 
 interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
 {
+    /**
+     * @param mixed $data
+     * @return static
+     */
+    public static function make($data = []);
+    public static function getArrayFrom($value): array;
     public function load(array $data): void;
     public function add(string $key, $value = null): void;
     public function remove(string $key): void;
@@ -31,11 +37,10 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
      * @param callable|null $callable
      * @return static
      */
-    public function filterKeys(?callable $callable);
+    public function filter(?callable $callable);
 
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
-    public static function getArrayFrom($value): array;
 }

@@ -54,7 +54,7 @@ abstract class Properties implements PropertiesInterface
 
     public function toArray(): array
     {
-        return $this->getCollection()->toArray();
+        return $this->toCollection()->toArray();
     }
 
     public function isSetProperties(): bool
@@ -90,9 +90,9 @@ abstract class Properties implements PropertiesInterface
         return $this->getReflectionInstance()->getProperty($property)->isPublic();
     }
 
-    public function getCollection(): CollectionInterface
+    public function toCollection(): CollectionInterface
     {
-        $collection = new Collection([]);
+        $collection = Collection::make();
         foreach ($this->getProperties() as $property) {
             $collection->add($property, $this->getProperty($property));
         }

@@ -15,9 +15,10 @@ interface CollectionInterface extends BaseCollectionInterface
     public function merge(CollectionInterface $collection): CollectionInterface;
     public function withPath(PathInterface $path): CollectionInterface;
     public function getPath(): PathInterface;
+    public function hasPath(): bool;
 
     /**
-     * @return ItemInterface[]|array
+     * @return ItemInterface[]
      */
     public function getItems(): array;
 }

@@ -139,7 +139,7 @@ class Filter implements FilterInterface
         return in_array($property, $this->exclude());
     }
 
-    public function all(): array
+    public function toArray(): array
     {
         return $this->properties();
     }
@@ -147,5 +147,20 @@ class Filter implements FilterInterface
     public function getRules(): array
     {
         return array_merge($this->include(), $this->exclude());
+    }
+
+    public function getInclude(): array
+    {
+        return $this->include();
+    }
+
+    public function getExclude(): array
+    {
+        return $this->exclude();
+    }
+
+    public function getProperties(): array
+    {
+        return $this->properties();
     }
 }

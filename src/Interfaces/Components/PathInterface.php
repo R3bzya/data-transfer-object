@@ -8,7 +8,7 @@ use IteratorAggregate;
 interface PathInterface extends Arrayable, IteratorAggregate
 {
     public static function make(string $path): PathInterface;
-    public function asString(): string;
+    public function get(): string;
     public function isInternal(): bool;
     public function with(PathInterface $path): PathInterface;
     public static function makeString(array $path): string;

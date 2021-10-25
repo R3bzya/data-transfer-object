@@ -29,20 +29,20 @@ class Path implements PathInterface
         return self::separator();
     }
 
-    public function asString(): string
+    public function get(): string
     {
         return $this->path;
     }
 
     public function isInternal(): bool
     {
-        return strpos($this->asString(), self::separator());
+        return strpos($this->get(), self::separator());
     }
 
     public function with(PathInterface $path): PathInterface
     {
         $clone = clone $this;
-        $clone->path = $this->asString().self::separator().$path->asString();
+        $clone->path = $this->get().self::separator().$path->get();
         return $clone;
     }
 
@@ -58,7 +58,7 @@ class Path implements PathInterface
 
     public function toArray(): array
     {
-        return explode(self::separator(), $this->asString());
+        return explode(self::separator(), $this->get());
     }
 
     public function getIterator(): ArrayIterator

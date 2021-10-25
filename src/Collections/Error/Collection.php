@@ -26,7 +26,7 @@ class Collection extends BaseCollection implements CollectionInterface
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
-            parent::add($item->getPath()->asString(), $item);
+            parent::add($item->getPath()->get(), $item);
         }
     }
 

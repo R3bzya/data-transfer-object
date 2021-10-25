@@ -10,9 +10,24 @@ class Collection implements CollectionInterface
 {
     private array $items;
 
-    public function __construct($value = [])
+    public function __construct(array $data)
     {
-        $this->items = self::getArrayFrom($value);
+        $this->items = $data;
+    }
+
+    public static function make($data = [])
+    {
+        return new static(static::getArrayFrom($data));
+    }
+
+    public static function getArrayFrom($value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        } elseif ($value instanceof Arrayable) {
+            return $value->toArray();
+        }
+        return (array) $value;
     }
 
     public function add(string $key, $value = null): void
@@ -87,31 +102,21 @@ class Collection implements CollectionInterface
 
     public function only(array $keys)
     {
-        return new static(array_filter_keys($this->items(), fn(string $key) => in_array($key, $keys)));
+        return static::make(array_filter_keys($this->items(), fn(string $key) => in_array($key, $keys)));
     }
 
     public function except(array $keys)
     {
-        return new static(array_filter_keys($this->items(), fn(string $key) => ! in_array($key, $keys)));
+        return static::make(array_filter_keys($this->items(), fn(string $key) => ! in_array($key, $keys)));
     }
 
-    public function filterKeys(?callable $callable)
+    public function filter(?callable $callable)
     {
-        return new static(array_filter($this->items(), $callable, ARRAY_FILTER_USE_KEY));
+        return static::make(array_filter($this->items(), $callable, ARRAY_FILTER_USE_BOTH));
     }
 
     public function clear(): void
     {
         $this->items = [];
-    }
-
-    public static function getArrayFrom($value): array
-    {
-        if (is_array($value)) {
-            return $value;
-        } elseif ($value instanceof Arrayable) {
-            return $value->toArray();
-        }
-        return (array) $value;
     }
 }

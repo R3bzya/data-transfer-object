@@ -69,7 +69,7 @@ class Item implements ItemInterface
         return [
             'property' => $this->property(),
             'messages' => $this->messages(),
-            'path' => $this->path()->asString(),
+            'path' => $this->path()->get(),
         ];
     }
 

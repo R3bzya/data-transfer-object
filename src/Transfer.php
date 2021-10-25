@@ -2,10 +2,9 @@
 
 namespace Rbz\Data;
 
-use DomainException;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
+use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Filter;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CombinatorTrait;
@@ -33,12 +32,9 @@ abstract class Transfer extends Properties implements TransferInterface
         return [];
     }
 
-    /**
-     * @throws DomainException
-     */
     public function load($data): bool
     {
-        $data = $this->normalizeData($data);
+        $data = Collection::make($data)->toArray();
         $this->setProperties($data);
         return $this->validateIsLoad(array_keys($data) ?: $this->getProperties());
     }
@@ -106,22 +102,6 @@ abstract class Transfer extends Properties implements TransferInterface
         } catch (Throwable $e) {
             $this->errors()->add($property, $e->getMessage());
         }
-    }
-
-    /**
-     * @param array|Arrayable $value
-     * @return array
-     * @throws DomainException
-     */
-    public function normalizeData($value): array
-    {
-        if (is_array($value)) {
-            return $value;
-        }
-        if ($value instanceof Arrayable) {
-            return $value->toArray();
-        }
-        throw new DomainException('The data must be an array or an Arrayable instance');
     }
 
     public function className(): string

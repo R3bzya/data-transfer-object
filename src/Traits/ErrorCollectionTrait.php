@@ -17,7 +17,7 @@ trait ErrorCollectionTrait
     public function errors(): CollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = new Collection([]);
+            $this->errorCollection = Collection::make();
         }
         return $this->errorCollection;
     }
