@@ -25,9 +25,9 @@ abstract class CompositeTransfer extends Transfer
 
     public function validate(array $properties = []): bool
     {
-        $validate = parent::validate($this->getTransferAttributes($properties));
+        $validate = parent::validate($properties);
         foreach ($this->getAdditionalTransfers() as $transfer) {
-            $validate = $this->getTransfer($transfer)->validate($this->getAttributesForTransfer($properties, $transfer)) && $validate;
+            $validate = $this->getTransfer($transfer)->validate($properties) && $validate;
         }
         return $validate;
     }
@@ -93,55 +93,5 @@ abstract class CompositeTransfer extends Transfer
     public function hasErrors(): bool
     {
         return $this->getErrors()->isNotEmpty();
-    }
-
-    /** @deprecated  */
-    public function getTransferAttributes(array $attributes): array
-    {
-        $rules = [];
-        foreach ($attributes as $attribute) {
-            if (count($this->explodeValidationAttributes($attribute)) == 1) {
-                $rules[] = $attribute;
-            }
-        }
-        return $rules;
-    }
-
-    /** @deprecated  */
-    public function getAttributesForTransfer(array $attributes, string $transfer): array
-    {
-        $rules = [];
-        foreach ($attributes as $attribute) {
-            $exploded = $this->explodeValidationAttributes($attribute);
-            if ($this->isTransferAttributes($exploded, $transfer)) {
-                $this->unsetTransferAttribute($exploded, $transfer);
-                $rules[] = $this->implodeValidationAttributes($exploded);
-            }
-        }
-        return $rules;
-    }
-
-    /** @deprecated  */
-    public function explodeValidationAttributes(string $rule): array
-    {
-        return explode('.', $rule);
-    }
-
-    /** @deprecated  */
-    public function implodeValidationAttributes(array $rule): string
-    {
-        return implode('.', $rule);
-    }
-
-    /** @deprecated  */
-    public function isTransferAttributes(array $rules, string $transfer): bool
-    {
-        return count($rules) > 1 && $rules[0] == $transfer;
-    }
-
-    /** @deprecated  */
-    public function unsetTransferAttribute(array &$exploded, string $transfer): void
-    {
-        unset($exploded[array_search($transfer, $exploded)]);
     }
 }
