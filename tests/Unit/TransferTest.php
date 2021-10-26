@@ -105,6 +105,18 @@ class TransferTest extends BaseCase
         $this->assertEquals(0, $transfer->getErrors()->count());
     }
 
+    public function testValidationExcludeProperties()
+    {
+        $transfer = $this->transfer();
+        $transfer->a_one_s = 'string';
+
+        $this->assertFalse($transfer->validate());
+        $this->assertEquals(2, $transfer->getErrors()->count());
+
+        $this->assertTrue($transfer->validate(['!a_two_i', '!a_three_a']));
+        $this->assertEquals(0, $transfer->getErrors()->count());
+    }
+
     public function getValidData(): array
     {
         return [
