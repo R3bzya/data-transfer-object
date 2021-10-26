@@ -8,7 +8,7 @@ use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Filter;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
-use Rbz\Data\Traits\CombinatorTrait;
+use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
@@ -16,7 +16,7 @@ use Throwable;
 abstract class Transfer extends Properties implements TransferInterface
 {
     use ErrorCollectionTrait,
-        CombinatorTrait;
+        CollectorTrait;
 
     protected string $adapter;
 
@@ -107,8 +107,8 @@ abstract class Transfer extends Properties implements TransferInterface
     public function setProperty(string $property, $value): void
     {
         try {
-            if ($this->combinator()->has($property)) {
-                $value = $this->combinator()->combine($property, $value);
+            if ($this->collector()->has($property)) {
+                $value = $this->collector()->collect($property, $value);
             }
             parent::setProperty($property, $value);
         } catch (Throwable $e) {

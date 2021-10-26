@@ -5,7 +5,7 @@ namespace Rbz\Data\Tests;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Collections\Error\Collection as ErrorCollection;
 use Rbz\Data\Components\Path;
-use Rbz\Data\Tests\Unit\Transfers\CombinedTransfer;
+use Rbz\Data\Tests\Unit\Transfers\CollectableTransfer;
 use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultTransfer;
@@ -28,9 +28,9 @@ class BaseCase extends TestCase
         return new CustomRulesTransfer();
     }
 
-    public function combinedTransfer(): CombinedTransfer
+    public function collectableTransfer(): CollectableTransfer
     {
-        return new CombinedTransfer();
+        return new CollectableTransfer();
     }
 
     public function errorCollection(): ErrorCollection

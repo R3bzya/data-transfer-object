@@ -4,11 +4,11 @@ namespace Rbz\Data\Tests\Unit;
 
 use Rbz\Data\Tests\BaseCase;
 
-class CombinatorTest extends BaseCase
+class CollectorTest extends BaseCase
 {
-    public function testCombinationsLoad()
+    public function testCollectableLoad()
     {
-        $transfer = $this->combinedTransfer();
+        $transfer = $this->collectableTransfer();
         $transfer->load([
             'defaultTransfers' => [
                 [

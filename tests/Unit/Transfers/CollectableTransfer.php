@@ -5,7 +5,7 @@ namespace Rbz\Data\Tests\Unit\Transfers;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Transfer;
 
-class CombinedTransfer extends Transfer
+class CollectableTransfer extends Transfer
 {
     /** @var DefaultTransfer[]  */
     public array $defaultTransfers = [];
@@ -13,7 +13,7 @@ class CombinedTransfer extends Transfer
     /** @var Collection[] */
     public array $collections = [];
 
-    protected array $combinedProperties = [
+    protected array $collectable = [
         'defaultTransfers' => DefaultTransfer::class,
         'collections' => Collection::class,
     ];

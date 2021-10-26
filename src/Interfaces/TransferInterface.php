@@ -4,7 +4,7 @@ namespace Rbz\Data\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
-use Rbz\Data\Interfaces\Components\CombinatorInterface;
+use Rbz\Data\Interfaces\Components\CollectorInterface;
 
 interface TransferInterface extends PropertiesInterface
 {
@@ -17,7 +17,7 @@ interface TransferInterface extends PropertiesInterface
     public function load($data): bool;
     public function validate(array $properties = []): bool;
     public function getErrors(): CollectionInterface;
-    public function getCombinator(): CombinatorInterface;
+    public function getCollector(): CollectorInterface;
     public function getClassName(): string;
     public function hasErrors(): bool;
 }
