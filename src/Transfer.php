@@ -59,7 +59,7 @@ abstract class Transfer extends Properties implements TransferInterface
         }
         $validation = $this->validateIsLoad($filter->filtered());
         if ($validation && $this->rules()) {
-            return $this->validateCustom($filter->filterTransfer($this), $filter->filterArrayKeys($this->rules()));
+            return $this->validateCustom($filter->filterTransfer($this), $filter->filterArray($this->rules()));
         }
         return $validation;
     }

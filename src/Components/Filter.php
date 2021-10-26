@@ -2,6 +2,7 @@
 
 namespace Rbz\Data\Components;
 
+use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Components\FilterInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
@@ -22,9 +23,9 @@ class Filter implements FilterInterface
         $this->include = $this->getIncludeFrom($rules);
     }
 
-    public static function make(array $properties, array $exclude): FilterInterface
+    public static function make(array $properties, array $rules): FilterInterface
     {
-        return new self($properties, $exclude);
+        return new self($properties, $rules);
     }
 
     public static function separator(): string
@@ -46,19 +47,9 @@ class Filter implements FilterInterface
         return $array;
     }
 
-    /** @deprecated  */
-    public function filterArray(array $array): array
+    public function filterArray(array $data): array
     {
-        return array_filter($array, function ($value) {
-            return in_array($value, $this->filtered());
-        });
-    }
-
-    public function filterArrayKeys(array $data): array
-    {
-        return array_filter_keys($data, function (string $property) {
-            return in_array($property, $this->filtered());
-        });
+        return Collection::make($data)->filter(fn($value, $property) => in_array($property, $this->filtered()))->toArray();
     }
 
     public function filtered(): array
