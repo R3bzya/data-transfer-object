@@ -2,9 +2,7 @@
 
 namespace Rbz\Data\Components;
 
-use DomainException;
 use Rbz\Data\Interfaces\Components\CombinatorInterface;
-use Rbz\Data\Interfaces\TransferInterface;
 
 class Combinator implements CombinatorInterface
 {
@@ -13,6 +11,11 @@ class Combinator implements CombinatorInterface
     public function __construct(array $combinations)
     {
         $this->combinations = $combinations;
+    }
+
+    public function make(array $combinations): CombinatorInterface
+    {
+        return new self($combinations);
     }
 
     public function combinations(): array
@@ -25,47 +28,18 @@ class Combinator implements CombinatorInterface
         return $this->combinations();
     }
 
-    public function getTransferClassByProperty(string $property): string
-    {
-        if (! $this->hasProperty($property)) {
-            throw new DomainException("Property `$property` is not combined");
-        }
-        $class = $this->combinations()[$property];
-        if (! class_exists($class)) {
-            throw new DomainException("Transfer class `$class` is not found");
-        }
-        return $class;
-    }
-
-    public function makeTransfer(string $class): TransferInterface
-    {
-        $object = new $class;
-        if (! $object instanceof TransferInterface) {
-            throw new DomainException("Class `$class` is not instance of TransferInterface");
-        }
-        return $object;
-    }
-
     public function combine(string $property, array $data): array
     {
-        return array_map(fn(array $datum) => $this->getLoadedTransfer(
-            $this->makeTransfer($this->getTransferClassByProperty($property)), $datum
-        ), $data);
+        return array_map(fn(array $datum) => call_user_func([$this->get($property), 'make'], $datum), $data);
     }
 
-    public function hasProperty(string $property): bool
+    public function has(string $property): bool
     {
-        return key_exists($property, $this->combinations());
+        return key_exists($property, $this->combinations);
     }
 
-    public function canCombine(string $property): bool
+    public function get(string $property): string
     {
-        return $this->hasProperty($property);
-    }
-
-    public function getLoadedTransfer(TransferInterface $transfer, array $data): TransferInterface
-    {
-        $transfer->load($data);
-        return $transfer;
+        return $this->combinations()[$property];
     }
 }

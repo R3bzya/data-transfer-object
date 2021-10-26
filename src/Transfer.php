@@ -107,7 +107,7 @@ abstract class Transfer extends Properties implements TransferInterface
     public function setProperty(string $property, $value): void
     {
         try {
-            if ($this->combinator()->canCombine($property)) {
+            if ($this->combinator()->has($property)) {
                 $value = $this->combinator()->combine($property, $value);
             }
             parent::setProperty($property, $value);

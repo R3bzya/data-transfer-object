@@ -7,14 +7,19 @@ use Rbz\Data\Interfaces\Components\CombinatorInterface;
 
 trait CombinatorTrait
 {
-    protected array $combinations;
+    protected array $combinedProperties = [];
 
     private CombinatorInterface $combinator;
+
+    public function setCombinator(CombinatorInterface $combinator): void
+    {
+        $this->combinator = $combinator;
+    }
 
     public function combinator(): CombinatorInterface
     {
         if (! isset($this->combinator)) {
-            $this->combinator = new Combinator($this->combinations ?? []);
+            $this->combinator = new Combinator($this->combinedProperties);
         }
         return $this->combinator;
     }

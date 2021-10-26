@@ -9,21 +9,37 @@ class CombinatorTest extends BaseCase
     public function testCombinationsLoad()
     {
         $transfer = $this->combinedTransfer();
-        $transfer->load(['combined' => [
-            [
-                'a_one_s' => 'sting',
-                'a_two_i' => 123,
-                'a_three_a' => [],
+        $transfer->load([
+            'defaultTransfers' => [
+                [
+                    'a_one_s' => 'string',
+                    'a_two_i' => 123,
+                    'a_three_a' => [],
+                ],
+                [
+                    'a_one_s' => 'test',
+                    'a_two_i' => 321,
+                    'a_three_a' => ['test' => 'test'],
+                ]
             ],
-            [
-                'a_one_s' => 'test',
-                'a_two_i' => 321,
-                'a_three_a' => ['test' => 'test'],
+            'collections' => [
+                [
+                    'key_1' => 'value_1',
+                    'key_2' => 'value_2',
+                ],
+                [
+                    'another' => 'data',
+                ],
+                [
+                    'more' => 'data',
+                ]
             ]
-        ]]);
+        ]);
 
-        //dd($transfer->getCombinator()->getCombinations(), $transfer->combined, $transfer->getErrors()->toArray());
+        $this->assertEquals(2, count($transfer->defaultTransfers));
+        $this->assertEquals(3, count($transfer->collections));
 
-        $this->assertTrue(false);
+        $this->assertEquals('string', $transfer->defaultTransfers[0]->a_one_s);
+        $this->assertEquals('value_1', $transfer->collections[0]->get('key_1'));
     }
 }
