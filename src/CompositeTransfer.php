@@ -34,24 +34,16 @@ abstract class CompositeTransfer extends Transfer
 
     public function setProperties(array $data): void
     {
-        parent::setProperties($this->getThisTransferFields($data));
-        foreach ($this->getDataTransfersForThisTransfer($data) as $transfer => $value) {
+        $collection = Collection::make($data);
+        parent::setProperties($collection->except($this->getAdditionalTransfers())->toArray());
+        foreach ($collection->filter(fn($value, $key) => $this->isTransferData($key, $value)) as $transfer => $value) {
             $this->getTransfer($transfer)->load($value);
         }
     }
 
-    private function getThisTransferFields(array $data): array
+    public function isTransferData(string $property, $data): bool
     {
-        return array_filter_keys($data, function ($attribute) {
-            return ! $this->isAdditionalTransfer($attribute);
-        });
-    }
-
-    private function getDataTransfersForThisTransfer(array $data): array
-    {
-        return array_filter($data, function ($value, $attribute) {
-            return $this->isAdditionalTransfer($attribute) && is_array($value);
-        }, ARRAY_FILTER_USE_BOTH);
+        return $this->isAdditionalTransfer($property) && is_array($data);
     }
 
     public function getAdditionalTransfers(): array

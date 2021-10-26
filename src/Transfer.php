@@ -47,7 +47,7 @@ abstract class Transfer extends Properties implements TransferInterface
         $this->errors()->clear();
         $data = Collection::make($data)->toArray();
         $this->setProperties($data);
-        return $this->validateIsLoad($this->onlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties());
+        return $this->validateIsLoad($this->getOnlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties());
     }
 
     public function validate(array $properties = []): bool
@@ -101,7 +101,7 @@ abstract class Transfer extends Properties implements TransferInterface
 
     public function setProperties(array $data): void
     {
-        parent::setProperties($this->onlyTransferProperties($data)->toArray());
+        parent::setProperties($this->getOnlyTransferProperties($data)->toArray());
     }
 
     public function setProperty(string $property, $value): void
@@ -126,7 +126,7 @@ abstract class Transfer extends Properties implements TransferInterface
         return $this->className();
     }
 
-    public function onlyTransferProperties(array $data): CollectionInterface
+    public function getOnlyTransferProperties(array $data): CollectionInterface
     {
         return Collection::make($data)->only($this->getProperties());
     }
