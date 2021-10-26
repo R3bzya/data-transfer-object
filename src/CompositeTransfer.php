@@ -5,7 +5,8 @@ namespace Rbz\Data;
 use DomainException;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
-use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\CollectionInterface as ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 abstract class CompositeTransfer extends Transfer
@@ -35,7 +36,7 @@ abstract class CompositeTransfer extends Transfer
     public function setProperties(array $data): void
     {
         $collection = Collection::make($data);
-        parent::setProperties($collection->except($this->getAdditionalTransfers())->toArray());
+        parent::setProperties($collection->except($this->getAdditionalTransfers()->toArray())->toArray());
         foreach ($collection->filter(fn($value, $key) => $this->isTransferData($key, $value)) as $transfer => $value) {
             $this->getTransfer($transfer)->load($value);
         }
@@ -46,15 +47,10 @@ abstract class CompositeTransfer extends Transfer
         return $this->isAdditionalTransfer($property) && is_array($data);
     }
 
-    public function getAdditionalTransfers(): array
+    public function getAdditionalTransfers(): CollectionInterface
     {
-        $additionalTransfers = [];
-        foreach ($this->getProperties() as $attribute) {
-            if ($this->isTransferAttribute($attribute)) {
-                $additionalTransfers[] = $attribute;
-            }
-        }
-        return $additionalTransfers;
+        return Collection::make($this->getProperties())
+            ->filter(fn(string $property) => $this->isTransferAttribute($property));
     }
 
     public function isTransferAttribute($attribute): bool
@@ -67,7 +63,7 @@ abstract class CompositeTransfer extends Transfer
 
     public function isAdditionalTransfer(string $transfer): bool
     {
-        return in_array($transfer, $this->getAdditionalTransfers());
+        return $this->getAdditionalTransfers()->has($transfer);
     }
 
     /**
@@ -81,7 +77,7 @@ abstract class CompositeTransfer extends Transfer
         return $this->getProperty($attribute);
     }
 
-    public function getErrors(): CollectionInterface
+    public function getErrors(): ErrorCollectionInterface
     {
         $collection = parent::getErrors();
         foreach ($this->getAdditionalTransfers() as $transfer) {
