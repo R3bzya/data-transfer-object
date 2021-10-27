@@ -21,10 +21,6 @@ interface ContainerInterface extends Arrayable, Collectable
 
     public function set(string $name, TransferInterface $transfer);
 
-    public function load(array $transfers): void;
-
-    public function isLoad(): bool;
-
     public function keys(): CollectionInterface;
 
     /**

@@ -13,6 +13,7 @@ interface PathProviderInterface extends Cloneable
     public function setPath(PathInterface $path);
 
     public function getPath(): PathInterface;
+
     public function hasPath(): bool;
 
     /**

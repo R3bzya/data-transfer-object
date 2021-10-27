@@ -15,7 +15,12 @@ class Container implements ContainerInterface
      */
     private array $transfers = [];
 
-    private bool $isLoad = false;
+    public function __construct(array $transfers)
+    {
+        foreach ($transfers as $key => $class) {
+            $this->add($key, call_user_func([$class, 'make']));
+        }
+    }
 
     public function add(string $name, TransferInterface $transfer): void
     {
@@ -48,7 +53,7 @@ class Container implements ContainerInterface
         return key_exists($name, $this->transfers());
     }
 
-    private function transfers(): array
+    public function transfers(): array
     {
         return $this->transfers;
     }
@@ -56,26 +61,6 @@ class Container implements ContainerInterface
     public function getTransfers(): array
     {
         return $this->transfers();
-    }
-
-    public function load(array $transfers): void
-    {
-        if (! empty($transfers)) {
-            $this->loaded();
-        }
-        foreach ($transfers as $key => $class) {
-            $this->add($key, call_user_func([$class, 'make']));
-        }
-    }
-
-    public function isLoad(): bool
-    {
-        return $this->isLoad;
-    }
-
-    private function loaded(): void
-    {
-        $this->isLoad = true;
     }
 
     public function toCollection(): CollectionInterface

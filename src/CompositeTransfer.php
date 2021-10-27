@@ -5,16 +5,12 @@ namespace Rbz\Data;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
 
 abstract class CompositeTransfer extends Transfer
 {
     use ContainerTrait;
-
-    public function __construct()
-    {
-        $this->initContainer();
-    }
 
     abstract public function internalTransfers(): array;
 
@@ -71,5 +67,13 @@ abstract class CompositeTransfer extends Transfer
     public function hasErrors(): bool
     {
         return $this->getErrors()->isNotEmpty();
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(
+            parent::toArray(),
+            $this->container()->toCollection()->map(fn(TransferInterface $transfer) => $transfer->toArray())->toArray()
+        );
     }
 }

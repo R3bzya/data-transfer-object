@@ -13,7 +13,7 @@ trait ContainerTrait
     public function container(): ContainerInterface
     {
         if (! isset($this->transfersHandler)) {
-            $this->transfersHandler = new Container();
+            $this->transfersHandler = new Container($this->internalTransfers());
         }
         return $this->transfersHandler;
     }
@@ -27,9 +27,9 @@ trait ContainerTrait
     {
         if ($this->container()->has($name)) {
             if ($this->hasPath()) {
-                return $this->container()->get($name)->withPath($this->path()->with(Path::make($name)));
+                return $this->container()->get($name)->setPath($this->path()->with(Path::make($name)));
             } else {
-                return $this->container()->get($name)->withPath(Path::make($name));
+                return $this->container()->get($name)->setPath(Path::make($name));
             }
         }
         return parent::__get($name);
@@ -45,13 +45,6 @@ trait ContainerTrait
         }
         if (! $this->container()->has($name)) {
             parent::__set($name, $value);
-        }
-    }
-
-    public function initContainer(): void
-    {
-        if (! $this->container()->isLoad()) {
-            $this->container()->load($this->internalTransfers());
         }
     }
 }
