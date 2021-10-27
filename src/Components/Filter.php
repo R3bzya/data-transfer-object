@@ -4,6 +4,7 @@ namespace Rbz\Data\Components;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Components\FilterInterface;
+use Rbz\Data\Interfaces\Components\PathInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 class Filter implements FilterInterface
@@ -11,21 +12,20 @@ class Filter implements FilterInterface
     private array $properties;
 
     /** @var string[] */
-    private array $exclude;
+    private array $exclude = [];
 
     /** @var string[] */
-    private array $include;
+    private array $include = [];
+    private PathInterface $path;
 
-    public function __construct(array $properties, array $rules)
+    public function __construct(array $properties)
     {
         $this->properties = $properties;
-        $this->exclude = $this->getExcludeFrom($rules);
-        $this->include = $this->getIncludeFrom($rules);
     }
 
-    public static function make(array $properties, array $rules): FilterInterface
+    public static function make(array $properties): FilterInterface
     {
-        return new self($properties, $rules);
+        return new self($properties);
     }
 
     public static function separator(): string
@@ -41,7 +41,7 @@ class Filter implements FilterInterface
     public function filterTransfer(TransferInterface $transfer): array
     {
         $array = [];
-        foreach ($this->filtered() as $property) {
+        foreach ($this->apply() as $property) {
             $array[$property] = $transfer->getProperty($property);
         }
         return $array;
@@ -49,10 +49,10 @@ class Filter implements FilterInterface
 
     public function filterArray(array $data): array
     {
-        return Collection::make($data)->filter(fn($value, $property) => in_array($property, $this->filtered()))->toArray();
+        return Collection::make($data)->filter(fn($value, $property) => in_array($property, $this->apply()))->toArray();
     }
 
-    public function filtered(): array
+    public function apply(): array
     {
         if ($this->hasInclude()) {
             return $this->filterNotInclude($this->properties());
@@ -153,5 +153,31 @@ class Filter implements FilterInterface
     public function getProperties(): array
     {
         return $this->properties();
+    }
+
+    public function setRules(array $rules): FilterInterface
+    {
+        $this->exclude = $this->getExcludeFrom($rules);
+        $this->include = $this->getIncludeFrom($rules);
+        return $this;
+    }
+
+    public function setPath(PathInterface $path): void
+    {
+        if ($this->hasPath()) {
+            $this->path = $this->path->with($path);
+        } else {
+            $this->path = $path;
+        }
+    }
+
+    public function getPath(): PathInterface
+    {
+        return $this->path;
+    }
+
+    public function hasPath(): bool
+    {
+        return isset($this->path);
     }
 }

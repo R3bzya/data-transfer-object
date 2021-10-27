@@ -72,7 +72,7 @@ class Collection extends BaseCollection implements CollectionInterface
 
     public function with(CollectionInterface $collection): CollectionInterface
     {
-        return (clone $this)->merge($collection);
+        return $this->copy()->merge($collection);
     }
 
     public function merge(CollectionInterface $collection): CollectionInterface

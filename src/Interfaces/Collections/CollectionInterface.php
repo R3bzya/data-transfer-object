@@ -39,8 +39,24 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
      */
     public function filter(?callable $callable);
 
+    /**
+     * @param callable|null $callable
+     * @return static
+     */
+    public function map(?callable $callable);
+
+    /**
+     * @return static
+     */
+    public function flip();
+
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
+
+    /**
+     * @return static
+     */
+    public function copy();
 }

@@ -119,4 +119,22 @@ class Collection implements CollectionInterface
     {
         $this->items = [];
     }
+
+    public function map(?callable $callable)
+    {
+        $keys = $this->keys()->toArray();
+        return new static(array_combine($keys,
+            array_map($callable, $this->items(), $keys)
+        ));
+    }
+
+    public function copy()
+    {
+        return clone $this;
+    }
+
+    public function flip()
+    {
+        return static::make(array_flip($this->items()));
+    }
 }

@@ -8,31 +8,23 @@ use Rbz\Data\Components\Filter;
 /** ToDo удалить testTemp */
 class FilterTest extends BaseCase
 {
-//    public function testTemp()
-//    {
-//        $filter = new Filter(
-//            ['1','2','3','4','5'],
-//            ['6']
-//        );
-//
-//        dd([
-//            'properties' => $filter->properties(),
-//            'all' => $filter->all(),
-//            'array_keys' => $filter->filterArrayKeys(['1' => 123, '2' => 321]),
-//            'filtered' =>$filter->filter(),
-//            'include' => $filter->include(),
-//            'exclude' => $filter->exclude()
-//        ]);
-//    }
+    public function testTemp()
+    {
+        $filter = Filter::make(['1','2','3','4','5'])->setRules(['5']);
+
+        $this->assertTrue(false);
+
+        //dd($filter->apply());
+    }
 
     /**
      * @dataProvider getData
      */
     public function testFilter(array $properties, array $rules, array $result)
     {
-        $filter = new Filter($properties, $rules);
+        $filter = Filter::make($properties)->setRules($rules);
 
-        $this->assertEquals($result, $filter->filtered());
+        $this->assertEquals($result, $filter->apply());
     }
 
     public function getData(): array

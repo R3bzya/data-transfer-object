@@ -5,18 +5,19 @@ namespace Rbz\Data;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Components\Filter;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
+use Rbz\Data\Traits\FilterTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
 
 abstract class Transfer extends Properties implements TransferInterface
 {
     use ErrorCollectionTrait,
-        CollectorTrait;
+        CollectorTrait,
+        FilterTrait;
 
     protected string $adapter;
 
@@ -53,11 +54,11 @@ abstract class Transfer extends Properties implements TransferInterface
     public function validate(array $properties = []): bool
     {
         $this->errors()->clear();
-        $filter = Filter::make($this->getProperties(), $properties);
+        $filter = $this->filter()->setRules($properties);
         if (! $this->validateHas($filter->getRules()) || $this->errors()->isNotEmpty()) {
             return false;
         }
-        $validation = $this->validateIsLoad($filter->filtered());
+        $validation = $this->validateIsLoad($filter->apply());
         if ($validation && $this->rules()) {
             return $this->validateCustom($filter->filterTransfer($this), $filter->filterArray($this->rules()));
         }
