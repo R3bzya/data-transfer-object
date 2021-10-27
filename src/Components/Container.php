@@ -3,6 +3,8 @@
 namespace Rbz\Data\Components;
 
 use DomainException;
+use Rbz\Data\Collections\Collection;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Components\ContainerInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
@@ -74,5 +76,20 @@ class Container implements ContainerInterface
     private function loaded(): void
     {
         $this->isLoad = true;
+    }
+
+    public function toCollection(): CollectionInterface
+    {
+        return Collection::make($this->getTransfers());
+    }
+
+    public function toArray(): array
+    {
+        return $this->getTransfers();
+    }
+
+    public function keys(): CollectionInterface
+    {
+        return $this->toCollection()->keys();
     }
 }

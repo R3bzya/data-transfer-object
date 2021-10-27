@@ -2,27 +2,27 @@
 
 namespace Rbz\Data\Traits;
 
-use Rbz\Data\Collections\Error\Collection;
-use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
+use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 
 trait ErrorCollectionTrait
 {
-    private CollectionInterface $errorCollection;
+    private ErrorCollectionInterface $errorCollection;
 
-    public function setErrors(CollectionInterface $collection): void
+    public function setErrors(ErrorCollectionInterface $collection): void
     {
         $this->errorCollection = $collection;
     }
 
-    public function errors(): CollectionInterface
+    public function errors(): ErrorCollectionInterface
     {
         if (! isset($this->errorCollection)) {
-            $this->errorCollection = Collection::make();
+            $this->errorCollection = ErrorCollection::make();
         }
         return $this->errorCollection;
     }
 
-    public function getErrors(): CollectionInterface
+    public function getErrors(): ErrorCollectionInterface
     {
         return $this->errors();
     }

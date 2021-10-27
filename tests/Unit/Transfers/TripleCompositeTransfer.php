@@ -6,7 +6,6 @@ use Rbz\Data\CompositeTransfer;
 
 /**
  * @property DefaultCompositeTransfer $composite
- * @property DefaultTransfer $transfer
  */
 class TripleCompositeTransfer extends CompositeTransfer
 {
@@ -16,7 +15,6 @@ class TripleCompositeTransfer extends CompositeTransfer
     {
         return [
             'composite' => DefaultCompositeTransfer::class,
-            'transfer' => DefaultTransfer::class,
         ];
     }
 }

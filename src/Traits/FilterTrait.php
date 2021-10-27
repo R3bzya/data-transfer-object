@@ -4,8 +4,6 @@ namespace Rbz\Data\Traits;
 
 use Rbz\Data\Components\Filter;
 use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
-use Rbz\Data\Interfaces\Components\Path\PathInterface;
-use Rbz\Data\Interfaces\TransferInterface;
 
 trait FilterTrait
 {
@@ -27,11 +25,5 @@ trait FilterTrait
     public function getFilter(): FilterInterface
     {
         return $this->filter();
-    }
-
-    public function setFilterPath(PathInterface $path): TransferInterface
-    {
-        $this->filter()->setPath($path);
-        return $this;
     }
 }

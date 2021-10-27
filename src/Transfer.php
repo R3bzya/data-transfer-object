@@ -56,7 +56,14 @@ abstract class Transfer extends Properties implements TransferInterface
     public function validate(array $properties = []): bool
     {
         $this->errors()->clear();
-        $filter = $this->filter()->setRules($properties);
+        /** ToDo fix it */
+        if ($this->hasPath()) {
+            $filter = $this->filter()->withPath($this->getPath());
+        } else {
+            $filter = $this->filter();
+        }
+        $filter->setRules($properties);
+
         if (! $this->validateHas($filter->getRules()) || $this->errors()->isNotEmpty()) {
             return false;
         }

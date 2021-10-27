@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Tests\Unit;
 
-use Rbz\Data\Collections\Error\Item;
+use Rbz\Data\Collections\Error\ErrorItem;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 
@@ -158,11 +158,11 @@ class ErrorCollectionTest extends BaseCase
     public function testAddItem()
     {
         $collection = $this->errorCollection();
-        $collection->addItem(new Item(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_FIRST)));
+        $collection->addItem(new ErrorItem(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_FIRST)));
 
         $this->assertEquals(1, $collection->count());
 
-        $collection->addItem(new Item(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_SECOND)));
+        $collection->addItem(new ErrorItem(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_SECOND)));
 
         $this->assertEquals(2, $collection->count());
     }

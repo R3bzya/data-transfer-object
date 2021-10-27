@@ -2,9 +2,11 @@
 
 namespace Rbz\Data\Interfaces\Components;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
-interface ContainerInterface
+interface ContainerInterface extends Arrayable, Collectable
 {
     public function add(string $name, TransferInterface $transfer): void;
 
@@ -12,6 +14,9 @@ interface ContainerInterface
 
     public function has(string $name): bool;
 
+    /**
+     * @return TransferInterface[]
+     */
     public function getTransfers(): array;
 
     public function set(string $name, TransferInterface $transfer);
@@ -19,4 +24,11 @@ interface ContainerInterface
     public function load(array $transfers): void;
 
     public function isLoad(): bool;
+
+    public function keys(): CollectionInterface;
+
+    /**
+     * @return CollectionInterface|TransferInterface[]
+     */
+    public function toCollection(): CollectionInterface;
 }

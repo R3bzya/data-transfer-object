@@ -2,11 +2,11 @@
 
 namespace Rbz\Data\Collections\Error;
 
-use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
+use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Traits\PathTrait;
 
-class Item implements ItemInterface
+class ErrorItem implements ErrorItemInterface
 {
     use PathTrait;
 
@@ -29,9 +29,9 @@ class Item implements ItemInterface
      * @param string $property
      * @param array $messages
      * @param PathInterface $path
-     * @return ItemInterface
+     * @return ErrorItemInterface
      */
-    public static function make(string $property, array $messages, PathInterface $path): ItemInterface
+    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface
     {
         return new self($property, $messages, $path);
     }
