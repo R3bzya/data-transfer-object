@@ -3,7 +3,7 @@
 namespace Rbz\Data\Components;
 
 use ArrayIterator;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 class Path implements PathInterface
 {
@@ -41,9 +41,7 @@ class Path implements PathInterface
 
     public function with(PathInterface $path): PathInterface
     {
-        $clone = clone $this;
-        $clone->path = $this->get().self::separator().$path->get();
-        return $clone;
+        return new static($this->get().self::separator().$path->get());
     }
 
     public static function makeString(array $path): string

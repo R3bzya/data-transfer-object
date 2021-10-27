@@ -3,8 +3,8 @@
 namespace Rbz\Data\Traits;
 
 use Rbz\Data\Components\Filter;
-use Rbz\Data\Interfaces\Components\FilterInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 trait FilterTrait

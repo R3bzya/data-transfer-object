@@ -1,11 +1,12 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Components;
+namespace Rbz\Data\Interfaces\Components\Filter;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
-interface FilterInterface extends Arrayable
+interface FilterInterface extends Arrayable, PathProviderInterface
 {
     public static function make(array $properties): FilterInterface;
     public function setRules(array $rules): FilterInterface;
@@ -17,9 +18,4 @@ interface FilterInterface extends Arrayable
     public function getInclude(): array;
     public function getExclude(): array;
     public function getProperties(): array;
-    public function setPath(PathInterface $path): void;
-
-    public function getPath(): PathInterface;
-
-    public function hasPath(): bool;
 }

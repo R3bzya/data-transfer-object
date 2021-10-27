@@ -5,8 +5,9 @@ namespace Rbz\Data\Interfaces\Collections;
 use Countable;
 use Illuminate\Contracts\Support\Arrayable;
 use IteratorAggregate;
+use Rbz\Data\Interfaces\Components\Cloneable;
 
-interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
+interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable
 {
     /**
      * @param mixed $data
@@ -54,9 +55,4 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
-
-    /**
-     * @return static
-     */
-    public function copy();
 }

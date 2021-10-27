@@ -10,7 +10,8 @@ class CompositeTransferTest extends BaseCase
     public function testComposite()
     {
         $transfer = new TripleCompositeTransfer();
-        //dd($transfer->getAdditionalTransfers()->toArray());
+
+        //dd($transfer->composite->defaultTransfer->getErrors());
 
         $transfer->validate();
 

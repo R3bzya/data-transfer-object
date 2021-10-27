@@ -3,7 +3,7 @@
 namespace Rbz\Data\Traits;
 
 use Rbz\Data\Components\Collector;
-use Rbz\Data\Interfaces\Components\CollectorInterface;
+use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
 
 trait CollectorTrait
 {

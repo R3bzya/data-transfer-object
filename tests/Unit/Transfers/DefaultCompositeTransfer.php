@@ -4,14 +4,17 @@ namespace Rbz\Data\Tests\Unit\Transfers;
 
 use Rbz\Data\CompositeTransfer;
 
+/**
+ * @property DefaultTransfer $defaultTransfer
+ */
 class DefaultCompositeTransfer extends CompositeTransfer
 {
     public string $b_one_s;
 
-    public DefaultTransfer $defaultTransfer;
-
-    public function __construct()
+    public function internalTransfers(): array
     {
-        $this->defaultTransfer = new DefaultTransfer();
+        return [
+            'defaultTransfer' => DefaultTransfer::class
+        ];
     }
 }

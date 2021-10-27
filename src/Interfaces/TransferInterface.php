@@ -4,11 +4,13 @@ namespace Rbz\Data\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
-use Rbz\Data\Interfaces\Components\CollectorInterface;
-use Rbz\Data\Interfaces\Components\FilterInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Interfaces\Collections\Error\CollectionProviderInterface;
+use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
+use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 
-interface TransferInterface extends PropertiesInterface
+interface TransferInterface extends PropertiesInterface, PathProviderInterface, CollectionProviderInterface
 {
     public static function make($data = []): TransferInterface;
 

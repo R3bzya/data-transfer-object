@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Components;
 
-use Rbz\Data\Interfaces\Components\CollectorInterface;
+use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
 
 class Collector implements CollectorInterface
 {

@@ -8,9 +8,14 @@ use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface as ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
+use Rbz\Data\Traits\ContainerTrait;
 
 abstract class CompositeTransfer extends Transfer
 {
+    use ContainerTrait;
+
+    abstract public function internalTransfers(): array;
+
     public function load($data): bool
     {
         $data = Collection::make($data)->toArray();
@@ -64,7 +69,7 @@ abstract class CompositeTransfer extends Transfer
         return Collection::make($this->getProperties())
             ->flip()
             ->filter(fn(string $key, string $property) => $this->isTransferAttribute($property))
-            ->map(fn(string $key, string $property) => $this->getTransfer($property));
+            ->map(fn(string $key, string $property) => $this->getTransfer($property)->withPath(Path::make($property)));
     }
 
     public function isTransferAttribute($attribute): bool

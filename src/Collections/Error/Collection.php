@@ -6,11 +6,11 @@ use Rbz\Data\Collections\Collection as BaseCollection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Traits\PathTrait;
 
 class Collection extends BaseCollection implements CollectionInterface
 {
-    private PathInterface $path;
+    use PathTrait;
 
     /**
      * @param string $key
@@ -28,27 +28,6 @@ class Collection extends BaseCollection implements CollectionInterface
         } else {
             parent::add($item->getPath()->get(), $item);
         }
-    }
-
-    public function withPath(PathInterface $path): CollectionInterface
-    {
-        $this->path = $path;
-        return $this;
-    }
-
-    public function path(): PathInterface
-    {
-        return $this->path;
-    }
-
-    public function getPath(): PathInterface
-    {
-        return $this->path();
-    }
-
-    public function hasPath(): bool
-    {
-        return isset($this->path);
     }
 
     public function getFirst(?string $property = null): ?ItemInterface
@@ -72,7 +51,7 @@ class Collection extends BaseCollection implements CollectionInterface
 
     public function with(CollectionInterface $collection): CollectionInterface
     {
-        return $this->copy()->merge($collection);
+        return $this->clone()->merge($collection);
     }
 
     public function merge(CollectionInterface $collection): CollectionInterface

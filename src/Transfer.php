@@ -10,6 +10,7 @@ use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Traits\FilterTrait;
+use Rbz\Data\Traits\PathTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
 
@@ -17,7 +18,8 @@ abstract class Transfer extends Properties implements TransferInterface
 {
     use ErrorCollectionTrait,
         CollectorTrait,
-        FilterTrait;
+        FilterTrait,
+        PathTrait;
 
     protected string $adapter;
 
@@ -130,5 +132,10 @@ abstract class Transfer extends Properties implements TransferInterface
     public function getOnlyTransferProperties(array $data): CollectionInterface
     {
         return Collection::make($data)->only($this->getProperties());
+    }
+
+    public function clone(): TransferInterface
+    {
+        return clone $this;
     }
 }

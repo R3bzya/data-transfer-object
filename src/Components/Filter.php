@@ -3,8 +3,8 @@
 namespace Rbz\Data\Components;
 
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Interfaces\Components\FilterInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 class Filter implements FilterInterface
@@ -162,7 +162,7 @@ class Filter implements FilterInterface
         return $this;
     }
 
-    public function setPath(PathInterface $path): void
+    public function setPath(PathInterface $path)
     {
         if ($this->hasPath()) {
             $this->path = $this->path->with($path);
@@ -179,5 +179,19 @@ class Filter implements FilterInterface
     public function hasPath(): bool
     {
         return isset($this->path);
+    }
+
+    public function clone()
+    {
+        return clone $this;
+    }
+
+    public function withPath(PathInterface $path)
+    {
+        if ($this->hasPath()) {
+            $this->path = $this->path->with($path);
+        } else {
+            $this->path = $path;
+        }
     }
 }

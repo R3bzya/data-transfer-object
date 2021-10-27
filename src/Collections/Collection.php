@@ -128,7 +128,7 @@ class Collection implements CollectionInterface
         ));
     }
 
-    public function copy()
+    public function clone()
     {
         return clone $this;
     }

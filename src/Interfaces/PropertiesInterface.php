@@ -3,7 +3,7 @@
 namespace Rbz\Data\Interfaces;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Rbz\Data\Interfaces\Collections\Collectable;
+use Rbz\Data\Interfaces\Components\Collectable;
 
 interface PropertiesInterface extends Arrayable, Collectable
 {

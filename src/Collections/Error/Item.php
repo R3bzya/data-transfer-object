@@ -3,13 +3,15 @@
 namespace Rbz\Data\Collections\Error;
 
 use Rbz\Data\Interfaces\Collections\Error\ItemInterface;
-use Rbz\Data\Interfaces\Components\PathInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Traits\PathTrait;
 
 class Item implements ItemInterface
 {
+    use PathTrait;
+
     private string $property;
     private array $messages;
-    private PathInterface $path;
 
     /**
      * @param string $property
@@ -54,16 +56,6 @@ class Item implements ItemInterface
         return $this->property();
     }
 
-    public function path(): PathInterface
-    {
-        return $this->path;
-    }
-
-    public function getPath(): PathInterface
-    {
-        return $this->path();
-    }
-
     public function toArray(): array
     {
         return [
@@ -93,10 +85,8 @@ class Item implements ItemInterface
         return count($this->messages());
     }
 
-    public function withPath(PathInterface $path): ItemInterface
+    public function clone()
     {
-        $clone = clone $this;
-        $clone->path = $path;
-        return $clone;
+        return clone $this;
     }
 }
