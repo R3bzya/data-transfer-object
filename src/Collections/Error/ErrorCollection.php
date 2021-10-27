@@ -21,7 +21,7 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
         $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), Path::make($key)));
     }
 
-    public function addItem(ErrorItemInterface $item): void
+    public function addItem($item): void
     {
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
@@ -49,12 +49,12 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
         return null;
     }
 
-    public function with(ErrorCollectionInterface $collection): ErrorCollectionInterface
+    public function with($collection)
     {
         return $this->clone()->merge($collection);
     }
 
-    public function merge(ErrorCollectionInterface $collection): ErrorCollectionInterface
+    public function merge($collection)
     {
         foreach ($collection->getItems() as $item) {
             if ($collection->hasPath()) {
