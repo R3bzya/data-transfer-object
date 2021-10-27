@@ -19,8 +19,6 @@ interface ContainerInterface extends Arrayable, Collectable
      */
     public function getTransfers(): array;
 
-    public function set(string $name, TransferInterface $transfer);
-
     public function keys(): CollectionInterface;
 
     /**

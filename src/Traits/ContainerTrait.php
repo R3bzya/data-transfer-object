@@ -28,9 +28,8 @@ trait ContainerTrait
         if ($this->container()->has($name)) {
             if ($this->hasPath()) {
                 return $this->container()->get($name)->setPath($this->path()->with(Path::make($name)));
-            } else {
-                return $this->container()->get($name)->setPath(Path::make($name));
             }
+            return $this->container()->get($name)->setPath(Path::make($name));
         }
         return parent::__get($name);
     }
@@ -38,9 +37,6 @@ trait ContainerTrait
     public function __set($name, $value)
     {
         if ($this->container()->has($name)) {
-            $this->container()->set($name, $value);
-        }
-        if (key_exists($name, $this->internalTransfers()) && ! $this->container()->has($name)) {
             $this->container()->add($name, $value);
         }
         if (! $this->container()->has($name)) {

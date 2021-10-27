@@ -24,17 +24,6 @@ class Container implements ContainerInterface
 
     public function add(string $name, TransferInterface $transfer): void
     {
-        if ($this->has($name)) {
-            throw (new DomainException("Transfer a key `$name` exist"));
-        }
-        $this->transfers[$name] = $transfer;
-    }
-
-    public function set(string $name, TransferInterface $transfer)
-    {
-        if (! $this->has($name)) {
-            throw new DomainException("Transfer a key `$name` doesnt exist");
-        }
         $this->transfers[$name] = $transfer;
     }
 

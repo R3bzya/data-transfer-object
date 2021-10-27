@@ -18,7 +18,7 @@ abstract class CompositeTransfer extends Transfer
     {
         $data = Collection::make($data)->toArray();
         $success = parent::load($data);
-        foreach ($this->container()->toCollection() as $property => $transfer) {
+        foreach ($this->container()->getTransfers() as $property => $transfer) {
             $success = $transfer->load($this->getTransferData($property, $data)) && $success;
         }
         return $success;
@@ -58,7 +58,7 @@ abstract class CompositeTransfer extends Transfer
     public function getErrors(): ErrorCollectionInterface
     {
         $collection = parent::getErrors();
-        foreach ($this->container()->toCollection() as $property => $transfer) {
+        foreach ($this->container()->getTransfers() as $property => $transfer) {
             $collection->merge($transfer->getErrors()->withPath(Path::make($property)));
         }
         return $collection;
