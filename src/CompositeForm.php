@@ -19,9 +19,17 @@ abstract class CompositeForm extends Form
     {
         $success = parent::load($data);
         foreach ($this->getAdditionalForms() as $form) {
-            $success = $this->getForm($form)->load($data[$form] ?? $data) && $success;
+            $success = $this->getForm($form)->load($this->getFormData($form, $data)) && $success;
         }
         return $success;
+    }
+
+    public function getFormData(string $form, array $data): array
+    {
+        if (! isset($data[$form]) || ! is_array($data[$form])) {
+            return $data;
+        }
+        return $data[$form];
     }
 
     public function setAttributes(array $data): bool

@@ -45,7 +45,7 @@ abstract class FormErrors extends Attributes
     public function setAttribute(string $attribute, $value): bool
     {
         if (! parent::setAttribute($attribute, $value)) {
-            $this->errors()->add($attribute, ErrorMessage::notSet());
+            $this->errors()->add($attribute, ErrorMessage::notSet($attribute));
             return false;
         }
         return true;
