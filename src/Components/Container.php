@@ -24,28 +24,26 @@ class Container implements ContainerInterface
 
     public function add(string $name, TransferInterface $transfer): void
     {
-        if (! $this->has($name)) {
-            $this->transfers[$name] = $transfer;
-        } else {
+        if ($this->has($name)) {
             throw (new DomainException("Transfer a key `$name` exist"));
         }
+        $this->transfers[$name] = $transfer;
     }
 
     public function set(string $name, TransferInterface $transfer)
     {
-        if ($this->has($name)) {
-            $this->transfers[$name] = $transfer;
-        } else {
+        if (! $this->has($name)) {
             throw new DomainException("Transfer a key `$name` doesnt exist");
         }
+        $this->transfers[$name] = $transfer;
     }
 
     public function get(string $name): TransferInterface
     {
-        if ($this->has($name)) {
-            return $this->transfers()[$name];
+        if (! $this->has($name)) {
+            throw new DomainException("Transfer handler doesnt have `$name`");
         }
-        throw new DomainException("Transfer handler doesnt have `$name`");
+        return $this->transfers()[$name];
     }
 
     public function has(string $name): bool
