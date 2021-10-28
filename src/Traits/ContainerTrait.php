@@ -8,14 +8,14 @@ use Rbz\Data\Interfaces\Components\ContainerInterface;
 
 trait ContainerTrait
 {
-    private ContainerInterface $transfersHandler;
+    private ContainerInterface $container;
 
     public function container(): ContainerInterface
     {
-        if (! isset($this->transfersHandler)) {
-            $this->transfersHandler = new Container($this->internalTransfers());
+        if (! isset($this->container)) {
+            $this->container = new Container($this->internalTransfers());
         }
-        return $this->transfersHandler;
+        return $this->container;
     }
 
     public function getContainer(): ContainerInterface
@@ -38,8 +38,7 @@ trait ContainerTrait
     {
         if ($this->container()->has($name)) {
             $this->container()->add($name, $value);
-        }
-        if (! $this->container()->has($name)) {
+        } else {
             parent::__set($name, $value);
         }
     }

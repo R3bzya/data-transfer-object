@@ -46,7 +46,7 @@ abstract class CompositeTransfer extends Transfer
         $collection = Collection::make($data);
         parent::setProperties($collection->except($this->container()->keys()->toArray())->toArray());
         foreach ($collection->filter(fn($data, $property) => $this->isTransferData($property, $data)) as $transfer => $value) {
-            $this->container()->get($transfer)->load($value);
+            $this->container()->get($transfer)->setProperties($value);
         }
     }
 
