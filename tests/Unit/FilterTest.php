@@ -2,19 +2,26 @@
 
 namespace Rbz\Data\Tests\Unit;
 
+use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Components\Filter;
 
 /** ToDo удалить testTemp */
 class FilterTest extends BaseCase
 {
-    public function testTemp()
+    public function testWithPath()
     {
-        $filter = Filter::make(['1','2','3','4','5'])->setRules(['5']);
+        $filter = Filter::make(['1','2','3','4','5'])->setRules(['5'])->withPath(Path::make('composite'));
 
-        $this->assertTrue(false);
+        $filter->getProperties();
 
-        //dd($filter->apply());
+        $this->assertEquals([
+            'composite.1',
+            'composite.2',
+            'composite.3',
+            'composite.4',
+            'composite.5'
+        ], $filter->getProperties());
     }
 
     /**

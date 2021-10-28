@@ -18,4 +18,8 @@ interface FilterInterface extends Arrayable, PathProviderInterface
     public function getInclude(): array;
     public function getExclude(): array;
     public function getProperties(): array;
+    public function hasInclude(): bool;
+    public function hasExclude(): bool;
+    public function isInclude(string $rule): bool;
+    public function isExclude(string $rule): bool;
 }
