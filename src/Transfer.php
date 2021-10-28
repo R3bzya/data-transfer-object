@@ -5,7 +5,6 @@ namespace Rbz\Data;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
@@ -132,6 +131,10 @@ abstract class Transfer extends Properties implements TransferInterface
         return clone $this;
     }
 
+    /**
+     * TODO что-то не нравится что метод errors без путей
+     * @return ErrorCollectionInterface
+     */
     public function getErrors(): ErrorCollectionInterface
     {
         if ($this->hasPath()) {
@@ -140,6 +143,10 @@ abstract class Transfer extends Properties implements TransferInterface
         return $this->errors();
     }
 
+    /**
+     * TODO что-то не нравится что метод filter без путей
+     * @return FilterInterface
+     */
     public function getFilter(): FilterInterface
     {
         if ($this->hasPath()) {
