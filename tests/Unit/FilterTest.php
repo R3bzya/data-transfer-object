@@ -6,7 +6,6 @@ use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Components\Filter;
 
-/** ToDo удалить testTemp */
 class FilterTest extends BaseCase
 {
     public function testWithPath()
@@ -14,6 +13,8 @@ class FilterTest extends BaseCase
         $filter = Filter::make(['1','2','3','4','5'])->setRules(['5'])->withPath(Path::make('composite'));
 
         $filter->getProperties();
+
+        $this->assertTrue(false); // Filter ne rabotaet
 
         $this->assertEquals([
             'composite.1',

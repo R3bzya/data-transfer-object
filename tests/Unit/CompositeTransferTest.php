@@ -6,6 +6,18 @@ use Rbz\Data\Tests\BaseCase;
 
 class CompositeTransferTest extends BaseCase
 {
+    public function testTemp()
+    {
+        $transfer = $this->compositeTransfer();
+
+        $this->assertFalse($transfer->validate());
+        $this->assertEquals(4, $transfer->getErrors()->count());
+        $this->assertTrue($transfer->getErrors()->has('b_one_s'));
+        $this->assertTrue($transfer->getErrors()->has('default.a_one_s'));
+        $this->assertTrue($transfer->getErrors()->has('default.a_two_i'));
+        $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
+    }
+
     public function testValidation()
     {
         $transfer = $this->compositeTransfer();

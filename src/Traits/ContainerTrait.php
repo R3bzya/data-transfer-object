@@ -2,7 +2,6 @@
 
 namespace Rbz\Data\Traits;
 
-use Rbz\Data\Components\Path;
 use Rbz\Data\Components\Container;
 use Rbz\Data\Interfaces\Components\ContainerInterface;
 
@@ -26,10 +25,7 @@ trait ContainerTrait
     public function __get($name)
     {
         if ($this->container()->has($name)) {
-            if ($this->hasPath()) {
-                return $this->container()->get($name)->setPath($this->path()->with(Path::make($name)));
-            }
-            return $this->container()->get($name)->setPath(Path::make($name));
+            return $this->container()->get($name);
         }
         return parent::__get($name);
     }

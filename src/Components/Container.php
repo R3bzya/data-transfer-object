@@ -24,7 +24,7 @@ class Container implements ContainerInterface
 
     public function add(string $name, TransferInterface $transfer): void
     {
-        $this->transfers[$name] = $transfer;
+        $this->transfers[$name] = $transfer->withPath(Path::make($name));
     }
 
     public function get(string $name): TransferInterface
@@ -37,7 +37,7 @@ class Container implements ContainerInterface
 
     public function has(string $name): bool
     {
-        return key_exists($name, $this->transfers());
+        return $this->toCollection()->has($name);
     }
 
     public function transfers(): array

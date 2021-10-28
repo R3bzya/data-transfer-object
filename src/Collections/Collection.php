@@ -55,7 +55,7 @@ class Collection implements CollectionInterface
 
     public function has(string $key): bool
     {
-        return in_array($key, $this->keys()->toArray());
+        return key_exists($key, $this->items());
     }
 
     public function count(): int
