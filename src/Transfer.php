@@ -21,16 +21,6 @@ abstract class Transfer extends Properties implements TransferInterface
         FilterTrait,
         PathTrait;
 
-    protected string $adapter;
-
-    public function __get($name)
-    {
-        if (isset($this->adapter) && method_exists($this->adapter, $name)) {
-            return call_user_func([$this->adapter, $name], $this);
-        }
-        return parent::__get($name);
-    }
-
     public static function make($data = []): TransferInterface
     {
         $transfer = new static();
