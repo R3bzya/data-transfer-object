@@ -5,7 +5,10 @@ namespace Rbz\Data;
 use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
@@ -46,14 +49,7 @@ abstract class Transfer extends Properties implements TransferInterface
     public function validate(array $properties = []): bool
     {
         $this->errors()->clear();
-        /** ToDo fix it */
-        if ($this->hasPath()) {
-            $filter = $this->filter()->withPath($this->getPath());
-        } else {
-            $filter = $this->filter();
-        }
-        $filter->setRules($properties);
-
+        $filter = $this->getFilter()->setRules($properties);
         if (! $this->validateHas($filter->getRules()) || $this->errors()->isNotEmpty()) {
             return false;
         }
@@ -134,5 +130,21 @@ abstract class Transfer extends Properties implements TransferInterface
     public function clone(): TransferInterface
     {
         return clone $this;
+    }
+
+    public function getErrors(): ErrorCollectionInterface
+    {
+        if ($this->hasPath()) {
+            return $this->errors()->withPath($this->getPath());
+        }
+        return $this->errors();
+    }
+
+    public function getFilter(): FilterInterface
+    {
+        if ($this->hasPath()) {
+            return $this->filter()->withPath($this->getPath());
+        }
+        return  $this->filter();
     }
 }

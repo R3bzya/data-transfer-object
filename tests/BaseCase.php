@@ -9,18 +9,24 @@ use Rbz\Data\Tests\Unit\Transfers\CollectableTransfer;
 use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultTransfer;
+use Rbz\Data\Tests\Unit\Transfers\TripleCompositeTransfer;
 use Tests\TestCase;
 
 class BaseCase extends TestCase
 {
+    public function transfer(): DefaultTransfer
+    {
+        return new DefaultTransfer();
+    }
+
     public function compositeTransfer(): DefaultCompositeTransfer
     {
         return new DefaultCompositeTransfer();
     }
 
-    public function transfer(): DefaultTransfer
+    public function tripleComposite(): TripleCompositeTransfer
     {
-        return new DefaultTransfer();
+        return new TripleCompositeTransfer();
     }
 
     public function transferWithCustomRules(): CustomRulesTransfer
@@ -35,7 +41,7 @@ class BaseCase extends TestCase
 
     public function errorCollection(): ErrorCollection
     {
-        return (new ErrorCollection([]))->withPath(Path::make('BaseCase'));
+        return ErrorCollection::make([])->withPath(Path::make('BaseCase'));
     }
 
     public function collection($data = []): Collection

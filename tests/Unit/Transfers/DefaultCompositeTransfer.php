@@ -5,7 +5,7 @@ namespace Rbz\Data\Tests\Unit\Transfers;
 use Rbz\Data\CompositeTransfer;
 
 /**
- * @property DefaultTransfer $defaultTransfer
+ * @property DefaultTransfer $default
  */
 class DefaultCompositeTransfer extends CompositeTransfer
 {
@@ -14,7 +14,7 @@ class DefaultCompositeTransfer extends CompositeTransfer
     public function internalTransfers(): array
     {
         return [
-            'defaultTransfer' => DefaultTransfer::class
+            'default' => DefaultTransfer::class
         ];
     }
 }

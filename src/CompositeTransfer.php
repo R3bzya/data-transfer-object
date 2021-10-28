@@ -3,7 +3,6 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
@@ -58,8 +57,8 @@ abstract class CompositeTransfer extends Transfer
     public function getErrors(): ErrorCollectionInterface
     {
         $collection = parent::getErrors();
-        foreach ($this->container()->getTransfers() as $property => $transfer) {
-            $collection->merge($transfer->getErrors()->withPath(Path::make($property)));
+        foreach ($this->container()->getTransfers() as $transfer) {
+            $collection->merge($transfer->getErrors());
         }
         return $collection;
     }
