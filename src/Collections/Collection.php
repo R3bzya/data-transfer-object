@@ -55,7 +55,12 @@ class Collection implements CollectionInterface
 
     public function has(string $key): bool
     {
-        return key_exists($key, $this->items());
+        return $this->keys()->in($key);
+    }
+
+    public function in($value): bool
+    {
+        return in_array($value, $this->items(), true);
     }
 
     public function count(): int
@@ -102,12 +107,12 @@ class Collection implements CollectionInterface
 
     public function only(array $keys)
     {
-        return static::make(array_filter_keys($this->items(), fn(string $key) => in_array($key, $keys)));
+        return static::make(array_filter_keys($this->items(), fn(string $key) => in_array($key, $keys, true)));
     }
 
     public function except(array $keys)
     {
-        return static::make(array_filter_keys($this->items(), fn(string $key) => ! in_array($key, $keys)));
+        return static::make(array_filter_keys($this->items(), fn(string $key) => ! in_array($key, $keys, true)));
     }
 
     public function filter(?callable $callable)
