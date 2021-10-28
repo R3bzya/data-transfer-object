@@ -13,8 +13,11 @@ class CollectableTransfer extends Transfer
     /** @var Collection[] */
     public array $collections = [];
 
-    protected array $collectable = [
-        'defaultTransfers' => DefaultTransfer::class,
-        'collections' => Collection::class,
-    ];
+    public function collectable(): array
+    {
+        return [
+            'defaultTransfers' => DefaultTransfer::class,
+            'collections' => Collection::class,
+        ];
+    }
 }
