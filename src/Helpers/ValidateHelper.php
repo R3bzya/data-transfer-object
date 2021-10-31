@@ -65,8 +65,8 @@ class ValidateHelper
             return $this->transfer->getProperties();
         } elseif ($this->hasExclude($properties, $transfer->getPath())) {
             return array_map(fn(string $property) => Filter::makeExclude($property), $transfer->getProperties());
-        } elseif ($test = $this->filterPropertiesByPath($properties, $transfer->getPath())) {
-            return array_map(fn(string $property) => Path::make($property)->last()->get(), $test);
+        } elseif ($filtered = $this->filterPropertiesByPath($properties, $transfer->getPath())) {
+            return array_map(fn(string $property) => Path::make($property)->last()->get(), $filtered);
         }
         return $properties;
     }
