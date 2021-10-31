@@ -18,6 +18,8 @@ interface FilterInterface extends Arrayable
     public function getProperties(): array;
     public function hasInclude(): bool;
     public function hasExclude(): bool;
-    public function isInclude(string $rule): bool;
-    public function isExclude(string $rule): bool;
+    public static function isInclude(string $rule): bool;
+    public static function isExclude(string $rule): bool;
+    public static function makeRaw(string $rule): string;
+    public static function makeExclude(string $property): string;
 }

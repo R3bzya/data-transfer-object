@@ -65,22 +65,30 @@ class Filter implements FilterInterface
         return array_map(fn(string $rule) => mb_substr($rule, 1), $this->getRawExcludeFrom($data));
     }
 
+    public static function makeRaw(string $rule): string
+    {
+        if (self::isExclude($rule)) {
+            return (mb_substr($rule, 1));
+        }
+        return $rule;
+    }
+
     public function getRawExcludeFrom(array $data): array
     {
-        return array_filter($data, fn(string $rule) => $this->isExclude($rule));
+        return array_filter($data, fn(string $rule) => self::isExclude($rule));
     }
 
     public function getIncludeFrom(array $data): array
     {
-        return array_filter($data, fn(string $rule) => $this->isInclude($rule));
+        return array_filter($data, fn(string $rule) => self::isInclude($rule));
     }
 
-    public function isInclude(string $rule): bool
+    public static function isInclude(string $rule): bool
     {
         return ! str_starts_with($rule, self::separator());
     }
 
-    public function isExclude(string $rule): bool
+    public static function isExclude(string $rule): bool
     {
         return str_starts_with($rule, self::separator());
     }
@@ -160,5 +168,13 @@ class Filter implements FilterInterface
     public function clone()
     {
         return clone $this;
+    }
+
+    public static function makeExclude(string $property): string
+    {
+        if (self::isExclude($property)) {
+            return $property;
+        }
+        return self::separator().$property;
     }
 }

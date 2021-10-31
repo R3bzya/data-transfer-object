@@ -3,6 +3,7 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Helpers\ValidateHelper;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
@@ -33,9 +34,9 @@ abstract class CompositeTransfer extends Transfer
 
     public function validate(array $properties = []): bool
     {
-        $validate = parent::validate($properties);
+        $validate = parent::validate((new ValidateHelper($this))->parse($properties));
         foreach ($this->container()->getTransfers() as $transfer) {
-            $validate = $transfer->validate($properties) && $validate;
+            $validate = $transfer->validate((new ValidateHelper($transfer))->parse($properties)) && $validate;
         }
         return $validate;
     }

@@ -76,4 +76,9 @@ class Path implements PathInterface
     {
         return count(self::makeArray($this->get()));
     }
+
+    public function equal(PathInterface $path): bool
+    {
+        return $this->get() === $path->get();
+    }
 }
