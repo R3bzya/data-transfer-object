@@ -54,7 +54,7 @@ class Filter implements FilterInterface
     {
         if ($this->hasInclude()) {
             return $this->filterNotInclude($this->properties());
-        } elseif ($this->filterExclude($this->getProperties())) {
+        } elseif ($this->hasExclude()) {
             return $this->filterExclude($this->properties());
         }
         return $this->getProperties();
