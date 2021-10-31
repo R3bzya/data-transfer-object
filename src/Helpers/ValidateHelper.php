@@ -65,7 +65,7 @@ class ValidateHelper
             return $this->transfer->getProperties();
         } elseif ($this->hasExclude($properties, $transfer->getPath())) {
             return array_map(fn(string $property) => Filter::makeExclude($property), $transfer->getProperties());
-        } elseif ($filtered = $this->filterPropertiesByPath($properties, $transfer->getPath())) {
+        } elseif ($filtered = $this->filterProperties($properties, $transfer->getPath())) {
             return array_map(fn(string $property) => Path::make($property)->last()->get(), $filtered);
         }
         return $properties;
@@ -89,5 +89,19 @@ class ValidateHelper
     private function hasExclude(array $properties, PathInterface $path): bool
     {
         return $this->hasExcludeProperties($properties, $path) || $this->hasExcludeTransferEntry($properties, $path);
+    }
+
+    private function filterExcludePropertiesByPath(array $properties, PathInterface $path): array
+    {
+        return array_filter($properties, fn(string $property) => str_starts_with(Filter::makeExclude($property), $path->last()->get()));
+    }
+
+    /**
+     * TODO метод не покрыт тестами
+     */
+    private function filterProperties(array $properties, PathInterface $path): array
+    {
+        return $this->filterPropertiesByPath($properties, $path)
+            ?: $this->filterExcludePropertiesByPath($properties, $path);
     }
 }
