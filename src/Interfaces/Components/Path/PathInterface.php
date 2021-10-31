@@ -2,10 +2,11 @@
 
 namespace Rbz\Data\Interfaces\Components\Path;
 
+use Countable;
 use Illuminate\Contracts\Support\Arrayable;
 use IteratorAggregate;
 
-interface PathInterface extends Arrayable, IteratorAggregate
+interface PathInterface extends Arrayable, IteratorAggregate, Countable
 {
     public static function make(string $path): PathInterface;
     public function get(): string;
@@ -14,4 +15,5 @@ interface PathInterface extends Arrayable, IteratorAggregate
     public static function makeString(array $path): string;
     public static function makeArray(string $path): array;
     public static function getSeparator(): string;
+    public function last(): PathInterface;
 }

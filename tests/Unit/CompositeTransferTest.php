@@ -6,6 +6,9 @@ use Rbz\Data\Tests\BaseCase;
 
 class CompositeTransferTest extends BaseCase
 {
+    /**
+     * TODO чек ит
+     */
     public function testTemp()
     {
         $transfer = $this->compositeTransfer();

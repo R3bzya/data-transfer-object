@@ -36,7 +36,7 @@ class Path implements PathInterface
 
     public function isInternal(): bool
     {
-        return strpos($this->get(), self::separator());
+        return $this->count() > 1;
     }
 
     public function with(PathInterface $path): PathInterface
@@ -56,11 +56,24 @@ class Path implements PathInterface
 
     public function toArray(): array
     {
-        return explode(self::separator(), $this->get());
+        return self::makeArray($this->get());
     }
 
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->toArray());
+    }
+
+    public function last(): PathInterface
+    {
+        if (! $this->isInternal()) {
+            return self::make($this->get());
+        }
+        return self::make($this->toArray()[$this->count() - 1]);
+    }
+
+    public function count(): int
+    {
+        return count(self::makeArray($this->get()));
     }
 }

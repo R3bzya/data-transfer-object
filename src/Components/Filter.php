@@ -5,12 +5,9 @@ namespace Rbz\Data\Components;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
 use Rbz\Data\Interfaces\TransferInterface;
-use Rbz\Data\Traits\PathTrait;
 
 class Filter implements FilterInterface
 {
-    use PathTrait;
-
     private array $properties;
 
     /** @var string[] */
@@ -57,8 +54,10 @@ class Filter implements FilterInterface
     {
         if ($this->hasInclude()) {
             return $this->filterNotInclude($this->properties());
+        } elseif ($this->filterExclude($this->getProperties())) {
+            return $this->filterExclude($this->properties());
         }
-        return $this->filterExclude($this->properties());
+        return $this->getProperties();
     }
 
     public function getExcludeFrom(array $data): array
@@ -134,11 +133,6 @@ class Filter implements FilterInterface
     public function toArray(): array
     {
         return $this->properties();
-    }
-
-    public function getRules(): array
-    {
-        return array_merge($this->include(), $this->exclude());
     }
 
     public function getInclude(): array
