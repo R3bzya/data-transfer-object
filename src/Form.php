@@ -11,6 +11,19 @@ use Rbz\Forms\Interfaces\FromInterface;
 abstract class Form extends FormErrors
     implements FromInterface
 {
+    /**
+     * @param array $data
+     * @return static
+     */
+    public static function make(array $data = [])
+    {
+        $transfer = new static();
+        if (! empty($data)) {
+            $transfer->load($data);
+        }
+        return $transfer;
+    }
+
     abstract public function rules(): array;
 
     public function load(array $data): bool
