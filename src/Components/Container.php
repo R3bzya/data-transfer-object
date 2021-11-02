@@ -30,7 +30,7 @@ class Container implements ContainerInterface
     public function get(string $name): TransferInterface
     {
         if (! $this->has($name)) {
-            throw new DomainException("Transfer handler doesnt have `$name`");
+            throw new DomainException("Container doesnt have `$name`");
         }
         return $this->transfers()[$name];
     }

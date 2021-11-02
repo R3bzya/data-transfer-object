@@ -7,6 +7,19 @@ use Rbz\Data\Tests\BaseCase;
 class CompositeTransferTest extends BaseCase
 {
     /**
+     * TODO
+     */
+    public function testT()
+    {
+        $transfer = $this->compositeTransfer();
+
+        $transfer->validate(['!a_three_a']);
+
+        dd($transfer->getErrors()->toArray());
+        dd($transfer->validate(['!a_three_a']), $transfer->getErrors()->toArray()); // работает некоректно
+    }
+
+    /**
      * TODO чек ит
      */
     public function testTemp()
