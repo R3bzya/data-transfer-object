@@ -15,8 +15,9 @@ class CompositeTransferTest extends BaseCase
 
         $transfer->validate(['!a_three_a']);
 
-        dd($transfer->getErrors()->toArray());
-        dd($transfer->validate(['!a_three_a']), $transfer->getErrors()->toArray()); // работает некоректно
+        $this->assertTrue(false);
+        //dd($transfer->getErrors()->toArray());
+        //dd($transfer->validate(['!a_three_a']), $transfer->getErrors()->toArray()); // работает некоректно
     }
 
     /**

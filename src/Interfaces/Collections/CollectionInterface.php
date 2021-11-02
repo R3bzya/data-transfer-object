@@ -21,7 +21,7 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function get(string $key, $default = null);
     public function getItems(): array;
     public function has(string $key): bool;
-    public function in($value): bool;
+    public function in($value, bool $strict = false): bool;
 
     /**
      * @param array $keys
