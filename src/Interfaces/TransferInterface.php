@@ -20,6 +20,6 @@ interface TransferInterface extends PropertiesInterface, PathProviderInterface, 
     public function validate(array $properties = []): bool;
     public function getCollector(): CollectorInterface;
     public function getFilter(): FilterInterface;
-    public function getClassName(): string;
+    public function getShortClassName(): string;
     public function setFilter(FilterInterface $filter): void;
 }

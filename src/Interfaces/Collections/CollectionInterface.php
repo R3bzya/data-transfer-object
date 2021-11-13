@@ -15,6 +15,7 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @return static
      */
     public static function make($data = []);
+
     public function load(array $data): void;
     public function add($value): void;
     public function set(string $key, $value = null): void;
@@ -23,6 +24,7 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function getItems(): array;
     public function has(string $key): bool;
     public function in($value, bool $strict = false): bool;
+    public function notIn($value, bool $strict = false): bool;
 
     /**
      * @param array $keys

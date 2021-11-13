@@ -20,10 +20,7 @@
     "autoload": {
         "psr-4": {
             "Rbz\\Data\\": "src/"
-        },
-        "files": [
-            "commands.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

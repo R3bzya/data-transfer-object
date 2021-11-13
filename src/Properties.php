@@ -95,18 +95,4 @@ abstract class Properties implements PropertiesInterface
         }
         return $collection;
     }
-
-    public function getOnly(array $properties): CollectionInterface
-    {
-        $collection = Collection::make();
-        foreach ($properties as $property) {
-            $collection->set($property, $this->getProperty($property));
-        }
-        return $collection;
-    }
-
-    public function getExcept(array $properties): CollectionInterface
-    {
-        return $this->getOnly($this->getProperties()->flip()->except($properties)->keys()->toArray());
-    }
 }

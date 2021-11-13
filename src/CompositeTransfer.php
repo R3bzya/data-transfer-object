@@ -6,7 +6,6 @@ use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
-use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
 
 abstract class CompositeTransfer extends Transfer
@@ -20,7 +19,7 @@ abstract class CompositeTransfer extends Transfer
     {
         $data = Collection::make($data)->toArray();
         $success = parent::load($data);
-        foreach ($this->container()->getTransfers() as $property => $transfer) {
+        foreach ($this->container()->toArray() as $property => $transfer) {
             $success = $transfer->load($this->getTransferData($property, $data)) && $success;
         }
         return $success;
@@ -37,7 +36,7 @@ abstract class CompositeTransfer extends Transfer
     public function validate(array $properties = []): bool
     {
         $validate = parent::validate($properties);
-        foreach ($this->container()->getTransfers() as $transfer) {
+        foreach ($this->container()->toArray() as $transfer) {
             $validate = $transfer->validate($properties) && $validate;
         }
         return $validate;
@@ -65,7 +64,7 @@ abstract class CompositeTransfer extends Transfer
     public function getErrors(): ErrorCollectionInterface
     {
         $collection = parent::getErrors();
-        foreach ($this->container()->getTransfers() as $transfer) {
+        foreach ($this->container()->toArray() as $transfer) {
             $collection->merge($transfer->getErrors());
         }
         return $collection;
@@ -76,10 +75,13 @@ abstract class CompositeTransfer extends Transfer
         return $this->getErrors()->isNotEmpty();
     }
 
+    public function toCollection(): CollectionInterface
+    {
+        return parent::toCollection()->with($this->container()->toCollection());
+    }
+
     public function toArray(): array
     {
-        return $this->toCollection()->merge(
-            $this->container()->toCollection()->map(fn(TransferInterface $transfer) => $transfer->toArray())
-        )->toArray();
+        return $this->toCollection()->toArray();
     }
 }

@@ -8,11 +8,11 @@ use Rbz\Data\Interfaces\TransferInterface;
 
 interface ContainerInterface extends Arrayable, Collectable
 {
-    public function add(string $name, TransferInterface $transfer): void;
+    public function add(string $id, TransferInterface $transfer): void;
 
-    public function get(string $name): TransferInterface;
+    public function get(string $id): TransferInterface;
 
-    public function has(string $name): bool;
+    public function has(string $id): bool;
 
     /**
      * @return TransferInterface[]

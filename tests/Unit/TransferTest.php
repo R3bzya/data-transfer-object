@@ -14,8 +14,6 @@ class TransferTest extends BaseCase
         $transfer = $this->transfer();
 
         $this->assertTrue($transfer->load($data));
-
-        dd($transfer->getExcept(['a_one_s'])->toArray());
         $this->assertEquals($data, $transfer->toArray());
         $this->assertTrue($transfer->getErrors()->isEmpty());
     }

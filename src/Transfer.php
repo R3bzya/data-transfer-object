@@ -113,14 +113,9 @@ abstract class Transfer extends Properties
         }
     }
 
-    public function className(): string
+    public function getShortClassName(): string
     {
-        return get_class_name($this);
-    }
-
-    public function getClassName(): string
-    {
-        return $this->className();
+        return $this->getReflectionInstance()->getShortName();
     }
 
     public function getOnlyTransferProperties(array $data): CollectionInterface

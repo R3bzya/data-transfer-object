@@ -17,6 +17,4 @@ interface PropertiesInterface extends Arrayable, Collectable
     public function isSetProperty(string $property): bool;
     public function isNullProperty(string $property): bool;
     public function isPublicProperty(string $property): bool;
-    public function getOnly(array $properties): CollectionInterface;
-    public function getExcept(array $properties): CollectionInterface;
 }

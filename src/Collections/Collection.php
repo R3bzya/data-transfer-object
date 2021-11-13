@@ -68,6 +68,11 @@ class Collection implements CollectionInterface
         return in_array($value, $this->items(), $strict);
     }
 
+    public function notIn($value, bool $strict = false): bool
+    {
+        return ! in_array($value, $this->items(), $strict);
+    }
+
     public function count(): int
     {
         return count($this->items());
@@ -119,7 +124,7 @@ class Collection implements CollectionInterface
     public function except(array $keys)
     {
         $keys = Collection::make($keys);
-        return $this->filter(fn($value, $key) => ! $keys->in($key, true));
+        return $this->filter(fn($value, $key) => $keys->notIn($key, true));
     }
 
     public function filter(?callable $callable)

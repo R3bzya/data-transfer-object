@@ -22,22 +22,22 @@ class Container implements ContainerInterface
         }
     }
 
-    public function add(string $name, TransferInterface $transfer): void
+    public function add(string $id, TransferInterface $transfer): void
     {
-        $this->transfers[$name] = $transfer->withPath(Path::make($name));
+        $this->transfers[$id] = $transfer->withPath(Path::make($id));
     }
 
-    public function get(string $name): TransferInterface
+    public function get(string $id): TransferInterface
     {
-        if (! $this->has($name)) {
-            throw new DomainException("Container doesnt have `$name`");
+        if (! $this->has($id)) {
+            throw new DomainException("Container doesnt have `$id`");
         }
-        return $this->transfers()[$name];
+        return $this->transfers()[$id];
     }
 
-    public function has(string $name): bool
+    public function has(string $id): bool
     {
-        return $this->toCollection()->has($name);
+        return $this->toCollection()->has($id);
     }
 
     public function transfers(): array
