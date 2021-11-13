@@ -74,10 +74,10 @@ class Path implements PathInterface
 
     public function count(): int
     {
-        return count(self::makeArray($this->get()));
+        return count($this->toArray());
     }
 
-    public function equal(PathInterface $path): bool
+    public function equalTo(PathInterface $path): bool
     {
         return $this->get() === $path->get();
     }

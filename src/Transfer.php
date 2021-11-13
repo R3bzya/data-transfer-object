@@ -15,7 +15,8 @@ use Rbz\Data\Traits\PathTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
 
-abstract class Transfer extends Properties implements TransferInterface
+abstract class Transfer extends Properties
+    implements TransferInterface
 {
     use ErrorCollectionTrait,
         CollectorTrait,

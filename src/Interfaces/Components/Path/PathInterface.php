@@ -16,5 +16,5 @@ interface PathInterface extends Arrayable, IteratorAggregate, Countable
     public static function makeArray(string $path): array;
     public static function getSeparator(): string;
     public function last(): PathInterface;
-    public function equal(PathInterface $path): bool;
+    public function equalTo(PathInterface $path): bool;
 }

@@ -144,4 +144,23 @@ class Collection implements CollectionInterface
     {
         return static::make(array_flip($this->items()));
     }
+
+    /**
+     * @param CollectionInterface $collection
+     * @return static
+     */
+    public function merge($collection)
+    {
+        $this->items = array_merge($this->items, $collection->getItems());
+        return $this;
+    }
+
+    /**
+     * @param CollectionInterface $collection
+     * @return static
+     */
+    public function with($collection)
+    {
+        return $this->clone()->merge($collection);
+    }
 }

@@ -3,12 +3,13 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Helpers\ValidateHelper;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\CompositeTransferInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
 
 abstract class CompositeTransfer extends Transfer
+    implements CompositeTransferInterface
 {
     use ContainerTrait;
 
@@ -34,9 +35,9 @@ abstract class CompositeTransfer extends Transfer
 
     public function validate(array $properties = []): bool
     {
-        $validate = parent::validate((new ValidateHelper($this))->parse($properties));
+        $validate = parent::validate($properties);
         foreach ($this->container()->getTransfers() as $transfer) {
-            $validate = $transfer->validate((new ValidateHelper($transfer))->parse($properties)) && $validate;
+            $validate = $transfer->validate($properties) && $validate;
         }
         return $validate;
     }
@@ -48,6 +49,11 @@ abstract class CompositeTransfer extends Transfer
         foreach ($collection->filter(fn($data, $property) => $this->isTransferData($property, $data)) as $transfer => $value) {
             $this->container()->get($transfer)->setProperties($value);
         }
+    }
+
+    public function getProperties(): array
+    {
+        return Collection::make(parent::getProperties())->merge($this->container()->keys())->toArray();
     }
 
     public function isTransferData(string $property, $data): bool
@@ -71,9 +77,8 @@ abstract class CompositeTransfer extends Transfer
 
     public function toArray(): array
     {
-        return array_merge(
-            parent::toArray(),
-            $this->container()->toCollection()->map(fn(TransferInterface $transfer) => $transfer->toArray())->toArray()
-        );
+        return $this->toCollection()->merge(
+            $this->container()->toCollection()->map(fn(TransferInterface $transfer) => $transfer->toArray())
+        )->toArray();
     }
 }

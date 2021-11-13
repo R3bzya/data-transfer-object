@@ -84,10 +84,7 @@ abstract class Properties implements PropertiesInterface
 
     public function isPublicProperty(string $property): bool
     {
-        if (! $this->getReflectionInstance()->hasProperty($property)) {
-            return false;
-        }
-        return $this->getReflectionInstance()->getProperty($property)->isPublic();
+        return $this->hasProperty($property);
     }
 
     public function toCollection(): CollectionInterface

@@ -52,6 +52,19 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      */
     public function flip();
 
+    /**
+     * @param CollectionInterface $collection
+     * @return static
+     */
+    public function merge($collection);
+
+    /**
+     * @param CollectionInterface $collection
+     * @return static
+     */
+    public function with($collection);
+
+
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
