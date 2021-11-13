@@ -14,9 +14,9 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @return static
      */
     public static function make($data = []);
-    public function getArrayFrom($value): array;
     public function load(array $data): void;
-    public function add(string $key, $value = null): void;
+    public function add($value): void;
+    public function set(string $key, $value = null): void;
     public function remove(string $key): void;
     public function get(string $key, $default = null);
     public function getItems(): array;

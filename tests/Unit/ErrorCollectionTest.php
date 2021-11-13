@@ -118,7 +118,7 @@ class ErrorCollectionTest extends BaseCase
     public function testIsEmpty()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertFalse($collection->isEmpty());
         $this->assertTrue($collection->isNotEmpty());
@@ -127,11 +127,11 @@ class ErrorCollectionTest extends BaseCase
     public function testCount()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(1, $collection->count());
 
-        $collection->add(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
 
         $this->assertEquals(2, $collection->count());
     }
@@ -139,17 +139,17 @@ class ErrorCollectionTest extends BaseCase
     public function testAdd()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(1, $collection->count());
         $this->assertEquals(1, $collection->get(self::PROPERTY_FIRST)->count());
 
-        $collection->add(self::PROPERTY_FIRST, 'Second message');
+        $collection->set(self::PROPERTY_FIRST, 'Second message');
 
         $this->assertEquals(1, $collection->count());
         $this->assertEquals(2, $collection->get(self::PROPERTY_FIRST)->count());
 
-        $collection->add(self::PROPERTY_FIRST, 'Second message');
+        $collection->set(self::PROPERTY_FIRST, 'Second message');
 
         $this->assertEquals(1, $collection->count());
         $this->assertEquals(2, $collection->get(self::PROPERTY_FIRST)->count());
@@ -170,12 +170,12 @@ class ErrorCollectionTest extends BaseCase
     public function testMerge()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(1, $this->count());
 
         $secondCollection = $this->errorCollection();
-        $secondCollection->add(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
+        $secondCollection->set(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
 
         $collection->merge($secondCollection);
 
@@ -185,12 +185,12 @@ class ErrorCollectionTest extends BaseCase
     public function testWith()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(1, $this->count());
 
         $secondCollection = $this->errorCollection();
-        $secondCollection->add(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
+        $secondCollection->set(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
 
         $newCollection = $collection->with($secondCollection);
 
@@ -204,7 +204,7 @@ class ErrorCollectionTest extends BaseCase
 
         $this->assertNull($collection->get(self::PROPERTY_FIRST));
 
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(self::PROPERTY_FIRST, $collection->get(self::PROPERTY_FIRST)->getProperty());
     }
@@ -215,11 +215,11 @@ class ErrorCollectionTest extends BaseCase
 
         $this->assertNull($collection->getFirst());
 
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(self::PROPERTY_FIRST, $collection->getFirst()->getProperty());
 
-        $collection->add(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
 
         $this->assertEquals(self::PROPERTY_SECOND, $collection->getFirst(self::PROPERTY_SECOND)->getProperty());
     }
@@ -227,7 +227,7 @@ class ErrorCollectionTest extends BaseCase
     public function testGetFirstMessage()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals(self::MESSAGE_ERROR, $collection->getFirstMessage());
     }
@@ -235,7 +235,7 @@ class ErrorCollectionTest extends BaseCase
     public function testHas()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertTrue($collection->has(self::PROPERTY_FIRST));
     }
@@ -243,7 +243,7 @@ class ErrorCollectionTest extends BaseCase
     public function testKeys()
     {
         $collection = $this->errorCollection();
-        $collection->add(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
+        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertEquals([self::PROPERTY_FIRST], $collection->keys()->toArray());
     }

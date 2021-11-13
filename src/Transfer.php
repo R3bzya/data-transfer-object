@@ -109,7 +109,7 @@ abstract class Transfer extends Properties
             }
             parent::setProperty($property, $value);
         } catch (Throwable $e) {
-            $this->errors()->add($property, $e->getMessage());
+            $this->errors()->set($property, $e->getMessage());
         }
     }
 

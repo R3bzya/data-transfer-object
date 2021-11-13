@@ -30,7 +30,12 @@ class Collection implements CollectionInterface
         return (array) $value;
     }
 
-    public function add(string $key, $value = null): void
+    public function add($value): void
+    {
+        $this->items[] = $value;
+    }
+
+    public function set(string $key, $value = null): void
     {
         $this->items[$key] = $value;
     }
@@ -96,7 +101,7 @@ class Collection implements CollectionInterface
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
-            $this->add($key, $value);
+            $this->set($key, $value);
         }
     }
 

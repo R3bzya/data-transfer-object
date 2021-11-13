@@ -16,7 +16,7 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
      * @param string $key
      * @param null $value
      */
-    public function add(string $key, $value = null): void
+    public function set(string $key, $value = null): void
     {
         $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), Path::make($key)));
     }
@@ -26,7 +26,7 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
-            parent::add($item->getPath()->get(), $item);
+            parent::set($item->getPath()->get(), $item);
         }
     }
 

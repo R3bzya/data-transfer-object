@@ -91,7 +91,7 @@ abstract class Properties implements PropertiesInterface
     {
         $collection = Collection::make();
         foreach ($this->getProperties() as $property) {
-            $collection->add($property, $this->getProperty($property));
+            $collection->set($property, $this->getProperty($property));
         }
         return $collection;
     }

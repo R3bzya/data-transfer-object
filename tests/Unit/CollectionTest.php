@@ -9,7 +9,7 @@ class CollectionTest extends BaseCase
     public function testAdd()
     {
         $data = $this->collection();
-        $data->add('test', 'test');
+        $data->set('test', 'test');
 
         $this->assertEquals(['test' => 'test'], $data->toArray());
     }
