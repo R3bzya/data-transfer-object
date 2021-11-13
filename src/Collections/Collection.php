@@ -168,4 +168,28 @@ class Collection implements CollectionInterface
     {
         return $this->clone()->merge($collection);
     }
+
+    public function offsetExists($offset): bool
+    {
+        return $this->has($offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    public function offsetSet($offset, $value): void
+    {
+        if (is_null($offset)) {
+            $this->add($value);
+        } else {
+            $this->set($offset, $value);
+        }
+    }
+
+    public function offsetUnset($offset): void
+    {
+        $this->remove($offset);
+    }
 }

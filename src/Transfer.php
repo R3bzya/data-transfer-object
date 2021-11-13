@@ -42,7 +42,7 @@ abstract class Transfer extends Properties
         $this->errors()->clear();
         $data = Collection::make($data)->toArray();
         $this->setProperties($data);
-        return $this->validateIsLoad($this->getOnlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties());
+        return $this->validateIsLoad($this->getOnlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties()->toArray());
     }
 
     public function validate(array $properties = []): bool
@@ -125,7 +125,7 @@ abstract class Transfer extends Properties
 
     public function getOnlyTransferProperties(array $data): CollectionInterface
     {
-        return Collection::make($data)->only($this->getProperties());
+        return Collection::make($data)->only($this->getProperties()->toArray());
     }
 
     public function clone(): TransferInterface

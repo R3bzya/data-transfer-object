@@ -125,7 +125,7 @@ class Validator implements ValidatorInterface
 
     public function getPropertiesAsArray(string $property): array
     {
-        return is_numeric($property) ? $this->transfer->getProperties() : (array) $property;
+        return is_numeric($property) ? $this->transfer->getProperties()->toArray() : (array) $property;
     }
 
     /**

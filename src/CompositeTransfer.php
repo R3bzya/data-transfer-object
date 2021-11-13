@@ -3,6 +3,7 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
 use Rbz\Data\Interfaces\TransferInterface;
@@ -51,9 +52,9 @@ abstract class CompositeTransfer extends Transfer
         }
     }
 
-    public function getProperties(): array
+    public function getProperties(): CollectionInterface
     {
-        return Collection::make(parent::getProperties())->merge($this->container()->keys())->toArray();
+        return parent::getProperties()->with($this->container()->keys());
     }
 
     public function isTransferData(string $property, $data): bool

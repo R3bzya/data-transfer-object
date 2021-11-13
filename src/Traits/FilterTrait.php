@@ -17,7 +17,7 @@ trait FilterTrait
     public function filter(): FilterInterface
     {
         if (! isset($this->filter)) {
-            $this->filter = Filter::make($this->getProperties());
+            $this->filter = Filter::make($this->getProperties()->toArray());
         }
         return $this->filter;
     }

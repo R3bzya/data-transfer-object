@@ -2,12 +2,13 @@
 
 namespace Rbz\Data\Interfaces\Collections;
 
+use ArrayAccess;
 use Countable;
 use Illuminate\Contracts\Support\Arrayable;
 use IteratorAggregate;
 use Rbz\Data\Interfaces\Components\Cloneable;
 
-interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable
+interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable, ArrayAccess
 {
     /**
      * @param mixed $data

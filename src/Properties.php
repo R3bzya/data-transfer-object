@@ -20,15 +20,15 @@ abstract class Properties implements PropertiesInterface
         }
     }
 
-    public function getProperties(): array
+    public function getProperties(): CollectionInterface
     {
-        $properties = [];
+        $collection = Collection::make();
         foreach ($this->getReflectionInstance()->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (! $property->isStatic()) {
-                $properties[] = $property->getName();
+                $collection->add($property->getName());
             }
         }
-        return $properties;
+        return $collection;
     }
 
     public function getProperty(string $property)
@@ -49,7 +49,7 @@ abstract class Properties implements PropertiesInterface
 
     public function hasProperty(string $property): bool
     {
-        return in_array($property, $this->getProperties(), true);
+        return $this->getProperties()->in($property, true);
     }
 
     public function toArray(): array
@@ -94,5 +94,19 @@ abstract class Properties implements PropertiesInterface
             $collection->set($property, $this->getProperty($property));
         }
         return $collection;
+    }
+
+    public function getOnly(array $properties): CollectionInterface
+    {
+        $collection = Collection::make();
+        foreach ($properties as $property) {
+            $collection->set($property, $this->getProperty($property));
+        }
+        return $collection;
+    }
+
+    public function getExcept(array $properties): CollectionInterface
+    {
+        return $this->getOnly($this->getProperties()->flip()->except($properties)->keys()->toArray());
     }
 }

@@ -14,6 +14,8 @@ class TransferTest extends BaseCase
         $transfer = $this->transfer();
 
         $this->assertTrue($transfer->load($data));
+
+        dd($transfer->getExcept(['a_one_s'])->toArray());
         $this->assertEquals($data, $transfer->toArray());
         $this->assertTrue($transfer->getErrors()->isEmpty());
     }
@@ -46,7 +48,7 @@ class TransferTest extends BaseCase
         $transfer = $this->transfer();
 
         $this->assertFalse($transfer->validate());
-        $this->assertEquals(count($transfer->getProperties()), $transfer->getErrors()->count());
+        $this->assertEquals($transfer->getProperties()->count(), $transfer->getErrors()->count());
     }
 
     public function testLoadedTransferValidation()
@@ -81,7 +83,7 @@ class TransferTest extends BaseCase
         $this->assertEquals(3, $transfer->getErrors()->count());
 
         $transfer->load([
-            'a_one_s' => 'sting',
+            'a_one_s' => 'string',
             'a_two_i' => 123,
             'a_three_a' => [],
         ]);
@@ -122,7 +124,7 @@ class TransferTest extends BaseCase
         return [
             [
                 [
-                    'a_one_s' => 'sting',
+                    'a_one_s' => 'string',
                     'a_two_i' => 123,
                     'a_three_a' => [],
                 ]
