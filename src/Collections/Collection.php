@@ -140,9 +140,7 @@ class Collection implements CollectionInterface
     public function map(?callable $callable)
     {
         $keys = $this->keys()->toArray();
-        return new static(array_combine($keys,
-            array_map($callable, $this->items(), $keys)
-        ));
+        return new static(array_combine($keys, array_map($callable, $this->items(), $keys)));
     }
 
     public function clone()

@@ -13,8 +13,6 @@ abstract class CompositeTransfer extends Transfer
 {
     use ContainerTrait;
 
-    abstract public function internalTransfers(): array;
-
     public function load($data): bool
     {
         $data = Collection::make($data)->toArray();

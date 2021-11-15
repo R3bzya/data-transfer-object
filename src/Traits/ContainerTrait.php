@@ -9,6 +9,8 @@ trait ContainerTrait
 {
     private ContainerInterface $container;
 
+    abstract public function internalTransfers(): array;
+
     public function container(): ContainerInterface
     {
         if (! isset($this->container)) {
