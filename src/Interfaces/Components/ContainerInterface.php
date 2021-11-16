@@ -20,10 +20,4 @@ interface ContainerInterface extends Arrayable, Collectable
     public function getTransfers(): array;
 
     public function keys(): CollectionInterface;
-
-    /**
-     * TODO fix it
-     * @return CollectionInterface|TransferInterface[]
-     */
-    public function toCollection(): CollectionInterface;
 }

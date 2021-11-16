@@ -4,7 +4,11 @@ namespace Rbz\Data\Interfaces\Collections\Error;
 
 interface ErrorCollectionProviderInterface
 {
-    public function setErrors(ErrorCollectionInterface $collection): void;
+    /**
+     * @param ErrorCollectionInterface $collection
+     * @return static
+     */
+    public function setErrors(ErrorCollectionInterface $collection);
 
     public function errors(): ErrorCollectionInterface;
 

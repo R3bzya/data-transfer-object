@@ -9,9 +9,10 @@ trait ErrorCollectionTrait
 {
     private ErrorCollectionInterface $_errors;
 
-    public function setErrors(ErrorCollectionInterface $collection): void
+    public function setErrors(ErrorCollectionInterface $collection)
     {
         $this->_errors = $collection;
+        return $this;
     }
 
     public function errors(): ErrorCollectionInterface

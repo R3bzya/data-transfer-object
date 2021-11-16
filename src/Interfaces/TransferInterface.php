@@ -5,7 +5,6 @@ namespace Rbz\Data\Interfaces;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
 use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
-use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 
 interface TransferInterface extends PropertiesInterface, PathProviderInterface, ErrorCollectionProviderInterface
@@ -20,10 +19,4 @@ interface TransferInterface extends PropertiesInterface, PathProviderInterface, 
     public function validate(array $properties = []): bool;
     public function getCollector(): CollectorInterface;
     public function getShortClassName(): string;
-
-    /**
-     * @param PathInterface $path
-     * @return static
-     */
-    public function withErrorsPath(PathInterface $path);
 }

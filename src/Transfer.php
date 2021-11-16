@@ -94,9 +94,21 @@ abstract class Transfer extends Properties
         return clone $this;
     }
 
-    public function withErrorsPath(PathInterface $path)
+    public function setPath(PathInterface $path)
     {
-        $this->setErrors($this->errors()->withPath($path));
+        $this->_path = $path;
+        $this->errors()->setPath($this->path());
         return $this;
+    }
+
+    public function withPath(PathInterface $path)
+    {
+        if ($this->hasPath()) {
+            $clone = $this->clone()->setPath($this->path()->with($path));
+        } else {
+            $clone = $this->clone()->setPath($path);
+        }
+
+        return $clone->setErrors($clone->errors()->withPath($clone->getPath()));
     }
 }

@@ -8,9 +8,9 @@ trait PathTrait
 {
     private PathInterface $_path;
 
-    public function setPath(PathInterface $_path)
+    public function setPath(PathInterface $path)
     {
-        $this->_path = $_path;
+        $this->_path = $path;
         return $this;
     }
 
