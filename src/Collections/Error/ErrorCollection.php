@@ -51,6 +51,7 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
 
     public function merge($collection)
     {
+        /** @var ErrorItemInterface $item */
         foreach ($collection->getItems() as $item) {
             if ($collection->hasPath()) {
                 $this->addItem($item->setPath($collection->getPath()->with($item->getPath())));

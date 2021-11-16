@@ -5,7 +5,7 @@ namespace Rbz\Data;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
@@ -95,15 +95,9 @@ abstract class Transfer extends Properties
         return clone $this;
     }
 
-    /**
-     * TODO что-то не нравится что метод errors без путей
-     * @return ErrorCollectionInterface
-     */
-    public function getErrors(): ErrorCollectionInterface
+    public function withErrorsPath(PathInterface $path)
     {
-        if ($this->hasPath()) {
-            return $this->errors()->withPath($this->getPath());
-        }
-        return $this->errors();
+        $this->setErrors($this->errors()->withPath($path));
+        return $this;
     }
 }
