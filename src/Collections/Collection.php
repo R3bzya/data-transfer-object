@@ -195,4 +195,14 @@ class Collection implements CollectionInterface
     {
         $this->remove($offset);
     }
+
+    /**
+     * @param Arrayable|array $data
+     * @return static
+     */
+    public function replace($data)
+    {
+        $this->items = $this->getArrayFrom($data);
+        return $this;
+    }
 }

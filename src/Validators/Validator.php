@@ -3,6 +3,8 @@
 namespace Rbz\Data\Validators;
 
 use DomainException;
+use Illuminate\Contracts\Validation\Validator as CustomValidatorInterface;
+use Illuminate\Support\Facades\Validator as CustomValidator;
 use Rbz\Data\Components\Filter;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Validators\RuleInterface;
@@ -59,9 +61,9 @@ class Validator implements ValidatorInterface
         return new self($transfer, $rules);
     }
 
-    public static function makeHas(TransferInterface $transfer, array $properties): self
+    public static function makeCustom(array $data, array $rules, array $messages = [], array $customAttributes = []): CustomValidatorInterface
     {
-        return self::make($transfer, self::addRulesToProperties($properties, ['has']));
+        return CustomValidator::make($data, $rules, $messages, $customAttributes);
     }
 
     public function validate(): bool

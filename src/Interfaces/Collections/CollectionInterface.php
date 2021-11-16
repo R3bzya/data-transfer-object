@@ -67,6 +67,11 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      */
     public function with($collection);
 
+    /**
+     * @param Arrayable|array $data
+     * @return static
+     */
+    public function replace($data);
 
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;

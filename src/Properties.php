@@ -22,13 +22,9 @@ abstract class Properties implements PropertiesInterface
 
     public function getProperties(): CollectionInterface
     {
-        $collection = Collection::make();
-        foreach ($this->getReflectionInstance()->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            if (! $property->isStatic()) {
-                $collection->add($property->getName());
-            }
-        }
-        return $collection;
+        return Collection::make($this->getReflectionInstance()->getProperties(ReflectionProperty::IS_PUBLIC))
+            ->filter(fn(ReflectionProperty $property) => ! $property->isStatic())
+            ->map(fn(ReflectionProperty $property) => $property->getName());
     }
 
     public function getProperty(string $property)

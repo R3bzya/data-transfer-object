@@ -2,7 +2,6 @@
 
 namespace Rbz\Data;
 
-use Illuminate\Support\Facades\Validator as CustomValidatorFactory;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
@@ -10,7 +9,6 @@ use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
-use Rbz\Data\Traits\FilterTrait;
 use Rbz\Data\Traits\PathTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
@@ -20,7 +18,6 @@ abstract class Transfer extends Properties
 {
     use ErrorCollectionTrait,
         CollectorTrait,
-        FilterTrait,
         PathTrait;
 
     public static function make($data = []): TransferInterface
@@ -39,50 +36,20 @@ abstract class Transfer extends Properties
 
     public function load($data): bool
     {
-        $this->errors()->clear();
         $data = Collection::make($data)->toArray();
         $this->setProperties($data);
-        return $this->validateIsLoad($this->getOnlyTransferProperties($data)->keys()->toArray() ?: $this->getProperties()->toArray());
+        $loadedProperties = $this->getOnlyTransferProperties($data)->keys()->toArray()
+            ?: $this->getProperties()->toArray();
+        return $this->errors()->replace(Validator::makeIsLoad($this, $loadedProperties)->getErrors())->isEmpty();
     }
 
     public function validate(array $properties = []): bool
     {
-        $this->errors()->clear();
-        $filter = $this->filter()->setRules($properties);
-
-        if (! $this->validateHas($filter->apply()) || $this->errors()->isNotEmpty()) {
-            return false;
+        $this->errors()->replace(Validator::makeIsLoad($this, $properties)->getErrors());
+        if ($this->errors()->isEmpty() && $this->rules()) {
+            $this->errors()->load(Validator::makeCustom($this->toArray(), $this->rules())->errors()->toArray());
         }
-
-        $validation = $this->validateIsLoad($filter->apply());
-        if ($validation && $this->rules()) {
-            return $this->validateCustom($filter->filterTransfer($this), $filter->filterArray($this->rules()));
-        }
-        return $validation;
-    }
-
-    /** ToDo какие-то дубли */
-    public function validateHas(array $properties): bool
-    {
-        $errors = Validator::makeHas($this, $properties)->getErrors();
-        $this->errors()->merge($errors);
-        return $errors->isEmpty();
-    }
-
-    /** ToDo какие-то дубли */
-    public function validateIsLoad(array $properties): bool
-    {
-        $errors = Validator::makeIsLoad($this, $properties)->getErrors();
-        $this->errors()->merge($errors);
-        return $errors->isEmpty();
-    }
-
-    /** ToDo какие-то дубли */
-    public function validateCustom(array $data, array $rules): bool
-    {
-        $messageBag = CustomValidatorFactory::make($data, $rules)->getMessageBag();
-        $this->errors()->load($messageBag->toArray());
-        return $messageBag->isEmpty();
+        return $this->errors()->isEmpty();
     }
 
     public function toCamelCaseKeys(array $data): array
