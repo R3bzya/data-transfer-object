@@ -24,7 +24,7 @@ class Container implements ContainerInterface
 
     public function add(string $id, TransferInterface $transfer): void
     {
-        $this->transfers[$id] = $transfer->withPath(Path::make($id));
+        $this->transfers[$id] = $transfer->setErrors($transfer->errors()->withPath(Path::make($id)));
     }
 
     public function get(string $id): TransferInterface

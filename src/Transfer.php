@@ -5,11 +5,9 @@ namespace Rbz\Data;
 use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
-use Rbz\Data\Traits\PathTrait;
 use Rbz\Data\Validators\Validator;
 use Throwable;
 
@@ -17,8 +15,7 @@ abstract class Transfer extends Properties
     implements TransferInterface
 {
     use ErrorCollectionTrait,
-        CollectorTrait,
-        PathTrait;
+        CollectorTrait;
 
     public static function make($data = []): TransferInterface
     {
@@ -92,23 +89,5 @@ abstract class Transfer extends Properties
     public function clone(): TransferInterface
     {
         return clone $this;
-    }
-
-    public function setPath(PathInterface $path)
-    {
-        $this->_path = $path;
-        $this->errors()->setPath($this->path());
-        return $this;
-    }
-
-    public function withPath(PathInterface $path)
-    {
-        if ($this->hasPath()) {
-            $clone = $this->clone()->setPath($this->path()->with($path));
-        } else {
-            $clone = $this->clone()->setPath($path);
-        }
-
-        return $clone->setErrors($clone->errors()->withPath($clone->getPath()));
     }
 }
