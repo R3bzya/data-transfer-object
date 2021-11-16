@@ -18,17 +18,17 @@ abstract class CompositeTransfer extends Transfer
         $data = Collection::make($data)->toArray();
         $success = parent::load($data);
         foreach ($this->container()->toArray() as $property => $transfer) {
-            $success = $transfer->load($this->getTransferData($property, $data)) && $success;
+            $success = $transfer->load($this->getFilteredData($data, $property)) && $success;
         }
         return $success;
     }
 
-    public function getTransferData(string $transfer, array $data): array
+    public function getFilteredData(array $data, string $key): array
     {
-        if (! isset($data[$transfer]) || ! is_array($data[$transfer])) {
-            return $data;
+        if (isset($data[$key]) && is_array($data[$key])) {
+            return $data[$key];
         }
-        return $data[$transfer];
+        return $data;
     }
 
     public function validate(array $properties = []): bool
