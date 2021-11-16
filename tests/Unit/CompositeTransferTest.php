@@ -56,6 +56,9 @@ class CompositeTransferTest extends BaseCase
         $this->assertEquals('default', $transfer->default->getErrors()->getPath()->get());
     }
 
+    /**
+     * @deprecated commit 113
+     */
     public function testTransferPath()
     {
         $transfer = $this->compositeTransfer();

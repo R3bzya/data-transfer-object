@@ -49,9 +49,26 @@ abstract class CompositeTransfer extends Transfer
         }
     }
 
+    public function setProperty(string $property, $value): void
+    {
+        if ($this->container()->has($property)) {
+            $this->container()->add($property, $value);
+        } else {
+            parent::setProperty($property, $value);
+        }
+    }
+
     public function getProperties(): CollectionInterface
     {
         return parent::getProperties()->with($this->container()->keys());
+    }
+
+    public function getProperty(string $property)
+    {
+        if ($this->container()->has($property)) {
+            return $this->container()->get($property);
+        }
+        return parent::getProperty($property);
     }
 
     public function isTransferData(string $property, $data): bool
