@@ -6,17 +6,17 @@ use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 trait PathTrait
 {
-    private PathInterface $path;
+    private PathInterface $_path;
 
-    public function setPath(PathInterface $path)
+    public function setPath(PathInterface $_path)
     {
-        $this->path = $path;
+        $this->_path = $_path;
         return $this;
     }
 
     public function path(): PathInterface
     {
-        return $this->path;
+        return $this->_path;
     }
 
     public function getPath(): PathInterface
@@ -26,7 +26,7 @@ trait PathTrait
 
     public function hasPath(): bool
     {
-        return isset($this->path);
+        return isset($this->_path);
     }
 
     public function withPath(PathInterface $path)

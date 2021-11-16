@@ -7,19 +7,19 @@ use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 
 trait ErrorCollectionTrait
 {
-    private ErrorCollectionInterface $errorCollection;
+    private ErrorCollectionInterface $_errors;
 
     public function setErrors(ErrorCollectionInterface $collection): void
     {
-        $this->errorCollection = $collection;
+        $this->_errors = $collection;
     }
 
     public function errors(): ErrorCollectionInterface
     {
-        if (! isset($this->errorCollection)) {
-            $this->errorCollection = ErrorCollection::make();
+        if (! isset($this->_errors)) {
+            $this->_errors = ErrorCollection::make();
         }
-        return $this->errorCollection;
+        return $this->_errors;
     }
 
     public function getErrors(): ErrorCollectionInterface

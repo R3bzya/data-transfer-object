@@ -7,19 +7,19 @@ use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
 
 trait CollectorTrait
 {
-    private CollectorInterface $collector;
+    private CollectorInterface $_collector;
 
-    public function setCollector(CollectorInterface $collector): void
+    public function setCollector(CollectorInterface $_collector): void
     {
-        $this->collector = $collector;
+        $this->_collector = $_collector;
     }
 
     public function collector(): CollectorInterface
     {
-        if (! isset($this->collector)) {
-            $this->collector = new Collector($this->collectable());
+        if (! isset($this->_collector)) {
+            $this->_collector = new Collector($this->collectable());
         }
-        return $this->collector;
+        return $this->_collector;
     }
 
     public function getCollector(): CollectorInterface

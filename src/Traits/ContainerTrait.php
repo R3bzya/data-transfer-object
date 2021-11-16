@@ -7,16 +7,16 @@ use Rbz\Data\Interfaces\Components\ContainerInterface;
 
 trait ContainerTrait
 {
-    private ContainerInterface $container;
+    private ContainerInterface $_container;
 
     abstract public function internalTransfers(): array;
 
     public function container(): ContainerInterface
     {
-        if (! isset($this->container)) {
-            $this->container = new Container($this->internalTransfers());
+        if (! isset($this->_container)) {
+            $this->_container = new Container($this->internalTransfers());
         }
-        return $this->container;
+        return $this->_container;
     }
 
     public function getContainer(): ContainerInterface
