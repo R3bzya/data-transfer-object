@@ -46,7 +46,7 @@ abstract class Transfer extends Properties
     {
         $this->errors()->replace(Validator::makeIsLoad($this, $properties)->getErrors());
         if ($this->errors()->isEmpty() && $this->rules()) {
-            $this->errors()->load(Validator::makeCustom($this->toArray(), $this->rules())->errors()->toArray());
+            $this->errors()->load(Validator::makeCustom($this, $this->rules())->errors()->toArray());
         }
         return $this->errors()->isEmpty();
     }

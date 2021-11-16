@@ -22,7 +22,7 @@ class ErrorItem implements ErrorItemInterface
     {
         $this->property = $property;
         $this->messages = $messages;
-        $this->path = $path;
+        $this->_path = $path;
     }
 
     /**

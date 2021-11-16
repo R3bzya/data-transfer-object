@@ -61,9 +61,9 @@ class Validator implements ValidatorInterface
         return new self($transfer, $rules);
     }
 
-    public static function makeCustom(array $data, array $rules, array $messages = [], array $customAttributes = []): CustomValidatorInterface
+    public static function makeCustom(TransferInterface $transfer, array $rules, array $messages = [], array $customAttributes = []): CustomValidatorInterface
     {
-        return CustomValidator::make($data, $rules, $messages, $customAttributes);
+        return CustomValidator::make($transfer->toArray(), $rules, $messages, $customAttributes);
     }
 
     public function validate(): bool

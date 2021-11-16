@@ -10,7 +10,7 @@ interface ValidatorInterface
 {
     public static function makeIsLoad(TransferInterface $transfer, array $properties): ValidatorInterface;
     public static function make(TransferInterface $transfer, array $rules): ValidatorInterface;
-    public static function makeCustom(array $data, array $rules): CustomValidatorInterface;
+    public static function makeCustom(TransferInterface $transfer, array $rules, array $messages = [], array $customAttributes = []): CustomValidatorInterface;
     public function validate(): bool;
     public function getErrors(): ErrorCollectionInterface;
 }
