@@ -20,6 +20,14 @@ abstract class Properties implements PropertiesInterface
         }
     }
 
+    public function setProperty(string $property, $value): void
+    {
+        if (! $this->isPublicProperty($property)) {
+            throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
+        }
+        $this->$property = $value;
+    }
+
     public function getProperties(): CollectionInterface
     {
         return Collection::make($this->getReflectionInstance()->getProperties(ReflectionProperty::IS_PUBLIC))
@@ -35,32 +43,9 @@ abstract class Properties implements PropertiesInterface
         return $this->$property;
     }
 
-    public function setProperty(string $property, $value): void
-    {
-        if (! $this->isPublicProperty($property)) {
-            throw new \DomainException('Setting private property:' . get_class($this) . '::' . $property);
-        }
-        $this->$property = $value;
-    }
-
     public function hasProperty(string $property): bool
     {
         return $this->getProperties()->in($property, true);
-    }
-
-    public function toArray(): array
-    {
-        return $this->toCollection()->toArray();
-    }
-
-    public function isSetProperties(): bool
-    {
-        foreach ($this->getProperties() as $property) {
-            if (! $this->isSetProperty($property)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public function isSetProperty(string $property): bool
@@ -81,14 +66,5 @@ abstract class Properties implements PropertiesInterface
     public function isPublicProperty(string $property): bool
     {
         return $this->hasProperty($property);
-    }
-
-    public function toCollection(): CollectionInterface
-    {
-        $collection = Collection::make();
-        foreach ($this->getProperties() as $property) {
-            $collection->set($property, $this->getProperty($property));
-        }
-        return $collection;
     }
 }

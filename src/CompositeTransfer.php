@@ -73,13 +73,18 @@ abstract class CompositeTransfer extends Transfer
         return $this->getErrors()->isNotEmpty();
     }
 
+    public function toArray(): array
+    {
+        return $this->toCollection()->toArray();
+    }
+
     public function toCollection(): CollectionInterface
     {
         return parent::toCollection()->with($this->container()->toCollection());
     }
 
-    public function toArray(): array
+    public function toSafeCollection(): CollectionInterface
     {
-        return $this->toCollection()->toArray();
+        return parent::toSafeCollection()->with($this->container()->toCollection());
     }
 }
