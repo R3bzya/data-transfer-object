@@ -35,7 +35,7 @@ abstract class Transfer extends Properties
     {
         $data = Collection::make($data)->toArray();
         $this->setProperties($data);
-        $loadedProperties = $this->getTransferData($data)->keys()->toArray() ?: $this->getProperties()->toArray();
+        $loadedProperties = $this->toSafeCollection()->keys()->toArray() ?: $this->getProperties()->toArray();
         return $this->errors()->replace(Validator::makeIsLoad($this, $loadedProperties)->getErrors())->isEmpty();
     }
 
@@ -61,7 +61,7 @@ abstract class Transfer extends Properties
 
     public function setProperties(array $data): void
     {
-        parent::setProperties($this->getTransferData($data)->toArray());
+        parent::setProperties(Collection::make($data)->only($this->getProperties()->toArray())->toArray());
     }
 
     public function setProperty(string $property, $value): void
@@ -79,11 +79,6 @@ abstract class Transfer extends Properties
     public function getShortClassName(): string
     {
         return $this->getReflectionInstance()->getShortName();
-    }
-
-    public function getTransferData(array $data): CollectionInterface
-    {
-        return Collection::make($data)->only($this->getProperties()->toArray());
     }
 
     public function clone(): TransferInterface

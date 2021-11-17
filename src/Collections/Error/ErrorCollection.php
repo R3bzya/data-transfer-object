@@ -61,9 +61,4 @@ class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
         }
         return $this;
     }
-
-    public function toArray(): array
-    {
-        return array_map(fn(ErrorItem $item) => $item->toArray(), $this->items());
-    }
 }
