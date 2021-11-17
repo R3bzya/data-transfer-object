@@ -33,9 +33,9 @@ abstract class Transfer extends Properties
 
     public function load($data): bool
     {
-        $data = Collection::make($data)->toArray();
-        $this->setProperties($data);
-        $loadedProperties = $this->toSafeCollection()->keys()->toArray() ?: $this->getProperties()->toArray();
+        $collection = $this->getTransferData($data);
+        $this->setProperties($collection->toArray());
+        $loadedProperties = $collection->keys()->toArray() ?: $this->getProperties()->toArray();
         return $this->errors()->replace(Validator::makeIsLoad($this, $loadedProperties)->getErrors())->isEmpty();
     }
 
@@ -59,9 +59,14 @@ abstract class Transfer extends Properties
         return $camelCaseAttributes;
     }
 
+    public function getTransferData(array $data): CollectionInterface
+    {
+        return Collection::make($data)->only($this->getProperties()->toArray());
+    }
+
     public function setProperties(array $data): void
     {
-        parent::setProperties(Collection::make($data)->only($this->getProperties()->toArray())->toArray());
+        parent::setProperties($this->getTransferData($data)->toArray());
     }
 
     public function setProperty(string $property, $value): void
