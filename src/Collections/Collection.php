@@ -5,9 +5,12 @@ namespace Rbz\Data\Collections;
 use ArrayIterator;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Traits\TypableTrait;
 
 class Collection implements CollectionInterface
 {
+    use TypableTrait;
+
     private array $items;
 
     public function __construct($data)
@@ -141,6 +144,14 @@ class Collection implements CollectionInterface
     {
         $keys = $this->keys()->toArray();
         return new static(array_combine($keys, array_map($callable, $this->items(), $keys)));
+    }
+
+    public function each(callable $callable)
+    {
+        foreach ($this->items() as $key => $item) {
+            $callable($item, $key);
+        }
+        return $this;
     }
 
     public function clone()

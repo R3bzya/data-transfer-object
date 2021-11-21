@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use IteratorAggregate;
 use Rbz\Data\Interfaces\Components\Cloneable;
 
-interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable, ArrayAccess
+interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable, ArrayAccess, TypableInterface
 {
     /**
      * @param mixed $data
@@ -49,6 +49,12 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @return static
      */
     public function map(?callable $callable);
+
+    /**
+     * @param callable $callable
+     * @return static
+     */
+    public function each(callable $callable);
 
     /**
      * @return static
