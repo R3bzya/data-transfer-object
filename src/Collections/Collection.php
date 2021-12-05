@@ -208,12 +208,12 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param Arrayable|array $data
+     * @param Arrayable|array|static $data
      * @return static
      */
     public function replace($data)
     {
-        $this->items = $this->getArrayFrom($data);
+        $this->items = $data instanceof $this ? $data->items : $this->getArrayFrom($data);
         return $this;
     }
 }
