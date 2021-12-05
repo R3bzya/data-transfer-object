@@ -2,13 +2,13 @@
 
 namespace Rbz\Data\Collections\Error;
 
-use Rbz\Data\Collections\Collection as BaseCollection;
+use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Traits\PathTrait;
 
-class ErrorCollection extends BaseCollection implements ErrorCollectionInterface
+class ErrorCollection extends Collection implements ErrorCollectionInterface
 {
     use PathTrait;
 

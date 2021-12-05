@@ -15,13 +15,6 @@ class Container implements ContainerInterface
      */
     private array $transfers = [];
 
-    public function __construct(array $transfers)
-    {
-        foreach ($transfers as $key => $class) {
-            $this->add($key, call_user_func([$class, 'make']));
-        }
-    }
-
     public function add(string $id, TransferInterface $transfer): void
     {
         $this->transfers[$id] = $transfer->setErrors($transfer->errors()->withPath(Path::make($id)));
