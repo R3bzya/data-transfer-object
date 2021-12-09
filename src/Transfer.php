@@ -9,6 +9,8 @@ use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Validators\Validator;
+use ReflectionClass;
+use ReflectionException;
 use Throwable;
 
 abstract class Transfer extends Properties
@@ -17,9 +19,17 @@ abstract class Transfer extends Properties
     use ErrorCollectionTrait,
         CollectorTrait;
 
-    public static function make($data = []): TransferInterface
+    /**
+     * @param mixed $data
+     * @param mixed ...$construct
+     * @return static
+     * @throws ReflectionException
+     */
+    public static function make($data = [], ...$construct): TransferInterface
     {
-        $transfer = new static();
+        $instance = new ReflectionClass(static::class);
+        /** @var TransferInterface $transfer */
+        $transfer = $instance->newInstanceArgs($construct);
         if (! empty($data)) {
             $transfer->load($data);
         }
