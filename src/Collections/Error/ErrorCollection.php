@@ -12,22 +12,19 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
 {
     use PathTrait;
 
-    /**
-     * @param string $key
-     * @param null $value
-     */
-    public function set(string $key, $value = null): void
+    public function set(string $key, $value = null)
     {
-        $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), Path::make($key)));
+        return $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), Path::make($key)));
     }
 
-    public function addItem(ErrorItemInterface $item): void
+    public function addItem(ErrorItemInterface $item)
     {
         if ($this->has($item->getProperty())) {
             $this->get($item->getProperty())->addMessages($item->getMessages());
         } else {
             parent::set($item->getPath()->get(), $item);
         }
+        return $this;
     }
 
     public function getFirst(?string $property = null): ?ErrorItemInterface

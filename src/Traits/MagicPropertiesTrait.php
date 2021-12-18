@@ -2,12 +2,12 @@
 
 namespace Rbz\Data\Traits;
 
-use DomainException;
+use Rbz\Data\Exceptions\PropertyException;
 
 trait MagicPropertiesTrait
 {
     /**
-     * @throws DomainException
+     * @throws PropertyException
      */
     public function __get($name)
     {
@@ -15,11 +15,11 @@ trait MagicPropertiesTrait
         if (method_exists($this, $method)) {
             return $this->$method();
         }
-        throw new DomainException('Getting unknown property: ' . get_class($this) . '::' . $name);
+        throw new PropertyException('Getting unknown property: ' . get_class($this) . '::' . $name);
     }
 
     /**
-     * @throws DomainException
+     * @throws PropertyException
      */
     public function __set($name, $value)
     {
@@ -29,8 +29,8 @@ trait MagicPropertiesTrait
             return;
         }
         if (method_exists($this, 'get' . $name)) {
-            throw new DomainException('Setting read-only property: ' . get_class($this) . '::' . $name);
+            throw new PropertyException('Setting read-only property: ' . get_class($this) . '::' . $name);
         }
-        throw new DomainException('Setting unknown property: ' . get_class($this) . '::' . $name);
+        throw new PropertyException('Setting unknown property: ' . get_class($this) . '::' . $name);
     }
 }

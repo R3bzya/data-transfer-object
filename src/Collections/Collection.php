@@ -5,15 +5,15 @@ namespace Rbz\Data\Collections;
 use ArrayIterator;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Traits\TypableTrait;
+use Rbz\Data\Traits\TypeCheckerTrait;
 
 class Collection implements CollectionInterface
 {
-    use TypableTrait;
+    use TypeCheckerTrait;
 
     private array $items;
 
-    public function __construct($data)
+    public function __construct($data = [])
     {
         $this->items = $this->getArrayFrom($data);
     }
@@ -33,22 +33,30 @@ class Collection implements CollectionInterface
         return (array) $value;
     }
 
-    public function add($value): void
+    /**
+     * @param $value
+     * @return static
+     */
+    public function add($value)
     {
         $this->items[] = $value;
+        return $this;
     }
 
-    public function set(string $key, $value = null): void
+    /**
+     * @param string $key
+     * @param $value
+     * @return static
+     */
+    public function set(string $key, $value = null)
     {
         $this->items[$key] = $value;
+        return $this;
     }
 
     public function get(string $key, $default = null)
     {
-        if (! $this->has($key)) {
-            return $default;
-        }
-        return $this->items()[$key];
+        return $this->has($key) ? $this->items()[$key] : $default;
     }
 
     public function remove(string $key): void
@@ -63,7 +71,7 @@ class Collection implements CollectionInterface
 
     public function has(string $key): bool
     {
-        return $this->keys()->in($key, true);
+        return $this->keys()->in($key);
     }
 
     public function in($value, bool $strict = false): bool
@@ -140,12 +148,20 @@ class Collection implements CollectionInterface
         $this->items = [];
     }
 
+    /**
+     * @param callable|null $callable
+     * @return static
+     */
     public function map(?callable $callable)
     {
         $keys = $this->keys()->toArray();
-        return new static(array_combine($keys, array_map($callable, $this->items(), $keys)));
+        return static::make(array_combine($keys, array_map($callable, $this->items(), $keys)));
     }
 
+    /**
+     * @param callable $callable
+     * @return static
+     */
     public function each(callable $callable)
     {
         foreach ($this->items() as $key => $item) {
@@ -154,11 +170,17 @@ class Collection implements CollectionInterface
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function clone()
     {
         return clone $this;
     }
 
+    /**
+     * @return static
+     */
     public function flip()
     {
         return static::make(array_flip($this->items()));
@@ -208,12 +230,34 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param Arrayable|array|static $data
+     * @param mixed $data
      * @return static
      */
     public function replace($data)
     {
         $this->items = $data instanceof $this ? $data->items : $this->getArrayFrom($data);
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return static
+     */
+    public function collect(string $key, $default = [])
+    {
+        return static::make($this->get($key, $default));
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function detach(string $key, $default = [])
+    {
+        $value = $this->get($key, $default);
+        $this->remove($key);
+        return $value;
     }
 }

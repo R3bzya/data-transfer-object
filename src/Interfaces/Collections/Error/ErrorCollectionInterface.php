@@ -7,7 +7,11 @@ use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 
 interface ErrorCollectionInterface extends BaseCollectionInterface, PathProviderInterface
 {
-    public function addItem(ErrorItemInterface $item): void;
+    /**
+     * @param ErrorItemInterface $item
+     * @return static
+     */
+    public function addItem(ErrorItemInterface $item);
 
     public function getFirstMessage(?string $property = null): ?string;
 

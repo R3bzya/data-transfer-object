@@ -6,6 +6,9 @@ use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Components\Filter\FilterInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
+/**
+ * @deprecated
+ */
 class Filter implements FilterInterface
 {
     private array $properties;

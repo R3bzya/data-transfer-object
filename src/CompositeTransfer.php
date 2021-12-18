@@ -13,10 +13,10 @@ abstract class CompositeTransfer extends Transfer
 {
     use ContainerTrait;
 
-    public function validate(array $properties = []): bool
+    public function validate(array $properties = [], bool $clearErrors = true): bool
     {
-        parent::validate($properties);
-        $this->container()->toCollection()->each(fn(Transfer $transfer) => $transfer->validate($properties));
+        parent::validate($properties, $clearErrors);
+        $this->container()->toCollection()->each(fn(Transfer $transfer) => $transfer->validate($properties, $clearErrors));
         return $this->errors()->isEmpty();
     }
 

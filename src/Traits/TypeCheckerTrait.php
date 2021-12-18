@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Traits;
 
-trait TypableTrait
+trait TypeCheckerTrait
 {
     public function isString(string $key): bool
     {

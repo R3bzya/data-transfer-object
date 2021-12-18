@@ -19,7 +19,7 @@ interface TransferInterface extends PropertiesInterface, ErrorCollectionProvider
      * @return bool
      */
     public function load($data): bool;
-    public function validate(array $properties = []): bool;
+    public function validate(array $properties = [], bool $clearErrors = true): bool;
     public function getCollector(): CollectorInterface;
     public function getShortClassName(): string;
     public function toSafeCollection(): CollectionInterface;

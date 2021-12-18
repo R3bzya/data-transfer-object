@@ -17,8 +17,20 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public static function make($data = []);
 
     public function load(array $data): void;
-    public function add($value): void;
-    public function set(string $key, $value = null): void;
+
+    /**
+     * @param $value
+     * @return static
+     */
+    public function add($value);
+
+    /**
+     * @param string $key
+     * @param $value
+     * @return static
+     */
+    public function set(string $key, $value = null);
+
     public function remove(string $key): void;
     public function get(string $key, $default = null);
     public function getItems(): array;
@@ -74,7 +86,7 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function with($collection);
 
     /**
-     * @param Arrayable|array $data
+     * @param mixed $data
      * @return static
      */
     public function replace($data);
@@ -83,4 +95,18 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function isNotEmpty(): bool;
     public function keys(): CollectionInterface;
     public function clear(): void;
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return static
+     */
+    public function collect(string $key, $default = []);
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function detach(string $key, $default = []);
 }

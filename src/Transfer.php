@@ -2,13 +2,13 @@
 
 namespace Rbz\Data;
 
-use Illuminate\Support\Str;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
-use Rbz\Data\Validators\Validator;
+use Rbz\Data\Validators\Facade as ValidatorFacade;
+use Rbz\Data\Validators\Helper as RulesHelper;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -21,15 +21,15 @@ abstract class Transfer extends Properties
 
     /**
      * @param mixed $data
-     * @param mixed ...$construct
+     * @param mixed ...$constructArgs
      * @return static
      * @throws ReflectionException
      */
-    public static function make($data = [], ...$construct): TransferInterface
+    public static function make($data = [], ...$constructArgs): TransferInterface
     {
         $instance = new ReflectionClass(static::class);
         /** @var TransferInterface $transfer */
-        $transfer = $instance->newInstanceArgs($construct);
+        $transfer = $instance->newInstanceArgs($constructArgs);
         if (! empty($data)) {
             $transfer->load($data);
         }
@@ -45,28 +45,19 @@ abstract class Transfer extends Properties
     {
         $collection = $this->getTransferData($data);
         $this->setProperties($collection->toArray());
-        $loadedProperties = $collection->keys()->toArray() ?: $this->getProperties()->toArray();
-        return $this->errors()->replace(Validator::makeIsLoad($this, $loadedProperties)->getErrors())->isEmpty();
+        return $this->validate($collection->keys()->toArray());
     }
 
-    public function validate(array $properties = []): bool
+    public function validate(array $properties = [], bool $clearErrors = true): bool
     {
-        $this->errors()->replace(Validator::makeIsLoad($this, $properties)->getErrors());
-        if ($this->errors()->isEmpty() && $this->rules()) {
-            $this->errors()->load(Validator::makeCustom($this, $this->rules())->errors()->toArray());
-        }
-        return $this->errors()->isEmpty();
-    }
+        $errors = ValidatorFacade::make(
+            $this->toSafeCollection()->toArray(),
+            (new RulesHelper($this->rules()))->resolve(RulesHelper::toValidation($this->getProperties(), $properties))
+        )->getErrors();
 
-    public function toCamelCaseKeys(array $data): array
-    {
-        $camelCaseAttributes = [];
-        foreach ($data as $attribute => $value) {
-            $camelCaseAttributes[Str::camel($attribute)] = is_array($value)
-                ? $this->toCamelCaseKeys($value)
-                : $value;
-        }
-        return $camelCaseAttributes;
+        return $clearErrors
+            ? $this->errors()->replace($errors)->isEmpty()
+            : $this->errors()->merge($errors)->isEmpty();
     }
 
     public function getTransferData(array $data): CollectionInterface

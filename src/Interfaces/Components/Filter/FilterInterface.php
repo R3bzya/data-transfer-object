@@ -5,6 +5,9 @@ namespace Rbz\Data\Interfaces\Components\Filter;
 use Illuminate\Contracts\Support\Arrayable;
 use Rbz\Data\Interfaces\TransferInterface;
 
+/**
+ * @deprecated
+ */
 interface FilterInterface extends Arrayable
 {
     public static function make(array $properties): FilterInterface;

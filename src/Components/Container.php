@@ -2,8 +2,8 @@
 
 namespace Rbz\Data\Components;
 
-use DomainException;
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Exceptions\ContainerException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Components\ContainerInterface;
 use Rbz\Data\Interfaces\TransferInterface;
@@ -23,7 +23,7 @@ class Container implements ContainerInterface
     public function get(string $id): TransferInterface
     {
         if (! $this->has($id)) {
-            throw new DomainException("Container doesnt have `$id`");
+            throw new ContainerException("Container doesnt have `$id`");
         }
         return $this->transfers()[$id];
     }
