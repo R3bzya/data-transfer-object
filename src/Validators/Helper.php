@@ -49,6 +49,14 @@ class Helper
      */
     public function resolve(array $properties): array
     {
-        return Collection::make($this->rules)->only($properties)->toArray();
+        if ($this->hasRules()) {
+            return Collection::make($this->rules)->only($properties)->toArray();
+        }
+        return Collection::make($properties)->flip()->map(fn($value, string $property) => 'present')->toArray();
+    }
+
+    private function hasRules(): bool
+    {
+        return count($this->rules);
     }
 }

@@ -100,11 +100,7 @@ class CompositeTransferTest extends BaseCase
         $this->assertEquals(
             [
                 'b_one_s' => 'string',
-                'default' => [
-                    'a_one_s' => 'string_2',
-                    'a_two_i' => 1,
-                    'a_three_a' => [],
-                ]
+                'default' => $transfer->default
             ],
             $transfer->toArray()
         );
