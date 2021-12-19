@@ -51,7 +51,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
         /** @var ErrorItemInterface $item */
         foreach ($collection->getItems() as $item) {
             if ($collection->hasPath()) {
-                $this->addItem($item->setPath($collection->getPath()->with($item->getPath())));
+                $this->addItem($item->clone()->setPath($collection->getPath()->with($item->getPath())));
             } else {
                 $this->addItem($item);
             }

@@ -45,7 +45,7 @@ class Container implements ContainerInterface
 
     public function toCollection(): CollectionInterface
     {
-        return Collection::make($this->getTransfers());
+        return Collection::make($this->transfers());
     }
 
     public function toArray(): array
