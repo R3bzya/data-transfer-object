@@ -5,7 +5,7 @@ namespace Rbz\Data\Validation\Validators;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Validation\Validator as AbstractValidator;
 
-class Yii extends AbstractValidator
+class Yii2 extends AbstractValidator
 {
     public function __construct(array $data, array $rules)
     {
@@ -13,11 +13,11 @@ class Yii extends AbstractValidator
 
     public function validate(): bool
     {
-        throw new \RuntimeException('Not implemented `yii` validator');
+        throw new \RuntimeException('Not implemented `yii2` validator');
     }
 
     public function getErrors(): ErrorCollectionInterface
     {
-        throw new \RuntimeException('Not implemented `yii` validator');
+        throw new \RuntimeException('Not implemented `yii2` validator');
     }
 }
