@@ -9,9 +9,9 @@ use Rbz\Data\Validators\Helper as ValidatorHelper;
 class Helper extends BaseCase
 {
     /**
-     * @dataProvider getTemp
+     * @dataProvider getDefault
      */
-    public function testTemp(array $properties, array $result)
+    public function testHelper(array $properties, array $result)
     {
         $resolved = (new ValidatorHelper([
             'property1' => ['value1'],
@@ -28,7 +28,26 @@ class Helper extends BaseCase
         $this->assertEquals($result, $resolved);
     }
 
-    public function getTemp()
+    /**
+     * @dataProvider getNotDefault
+     */
+    public function testHelperNotDefault(array $properties, array $result)
+    {
+        $resolved = (new ValidatorHelper([
+            'property1' => ['value1'],
+            'property2' => ['value2'],
+            'property3' => ['value3'],
+        ]))->resolve(ValidatorHelper::toValidation(Collection::make([
+            'property1',
+            'property2',
+            'property3',
+            'property4',
+        ]), $properties));
+
+        $this->assertEquals($result, $resolved);
+    }
+
+    public function getDefault(): array
     {
         return [
             [
@@ -76,6 +95,20 @@ class Helper extends BaseCase
                     // can be empty, because we don`t have property5
                 ]
             ],
+        ];
+    }
+
+    public function getNotDefault(): array
+    {
+        return [
+            [
+                [
+                    'property4'
+                ],
+                [
+                    'property4' => ['present'],
+                ]
+            ]
         ];
     }
 }

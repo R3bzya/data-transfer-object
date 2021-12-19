@@ -74,13 +74,13 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function flip();
 
     /**
-     * @param CollectionInterface $collection
+     * @param static $collection
      * @return static
      */
     public function merge($collection);
 
     /**
-     * @param CollectionInterface $collection
+     * @param static $collection
      * @return static
      */
     public function with($collection);
@@ -109,4 +109,10 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @return mixed
      */
     public function detach(string $key, $default = []);
+
+    /**
+     * @param mixed $data
+     * @return static
+     */
+    public function diff($data);
 }

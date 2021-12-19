@@ -49,14 +49,23 @@ class Helper
      */
     public function resolve(array $properties): array
     {
-        if ($this->hasRules()) {
-            return Collection::make($this->rules)->only($properties)->toArray();
+        if (! $this->hasRules()) {
+            return $this->makeDefaultRules($properties)->toArray();
         }
-        return Collection::make($properties)->flip()->map(fn($value, string $property) => 'present')->toArray();
+        $resolved = Collection::make($this->rules)->only($properties);
+        $differentProperties = Collection::make($properties)->diff($resolved->keys()->toArray());
+        return $differentProperties->isEmpty()
+            ? $resolved->toArray()
+            : $resolved->merge($this->makeDefaultRules($differentProperties->toArray()))->toArray();
     }
 
     private function hasRules(): bool
     {
-        return count($this->rules);
+        return count($this->rules) > 0;
+    }
+
+    private function makeDefaultRules(array $properties): CollectionInterface
+    {
+        return Collection::make($properties)->flip()->map(fn($value, string $property) => ['present']);
     }
 }

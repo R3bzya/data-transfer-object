@@ -260,4 +260,13 @@ class Collection implements CollectionInterface
         $this->remove($key);
         return $value;
     }
+
+    /**
+     * @param mixed $data
+     * @return static
+     */
+    public function diff($data)
+    {
+        return static::make(array_diff($this->items(), $data));
+    }
 }
