@@ -13,20 +13,21 @@ abstract class CompositeTransfer extends Transfer
 {
     use ContainerTrait;
 
+    public function load($data): bool
+    {
+        $collection = Collection::make($data);
+        parent::load($collection->toArray());
+        $this->container()->toCollection()->each(function (Transfer $transfer, string $property) use ($collection) {
+            $transfer->load($collection->isArray($property) ? $collection->get($property) : $collection->toArray());
+        });
+        return $this->errors()->isEmpty();
+    }
+
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         parent::validate($properties, $clearErrors);
         $this->container()->toCollection()->each(fn(Transfer $transfer) => $transfer->validate($properties, $clearErrors));
         return $this->errors()->isEmpty();
-    }
-
-    public function setProperties(array $data): void
-    {
-        $collection = Collection::make($data);
-        parent::setProperties($collection->except($this->container()->keys()->toArray())->toArray());
-        $this->container()->toCollection()->each(function (Transfer $transfer, string $property) use ($collection) {
-            $transfer->setProperties($collection->isArray($property) ? $collection->get($property) : $collection->toArray());
-        });
     }
 
     public function errors(): ErrorCollectionInterface
