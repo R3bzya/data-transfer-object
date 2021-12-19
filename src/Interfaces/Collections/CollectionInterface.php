@@ -16,7 +16,11 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      */
     public static function make($data = []);
 
-    public function load(array $data): void;
+    /**
+     * @param mixed $data
+     * @return static
+     */
+    public function load($data);
 
     /**
      * @param $value

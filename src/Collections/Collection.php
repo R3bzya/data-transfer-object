@@ -114,11 +114,16 @@ class Collection implements CollectionInterface
         return new ArrayIterator($this->items());
     }
 
-    public function load(array $data): void
+    /**
+     * @param mixed $data
+     * @return static
+     */
+    public function load($data)
     {
-        foreach ($data as $key => $value) {
+        foreach ($this->getArrayFrom($data) as $key => $value) {
             $this->set($key, $value);
         }
+        return $this;
     }
 
     public function getItems(): array

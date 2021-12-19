@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Validators;
+namespace Rbz\Data\Validation;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;

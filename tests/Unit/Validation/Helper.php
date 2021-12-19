@@ -1,11 +1,14 @@
 <?php
 
-namespace Rbz\Data\Tests\Unit\Validators;
+namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validators\Helper as ValidatorHelper;
+use Rbz\Data\Validation\Helper as ValidatorHelper;
 
+/**
+ * TODO названия тестов
+ */
 class Helper extends BaseCase
 {
     /**
