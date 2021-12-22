@@ -13,7 +13,7 @@ class Collector implements CollectorInterface
         $this->collectable = $collectable;
     }
 
-    public function make(array $collectable): CollectorInterface
+    public static function make(array $collectable): CollectorInterface
     {
         return new self($collectable);
     }

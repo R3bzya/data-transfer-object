@@ -3,6 +3,7 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
@@ -24,6 +25,9 @@ abstract class CompositeTransfer extends Transfer
         return $this->errors()->isEmpty();
     }
 
+    /**
+     * @throws PathException
+     */
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $properties = new PropertyHelper($properties);

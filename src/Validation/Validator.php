@@ -14,6 +14,12 @@ abstract class Validator implements ValidatorInterface
     const YII_2 = 'yii_2';
     const SYMFONY = 'symfony';
 
+    /**
+     * @param array $data
+     * @param array $rules
+     * @return Validator
+     * @throws ValidatorException
+     */
     public static function make(array $data, array $rules): Validator
     {
         switch (self::LARAVEL) {

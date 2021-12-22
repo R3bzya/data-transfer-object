@@ -4,12 +4,17 @@ namespace Rbz\Data\Validation;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
+use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 class PropertyHelper
 {
     private array $items = [];
 
+    /**
+     * @param array $data
+     * @throws PathException
+     */
     public function __construct(array $data)
     {
         foreach ($data as $path) {
@@ -21,7 +26,7 @@ class PropertyHelper
     {
         $items = [];
         $path->isInternal()
-            ? $items[$path->geFirstSection()->get()] = $this->resolve($path->slice(1))
+            ? $items[$path->firstSection()->get()] = $this->resolve($path->slice(1))
             : $items[] = $path->get();
         return $items;
     }

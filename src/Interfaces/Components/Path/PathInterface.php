@@ -28,9 +28,9 @@ interface PathInterface extends Arrayable, IteratorAggregate, Countable
 
     public function equalTo(PathInterface $path): bool;
 
-    public function geFirstSection(): PathInterface;
+    public function firstSection(): PathInterface;
 
-    public function getLastSection(): PathInterface;
+    public function lastSection(): PathInterface;
 
     /**
      * @param int $offset

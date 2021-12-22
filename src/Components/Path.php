@@ -80,12 +80,12 @@ class Path implements PathInterface
         return $this->get() === $path->get();
     }
 
-    public function getLastSection(): PathInterface
+    public function lastSection(): PathInterface
     {
         return $this->slice($this->count());
     }
 
-    public function geFirstSection(): PathInterface
+    public function firstSection(): PathInterface
     {
         return $this->slice(0, 1);
     }
