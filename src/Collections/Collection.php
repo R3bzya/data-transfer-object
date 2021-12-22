@@ -15,7 +15,7 @@ class Collection implements CollectionInterface
 
     public function __construct($data = [])
     {
-        $this->items = $this->getArrayFrom($data);
+        $this->items = $this->makeArrayFrom($data);
     }
 
     public static function make($data = [])
@@ -23,7 +23,7 @@ class Collection implements CollectionInterface
         return new static($data);
     }
 
-    public function getArrayFrom($value): array
+    public function makeArrayFrom($value): array
     {
         if (is_array($value)) {
             return $value;
@@ -54,11 +54,20 @@ class Collection implements CollectionInterface
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param $default
+     * @return mixed
+     */
     public function get(string $key, $default = null)
     {
         return $this->has($key) ? $this->items()[$key] : $default;
     }
 
+    /**
+     * @param string $key
+     * @return void
+     */
     public function remove(string $key): void
     {
         unset($this->items[$key]);
@@ -69,16 +78,30 @@ class Collection implements CollectionInterface
         return $this->items;
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function has(string $key): bool
     {
-        return $this->keys()->in($key);
+        return $this->keys()->in($key, true);
     }
 
+    /**
+     * @param $value
+     * @param bool $strict
+     * @return bool
+     */
     public function in($value, bool $strict = false): bool
     {
         return in_array($value, $this->items(), $strict);
     }
 
+    /**
+     * @param $value
+     * @param bool $strict
+     * @return bool
+     */
     public function notIn($value, bool $strict = false): bool
     {
         return ! in_array($value, $this->items(), $strict);
@@ -120,7 +143,7 @@ class Collection implements CollectionInterface
      */
     public function load($data)
     {
-        foreach ($this->getArrayFrom($data) as $key => $value) {
+        foreach ($this->makeArrayFrom($data) as $key => $value) {
             $this->set($key, $value);
         }
         return $this;
@@ -131,12 +154,20 @@ class Collection implements CollectionInterface
         return $this->items();
     }
 
+    /**
+     * @param array $keys
+     * @return static
+     */
     public function only(array $keys)
     {
         $keys = Collection::make($keys);
         return $this->filter(fn($value, $key) => $keys->in($key, true));
     }
 
+    /**
+     * @param array $keys
+     * @return static
+     */
     public function except(array $keys)
     {
         $keys = Collection::make($keys);
@@ -240,7 +271,7 @@ class Collection implements CollectionInterface
      */
     public function replace($data)
     {
-        $this->items = $data instanceof $this ? $data->items : $this->getArrayFrom($data);
+        $this->items = $data instanceof $this ? $data->items : $this->makeArrayFrom($data);
         return $this;
     }
 
@@ -259,7 +290,7 @@ class Collection implements CollectionInterface
      * @param mixed $default
      * @return mixed
      */
-    public function detach(string $key, $default = [])
+    public function detach(string $key, $default = null)
     {
         $value = $this->get($key, $default);
         $this->remove($key);
@@ -272,6 +303,11 @@ class Collection implements CollectionInterface
      */
     public function diff($data)
     {
-        return static::make(array_diff($this->items(), $data));
+        return static::make(array_diff($this->items(), $this->makeArrayFrom($data)));
+    }
+
+    public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
+    {
+        return static::make(array_slice($this->items, $offset, $length, $preserveKeys));
     }
 }

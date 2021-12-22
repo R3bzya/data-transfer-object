@@ -35,11 +35,39 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      */
     public function set(string $key, $value = null);
 
+    /**
+     * @param string $key
+     * @return void
+     */
     public function remove(string $key): void;
+
+    /**
+     * @param string $key
+     * @param $default
+     * @return mixed
+     */
     public function get(string $key, $default = null);
+
     public function getItems(): array;
+
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function has(string $key): bool;
+
+    /**
+     * @param $value
+     * @param bool $strict
+     * @return bool
+     */
     public function in($value, bool $strict = false): bool;
+
+    /**
+     * @param $value
+     * @param bool $strict
+     * @return bool
+     */
     public function notIn($value, bool $strict = false): bool;
 
     /**
@@ -96,8 +124,11 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function replace($data);
 
     public function isEmpty(): bool;
+
     public function isNotEmpty(): bool;
+
     public function keys(): CollectionInterface;
+
     public function clear(): void;
 
     /**
@@ -112,11 +143,19 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @param mixed $default
      * @return mixed
      */
-    public function detach(string $key, $default = []);
+    public function detach(string $key, $default = null);
 
     /**
      * @param mixed $data
      * @return static
      */
     public function diff($data);
+
+    /**
+     * @param int $offset
+     * @param int|null $length
+     * @param bool $preserveKeys
+     * @return static
+     */
+    public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false);
 }

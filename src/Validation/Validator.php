@@ -11,7 +11,7 @@ use Rbz\Data\Validation\Validators\Yii2;
 abstract class Validator implements ValidatorInterface
 {
     const LARAVEL = 'laravel';
-    const YII_2 = 'yii2';
+    const YII_2 = 'yii_2';
     const SYMFONY = 'symfony';
 
     public static function make(array $data, array $rules): Validator

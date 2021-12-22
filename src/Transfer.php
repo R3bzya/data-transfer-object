@@ -8,7 +8,7 @@ use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Validation\Validator as AbstractValidator;
-use Rbz\Data\Validation\Helper as RulesHelper;
+use Rbz\Data\Validation\RuleHelper;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -52,7 +52,7 @@ abstract class Transfer extends Properties
     {
         $errors = AbstractValidator::make(
             $this->toSafeCollection()->toArray(),
-            (new RulesHelper($this->rules()))->resolve(RulesHelper::toValidation($this->getProperties(), $properties))
+            (new RuleHelper($this->rules()))->resolve(RuleHelper::toValidation($this->getProperties(), $properties))
         )->getErrors();
 
         return $clearErrors

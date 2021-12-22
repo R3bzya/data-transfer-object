@@ -5,7 +5,7 @@ namespace Rbz\Data\Validation;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 
-class Helper
+class RuleHelper
 {
     private array $rules;
 
@@ -53,7 +53,7 @@ class Helper
             return $this->makeDefaultRules($properties)->toArray();
         }
         $resolved = Collection::make($this->rules)->only($properties);
-        $differentProperties = Collection::make($properties)->diff($resolved->keys()->toArray());
+        $differentProperties = Collection::make($properties)->diff($resolved->keys());
         return $differentProperties->isEmpty()
             ? $resolved->toArray()
             : $resolved->merge($this->makeDefaultRules($differentProperties->toArray()))->toArray();

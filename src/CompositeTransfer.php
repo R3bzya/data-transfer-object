@@ -7,6 +7,7 @@ use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
 use Rbz\Data\Traits\ContainerTrait;
+use Rbz\Data\Validation\PropertyHelper;
 
 abstract class CompositeTransfer extends Transfer
     implements CompositeTransferInterface
@@ -25,8 +26,9 @@ abstract class CompositeTransfer extends Transfer
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
-        parent::validate($properties, $clearErrors);
-        $this->container()->toCollection()->each(fn(Transfer $transfer) => $transfer->validate($properties, $clearErrors));
+        $properties = new PropertyHelper($properties);
+        parent::validate($properties->get(), $clearErrors);
+        $this->container()->toCollection()->each(fn(Transfer $transfer, $property) => $transfer->validate($properties->get($property), $clearErrors));
         return $this->errors()->isEmpty();
     }
 

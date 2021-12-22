@@ -3,6 +3,8 @@
 namespace Rbz\Data\Components;
 
 use ArrayIterator;
+use Rbz\Data\Collections\Collection;
+use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 class Path implements PathInterface
@@ -14,9 +16,13 @@ class Path implements PathInterface
         $this->path = $path;
     }
 
-    public static function make(string $path): PathInterface
+    public static function make($path): PathInterface
     {
-        return new self($path);
+        switch (gettype($path)) {
+            case 'string': return new self($path);
+            case 'array': return new self(self::makeString($path));
+        }
+        throw new PathException('Path type must be array or string');
     }
 
     public static function separator(): string
@@ -64,14 +70,6 @@ class Path implements PathInterface
         return new ArrayIterator($this->toArray());
     }
 
-    public function last(): PathInterface
-    {
-        if (! $this->isInternal()) {
-            return self::make($this->get());
-        }
-        return self::make($this->toArray()[$this->count() - 1]);
-    }
-
     public function count(): int
     {
         return count($this->toArray());
@@ -80,5 +78,20 @@ class Path implements PathInterface
     public function equalTo(PathInterface $path): bool
     {
         return $this->get() === $path->get();
+    }
+
+    public function getLastSection(): PathInterface
+    {
+        return $this->slice($this->count());
+    }
+
+    public function geFirstSection(): PathInterface
+    {
+        return $this->slice(0, 1);
+    }
+
+    public function slice(int $offset = 0, int $length = null): PathInterface
+    {
+        return static::make(Collection::make($this->toArray())->slice($offset, $length)->toArray());
     }
 }

@@ -14,7 +14,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
 
     public function set(string $key, $value = null)
     {
-        return $this->addItem(ErrorItem::make($key, $this->getArrayFrom($value), Path::make($key)));
+        return $this->addItem(ErrorItem::make($key, $this->makeArrayFrom($value), Path::make($key)));
     }
 
     public function addItem(ErrorItemInterface $item)
