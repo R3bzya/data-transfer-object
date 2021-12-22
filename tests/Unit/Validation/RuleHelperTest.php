@@ -9,7 +9,7 @@ use Rbz\Data\Validation\RuleHelper as ValidatorHelper;
 /**
  * TODO названия тестов
  */
-class RuleHelper extends BaseCase
+class RuleHelperTest extends BaseCase
 {
     /**
      * @dataProvider getDefault
