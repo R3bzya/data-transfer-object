@@ -9,6 +9,7 @@ class CollectorTest extends BaseCase
     public function testCollectableLoad()
     {
         $transfer = $this->collectableTransfer();
+
         $transfer->load([
             'defaultTransfers' => [
                 [
@@ -33,13 +34,20 @@ class CollectorTest extends BaseCase
                 [
                     'more' => 'data',
                 ]
+            ],
+            'laravelCollections' => [
+                [
+                    'just' => 'test',
+                ]
             ]
         ]);
 
         $this->assertEquals(2, count($transfer->defaultTransfers));
         $this->assertEquals(3, count($transfer->collections));
+        $this->assertEquals(1, count($transfer->laravelCollections));
 
         $this->assertEquals('string', $transfer->defaultTransfers[0]->a_one_s);
-        $this->assertEquals('value_1', $transfer->collections[0]->get('key_1'));
+        $this->assertEquals('data', $transfer->collections[1]->get('another'));
+        $this->assertEquals('test', $transfer->laravelCollections[0]->get('just'));
     }
 }

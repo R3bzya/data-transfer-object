@@ -2,23 +2,29 @@
 
 namespace Rbz\Data\Interfaces\Components\Path;
 
-use Rbz\Data\Interfaces\Components\Cloneable;
+use Rbz\Data\Interfaces\Cloneable;
 
 interface PathProviderInterface extends Cloneable
 {
     /**
+     * Set the path to the instance.
+     *
      * @param PathInterface $path
      * @return static
      */
     public function setPath(PathInterface $path);
 
+    /**
+     * Get the path from the instance.
+     *
+     * @return PathInterface
+     */
     public function getPath(): PathInterface;
 
-    public function hasPath(): bool;
-
     /**
-     * @param PathInterface $path
-     * @return static
+     * Determine if the path exists in the instance.
+     *
+     * @return bool
      */
-    public function withPath(PathInterface $path);
+    public function hasPath(): bool;
 }

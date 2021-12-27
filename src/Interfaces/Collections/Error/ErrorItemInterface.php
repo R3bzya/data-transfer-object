@@ -3,16 +3,56 @@
 namespace Rbz\Data\Interfaces\Collections\Error;
 
 use Countable;
-use Illuminate\Contracts\Support\Arrayable;
+use Rbz\Data\Interfaces\Arrayable;
 use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 interface ErrorItemInterface extends Arrayable, Countable, PathProviderInterface
 {
-    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface;
+    /**
+     * Make the new error item instance.
+     *
+     * @param string $property
+     * @param array $messages
+     * @param PathInterface|null $path
+     * @return ErrorItemInterface
+     */
+    public static function make(string $property, array $messages, PathInterface $path = null): ErrorItemInterface;
+
+    /**
+     * Get the property from the error item.
+     *
+     * @return string
+     */
     public function getProperty(): string;
+
+    /**
+     * Get all messages from the error item.
+     *
+     * @return array
+     */
     public function getMessages(): array;
+
+    /**
+     * Add the message to the error item.
+     *
+     * @param string $message
+     * @return void
+     */
     public function addMessage(string $message): void;
+
+    /**
+     * Add messages to the error item.
+     *
+     * @param array $messages
+     * @return void
+     */
     public function addMessages(array $messages): void;
-    public function getMessage(): string;
+
+    /**
+     * Get the first message of the error item messages.
+     *
+     * @return string
+     */
+    public function getMessage(): ?string;
 }

@@ -28,12 +28,4 @@ trait PathTrait
     {
         return isset($this->_path);
     }
-
-    public function withPath(PathInterface $path)
-    {
-        if ($this->hasPath()) {
-            return $this->clone()->setPath($this->path()->with($path));
-        }
-        return $this->clone()->setPath($path);
-    }
 }

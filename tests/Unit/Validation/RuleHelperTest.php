@@ -4,53 +4,50 @@ namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validation\RuleHelper as ValidatorHelper;
+use Rbz\Data\Validation\Helpers\RuleHelper as ValidatorHelper;
 
-/**
- * TODO названия тестов
- */
 class RuleHelperTest extends BaseCase
 {
     /**
-     * @dataProvider getDefault
+     * @dataProvider getPropertiesHasRules
      */
-    public function testHelper(array $properties, array $result)
+    public function testPropertiesHasRules(array $properties, array $result)
     {
-        $resolved = (new ValidatorHelper([
+        $rules = (new ValidatorHelper([
             'property1' => ['value1'],
             'property2' => ['value2'],
             'property3' => ['value3'],
             'property4' => ['value4'],
-        ]))->resolve(ValidatorHelper::toValidation(Collection::make([
+        ]))->run(ValidatorHelper::toValidation(Collection::make([
             'property1',
             'property2',
             'property3',
             'property4',
         ]), $properties));
 
-        $this->assertEquals($result, $resolved);
+        $this->assertEquals($result, $rules);
     }
 
     /**
-     * @dataProvider getNotDefault
+     * @dataProvider getNotAllPropertiesHasRules
      */
-    public function testHelperNotDefault(array $properties, array $result)
+    public function testNotAllPropertiesHasRules(array $properties, array $result)
     {
-        $resolved = (new ValidatorHelper([
+        $rules = (new ValidatorHelper([
             'property1' => ['value1'],
             'property2' => ['value2'],
             'property3' => ['value3'],
-        ]))->resolve(ValidatorHelper::toValidation(Collection::make([
+        ]))->run(ValidatorHelper::toValidation(Collection::make([
             'property1',
             'property2',
             'property3',
             'property4',
         ]), $properties));
 
-        $this->assertEquals($result, $resolved);
+        $this->assertEquals($result, $rules);
     }
 
-    public function getDefault(): array
+    public function getPropertiesHasRules(): array
     {
         return [
             [
@@ -92,16 +89,16 @@ class RuleHelperTest extends BaseCase
             ],
             [
                 [
-                    'property5',
+                    '__toExclude__', // Used to exclude all properties
                 ],
                 [
-                    // can be empty, because we don`t have property5
+                    // can be empty, because we don`t have __toExclude__
                 ]
             ],
         ];
     }
 
-    public function getNotDefault(): array
+    public function getNotAllPropertiesHasRules(): array
     {
         return [
             [

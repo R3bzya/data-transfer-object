@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Components;
+namespace Rbz\Data\Interfaces;
 
 interface Cloneable
 {

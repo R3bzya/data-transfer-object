@@ -67,10 +67,8 @@ class TransferTest extends BaseCase
         $transfer->a_one_s = 'string';
         $transfer->a_two_i = 1;
 
-        $this->assertFalse($transfer->validate(['undefined_property']));
-        $this->assertEquals(1, $transfer->getErrors()->count());
-
-        $this->assertNotNull($transfer->getErrors()->get('undefined_property'));
+        $this->assertTrue($transfer->validate(['undefined_property']));
+        $this->assertEquals(0, $transfer->getErrors()->count());
     }
 
     public function testConsistentLoading()
@@ -140,14 +138,14 @@ class TransferTest extends BaseCase
     public function getInvalidData(): array
     {
         return [
-            'empty data' => [
+            'data is empty' => [
                 [],
                 [
                     'load' => false,
                     'count' => 3
                 ]
             ],
-            'bad types' => [
+            'types is bad' => [
                 [
                     'a_one_s' => 'string',
                     'a_two_i' => 'string',

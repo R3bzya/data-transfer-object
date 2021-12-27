@@ -2,48 +2,17 @@
 
 namespace Rbz\Data\Tests\Unit;
 
+use Rbz\Data\Exceptions\PropertyException;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Tests\Unit\Transfers\DefaultTransfer;
 
 class CompositeTransferTest extends BaseCase
 {
-//    /**
-//     * TODO
-//     */
-//    public function testT()
-//    {
-//        $transfer = $this->compositeTransfer();
-//
-//        $transfer->validate(['!a_three_a']);
-//
-//        $this->assertTrue(false);
-//        //dd($transfer->getErrors()->toArray());
-//        //dd($transfer->validate(['!a_three_a']), $transfer->getErrors()->toArray()); // работает некоректно
-//    }
-//
-//    /**
-//     * TODO чек ит
-//     */
-//    public function testTemp()
-//    {
-//        $transfer = $this->compositeTransfer();
-//
-//        $this->assertFalse($transfer->validate());
-//        $this->assertEquals(4, $transfer->getErrors()->count());
-//        $this->assertTrue($transfer->getErrors()->has('b_one_s'));
-//        $this->assertTrue($transfer->getErrors()->has('default.a_one_s'));
-//        $this->assertTrue($transfer->getErrors()->has('default.a_two_i'));
-//        $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
-//    }
-
-    /**
-     * TODO чек ит
-     */
     public function testSetCompositeProperty()
     {
         $transfer = $this->compositeTransfer();
 
-        $this->expectException(\TypeError::class);
+        $this->expectException(PropertyException::class);
         $transfer->default = [];
 
         $transfer->default = DefaultTransfer::make(['a_one_s' => 'its okay']);
@@ -60,15 +29,6 @@ class CompositeTransferTest extends BaseCase
         $this->assertEquals(2, $transfer->getErrors()->count());
         $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
         $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
-    }
-
-    public function testErrorsPath()
-    {
-        $transfer = $this->compositeTransfer();
-
-        $this->assertFalse($transfer->getErrors()->hasPath());
-        $this->assertTrue($transfer->default->getErrors()->hasPath());
-        $this->assertEquals('default', $transfer->default->getErrors()->getPath()->get());
     }
 
     public function testSetSelfProperty()
@@ -158,15 +118,7 @@ class CompositeTransferTest extends BaseCase
                     ]
                 ],
                 [
-                    'count' => 1
-                ]
-            ],
-            [
-                [
-                    // empty
-                ],
-                [
-                    'count' => 4
+                    'count' => 3
                 ]
             ],
             [

@@ -6,12 +6,12 @@
     "homepage": "https://github.com/R3bzya/data-transfer-object",
     "require": {
         "php": ">=7.4.0",
-        "laravel/framework": ">=5.0.0"
+        "laravel/framework": ">=8.0.0"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "Alexey R3bzya",
+            "name": "Aleksey Yakushev",
             "email": "r3bzya@gmail.com",
             "homepage": "https://github.com/R3bzya",
             "role": "Developer"

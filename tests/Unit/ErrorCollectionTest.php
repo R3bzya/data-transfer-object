@@ -12,108 +12,14 @@ class ErrorCollectionTest extends BaseCase
     const PROPERTY_SECOND = 'second_property';
     const MESSAGE_ERROR = 'Error message';
 
-//    public function testTemp()
-//    {
-//        $collection_1 = new Collection(Path::make('collection_1'));
-//        $collection_2 = new Collection(Path::make('collection_2'));
-//        $collection_3 = new Collection(Path::make('collection_3'));
-//
-//        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
-//        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
-//
-//        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
-//        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
-//
-//        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
-//        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
-//
-//        $collection_1->merge($collection_2)->merge($collection_3);
-//
-//        $this->assertEquals([
-//            "1_1" => [
-//                "property" => "1_1",
-//                "messages" => ["какая-то ошибка 1_1"],
-//                "path" => "collection_1",
-//            ],
-//                "1_2" => [
-//                "property" => "1_2",
-//                "messages" => ["какая-то ошибка 1_2"],
-//                "path" => "collection_1",
-//            ],
-//                "collection_1.collection_2.2_1" => [
-//                "property" => "2_1",
-//                "messages" => ["какая-то ошибка 2_1"],
-//                "path" => "collection_1.collection_2",
-//            ],
-//                "collection_1.collection_2.2_2" => [
-//                "property" => "2_2",
-//                "messages" => ["какая-то ошибка 2_2"],
-//                "path" => "collection_1.collection_2",
-//            ],
-//                "collection_1.collection_3.3_1" => [
-//                "property" => "3_1",
-//                "messages" => ["какая-то ошибка 3_1"],
-//                "path" => "collection_1.collection_3",
-//            ],
-//                "collection_1.collection_3.3_2" => [
-//                "property" => "3_2",
-//                "messages" => ["какая-то ошибка 3_2"],
-//                "path" => "collection_1.collection_3"
-//            ]
-//        ], $collection_1->toArray());
-//    }
-//
-//    public function testTemp_2()
-//    {
-//        $collection_1 = new Collection(Path::make('collection_1'));
-//        $collection_2 = new Collection(Path::make('collection_2'));
-//        $collection_3 = new Collection(Path::make('collection_3'));
-//
-//        $collection_1->add('1_1', ['какая-то ошибка 1_1']);
-//        $collection_1->add('1_2', ['какая-то ошибка 1_2']);
-//
-//        $collection_2->add('2_1', ['какая-то ошибка 2_1']);
-//        $collection_2->add('2_2', ['какая-то ошибка 2_2']);
-//
-//        $collection_3->add('3_1', ['какая-то ошибка 3_1']);
-//        $collection_3->add('3_2', ['какая-то ошибка 3_2']);
-//
-//        $collection_2->merge($collection_3);
-//        $collection_1->merge($collection_2);
-//
-//        $this->assertEquals([
-//            "1_1" => [
-//                "property" => "1_1",
-//                "messages" => ["какая-то ошибка 1_1"],
-//                "path" => "collection_1",
-//            ],
-//            "1_2" => [
-//                "property" => "1_2",
-//                "messages" => ["какая-то ошибка 1_2"],
-//                "path" => "collection_1",
-//            ],
-//            "collection_1.collection_2.2_1" => [
-//                "property" => "2_1",
-//                "messages" => ["какая-то ошибка 2_1"],
-//                "path" => "collection_1.collection_2",
-//            ],
-//            "collection_1.collection_2.2_2" => [
-//                "property" => "2_2",
-//                "messages" => ["какая-то ошибка 2_2"],
-//                "path" => "collection_1.collection_2",
-//            ],
-//            "collection_1.collection_2.collection_3.3_1" => [
-//                "property" => "3_1",
-//                "messages" => ["какая-то ошибка 3_1"],
-//                "path" => "collection_1.collection_2.collection_3",
-//            ],
-//            "collection_1.collection_2.collection_3.3_2" => [
-//                "property" => "3_2",
-//                "messages" => ["какая-то ошибка 3_2"],
-//                "path" => "collection_1.collection_2.collection_3"
-//            ]
-//        ], $collection_1->toArray());
-//    }
+    public function testOneNameDifferentPath()
+    {
+        $collection = $this->errorCollection();
+        $firstError = ErrorItem::make(self::PROPERTY_FIRST, ['first message']);
+        $secondError = ErrorItem::make(self::PROPERTY_FIRST, ['second message'], Path::make('second.first_property'));
+
+        $this->assertEquals(2, $collection->addItem($firstError)->addItem($secondError)->count());
+    }
 
     public function testIsEmpty()
     {
@@ -158,11 +64,11 @@ class ErrorCollectionTest extends BaseCase
     public function testAddItem()
     {
         $collection = $this->errorCollection();
-        $collection->addItem(new ErrorItem(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_FIRST)));
+        $collection->addItem(ErrorItem::make(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR));
 
         $this->assertEquals(1, $collection->count());
 
-        $collection->addItem(new ErrorItem(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR, Path::make(self::PROPERTY_SECOND)));
+        $collection->addItem(ErrorItem::make(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR));
 
         $this->assertEquals(2, $collection->count());
     }
@@ -209,19 +115,15 @@ class ErrorCollectionTest extends BaseCase
         $this->assertEquals(self::PROPERTY_FIRST, $collection->get(self::PROPERTY_FIRST)->getProperty());
     }
 
-    public function testGetFirst()
+    public function testFirst()
     {
         $collection = $this->errorCollection();
 
-        $this->assertNull($collection->getFirst());
+        $this->assertNull($collection->first());
 
         $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
-        $this->assertEquals(self::PROPERTY_FIRST, $collection->getFirst()->getProperty());
-
-        $collection->set(self::PROPERTY_SECOND, self::MESSAGE_ERROR);
-
-        $this->assertEquals(self::PROPERTY_SECOND, $collection->getFirst(self::PROPERTY_SECOND)->getProperty());
+        $this->assertEquals(self::PROPERTY_FIRST, $collection->first()->getProperty());
     }
 
     public function testGetFirstMessage()

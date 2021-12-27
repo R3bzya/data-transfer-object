@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Exceptions;
 
-class ValidatorException extends \Exception
+class TransferException extends \Exception
 {
 
 }

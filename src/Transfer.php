@@ -3,12 +3,13 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Exceptions\TransferException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
-use Rbz\Data\Traits\CollectorTrait;
+use Rbz\Data\Traits\AdapterTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Validation\Validator as AbstractValidator;
-use Rbz\Data\Validation\RuleHelper;
+use Rbz\Data\Validation\Helpers\RuleHelper;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -17,19 +18,22 @@ abstract class Transfer extends Properties
     implements TransferInterface
 {
     use ErrorCollectionTrait,
-        CollectorTrait;
+        AdapterTrait;
 
     /**
      * @param mixed $data
-     * @param mixed ...$constructArgs
+     * @param array $constructArgs
      * @return static
-     * @throws ReflectionException
+     * @throws ReflectionException|TransferException
      */
-    public static function make($data = [], ...$constructArgs): TransferInterface
+    public static function make($data = [], array $constructArgs = []): TransferInterface
     {
-        $instance = new ReflectionClass(static::class);
+        $reflection = new ReflectionClass(static::class);
+        if (! $reflection->isInstantiable()) {
+            throw new TransferException('Class ' . static::class . 'is not instantiable');
+        }
         /** @var TransferInterface $transfer */
-        $transfer = $instance->newInstanceArgs($constructArgs);
+        $transfer = $reflection->newInstanceArgs($constructArgs);
         if (! empty($data)) {
             $transfer->load($data);
         }
@@ -43,16 +47,17 @@ abstract class Transfer extends Properties
 
     public function load($data): bool
     {
-        $collection = $this->getTransferData($data);
+        $this->errors()->clear();
+        $collection = Collection::make($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
-        return $this->validate($collection->keys()->toArray());
+        return self::errors()->isEmpty() && $this->validate($collection->keys()->toArray());
     }
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $errors = AbstractValidator::make(
             $this->toSafeCollection()->toArray(),
-            (new RuleHelper($this->rules()))->resolve(RuleHelper::toValidation($this->getProperties(), $properties))
+            (new RuleHelper($this->rules()))->run(RuleHelper::toValidation($this->getProperties(), $properties))
         )->getErrors();
 
         return $clearErrors
@@ -60,31 +65,13 @@ abstract class Transfer extends Properties
             : $this->errors()->merge($errors)->isEmpty();
     }
 
-    public function getTransferData(array $data): CollectionInterface
-    {
-        return Collection::make($data)->only($this->getProperties()->toArray());
-    }
-
-    public function setProperties(array $data): void
-    {
-        parent::setProperties($this->getTransferData($data)->toArray());
-    }
-
     public function setProperty(string $property, $value): void
     {
         try {
-            if ($this->collector()->has($property)) {
-                $value = $this->collector()->collect($property, $value);
-            }
             parent::setProperty($property, $value);
         } catch (Throwable $e) {
             $this->errors()->set($property, $e->getMessage());
         }
-    }
-
-    public function getShortClassName(): string
-    {
-        return $this->getReflectionInstance()->getShortName();
     }
 
     public function clone(): TransferInterface

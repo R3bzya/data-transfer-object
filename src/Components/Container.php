@@ -5,7 +5,7 @@ namespace Rbz\Data\Components;
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Exceptions\ContainerException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Components\ContainerInterface;
+use Rbz\Data\Interfaces\Components\Container\ContainerInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 class Container implements ContainerInterface
@@ -15,22 +15,22 @@ class Container implements ContainerInterface
      */
     private array $transfers = [];
 
-    public function add(string $id, TransferInterface $transfer): void
+    public function add(string $key, TransferInterface $transfer): void
     {
-        $this->transfers[$id] = $transfer->setErrors($transfer->errors()->withPath(Path::make($id)));
+        $this->transfers[$key] = $transfer;
     }
 
-    public function get(string $id): TransferInterface
+    public function get(string $key): TransferInterface
     {
-        if (! $this->has($id)) {
-            throw new ContainerException("Container doesnt have `$id`");
+        if (! $this->has($key)) {
+            throw new ContainerException("Container doesnt have $key");
         }
-        return $this->transfers()[$id];
+        return $this->toCollection()->get($key);
     }
 
-    public function has(string $id): bool
+    public function has(string $key): bool
     {
-        return $this->toCollection()->has($id);
+        return $this->toCollection()->has($key);
     }
 
     public function transfers(): array

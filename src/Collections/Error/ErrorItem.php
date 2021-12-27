@@ -2,6 +2,8 @@
 
 namespace Rbz\Data\Collections\Error;
 
+use Rbz\Data\Components\Path;
+use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Traits\PathTrait;
@@ -16,22 +18,24 @@ class ErrorItem implements ErrorItemInterface
     /**
      * @param string $property
      * @param array $messages
-     * @param PathInterface $path
+     * @param PathInterface|null $path
+     * @throws PathException
      */
-    public function __construct(string $property, array $messages, PathInterface $path)
+    public function __construct(string $property, array $messages, PathInterface $path = null)
     {
         $this->property = $property;
         $this->messages = $messages;
-        $this->_path = $path;
+        $this->_path = $path ?: Path::make($property);
     }
 
     /**
      * @param string $property
      * @param array $messages
-     * @param PathInterface $path
+     * @param PathInterface|null $path
      * @return ErrorItemInterface
+     * @throws PathException
      */
-    public static function make(string $property, array $messages, PathInterface $path): ErrorItemInterface
+    public static function make(string $property, array $messages, PathInterface $path = null): ErrorItemInterface
     {
         return new self($property, $messages, $path);
     }
@@ -75,9 +79,12 @@ class ErrorItem implements ErrorItemInterface
         $this->messages = array_unique(array_merge($this->messages(), $messages));
     }
 
-    public function getMessage(): string
+    public function getMessage(): ?string
     {
-        return $this->messages[0] ?? '';
+        foreach ($this->messages as $message) {
+            return $message;
+        }
+        return null;
     }
 
     public function count(): int

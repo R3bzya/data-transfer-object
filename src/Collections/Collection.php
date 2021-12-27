@@ -3,7 +3,9 @@
 namespace Rbz\Data\Collections;
 
 use ArrayIterator;
-use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Arrayable as LaravelArrayable;
+use Rbz\Data\Exceptions\CollectionException;
+use Rbz\Data\Interfaces\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Traits\TypeCheckerTrait;
 
@@ -27,14 +29,14 @@ class Collection implements CollectionInterface
     {
         if (is_array($value)) {
             return $value;
-        } elseif ($value instanceof Arrayable) {
+        } elseif ($value instanceof Arrayable || $value instanceof LaravelArrayable) {
             return $value->toArray();
         }
         return (array) $value;
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return static
      */
     public function add($value)
@@ -44,33 +46,40 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param string $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      * @return static
+     * @throws CollectionException
      */
-    public function set(string $key, $value = null)
+    public function set($key, $value = null)
     {
+        $this->assertKey($key);
         $this->items[$key] = $value;
         return $this;
     }
 
     /**
-     * @param string $key
-     * @param $default
+     * @param mixed $key
+     * @param mixed $default
      * @return mixed
+     * @throws CollectionException
      */
-    public function get(string $key, $default = null)
+    public function get($key, $default = null)
     {
-        return $this->has($key) ? $this->items()[$key] : $default;
+        $this->assertKey($key);
+        return $this->items[$key] ?? $default;
     }
 
     /**
-     * @param string $key
-     * @return void
+     * @param mixed $key
+     * @return static
+     * @throws CollectionException
      */
-    public function remove(string $key): void
+    public function remove($key)
     {
+        $this->assertKey($key);
         unset($this->items[$key]);
+        return $this;
     }
 
     public function items(): array
@@ -79,16 +88,18 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      * @return bool
+     * @throws CollectionException
      */
-    public function has(string $key): bool
+    public function has($key): bool
     {
-        return $this->keys()->in($key, true);
+        $this->assertKey($key);
+        return key_exists($key, $this->items());
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param bool $strict
      * @return bool
      */
@@ -98,7 +109,7 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param bool $strict
      * @return bool
      */
@@ -140,6 +151,7 @@ class Collection implements CollectionInterface
     /**
      * @param mixed $data
      * @return static
+     * @throws CollectionException
      */
     public function load($data)
     {
@@ -176,12 +188,13 @@ class Collection implements CollectionInterface
 
     public function filter(?callable $callable)
     {
-        return static::make(array_filter($this->items(), $callable, ARRAY_FILTER_USE_BOTH));
+        return new static(array_filter($this->items(), $callable, ARRAY_FILTER_USE_BOTH));
     }
 
-    public function clear(): void
+    public function clear()
     {
         $this->items = [];
+        return $this;
     }
 
     /**
@@ -191,7 +204,16 @@ class Collection implements CollectionInterface
     public function map(?callable $callable)
     {
         $keys = $this->keys()->toArray();
-        return static::make(array_combine($keys, array_map($callable, $this->items(), $keys)));
+        return new static(array_combine($keys, array_map($callable, $this->items(), $keys)));
+    }
+
+    public function mapWithKeys(callable $callable)
+    {
+        $items = [];
+        foreach ($this->items() as $key => $item) {
+            $items = array_merge($items, $callable($item, $key));
+        }
+        return new static($items);
     }
 
     /**
@@ -219,7 +241,7 @@ class Collection implements CollectionInterface
      */
     public function flip()
     {
-        return static::make(array_flip($this->items()));
+        return new static(array_flip($this->items()));
     }
 
     /**
@@ -276,21 +298,23 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      * @param mixed $default
      * @return static
+     * @throws CollectionException
      */
-    public function collect(string $key, $default = [])
+    public function collect($key, $default = [])
     {
-        return static::make($this->get($key, $default));
+        return new static($this->get($key, $default));
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      * @param mixed $default
      * @return mixed
+     * @throws CollectionException
      */
-    public function detach(string $key, $default = null)
+    public function detach($key, $default = null)
     {
         $value = $this->get($key, $default);
         $this->remove($key);
@@ -303,11 +327,31 @@ class Collection implements CollectionInterface
      */
     public function diff($data)
     {
-        return static::make(array_diff($this->items(), $this->makeArrayFrom($data)));
+        return new static(array_diff($this->items(), $this->makeArrayFrom($data)));
     }
 
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
     {
-        return static::make(array_slice($this->items, $offset, $length, $preserveKeys));
+        return new static(array_slice($this->items, $offset, $length, $preserveKeys));
+    }
+
+    public function first($default = null)
+    {
+        foreach ($this->items() as $item) {
+            return $item;
+        }
+        return $default;
+    }
+
+    /**
+     * @param mixed $key
+     * @return void
+     * @throws CollectionException
+     */
+    protected function assertKey($key): void
+    {
+        if (! is_scalar($key) && ! is_null($key)) {
+            throw new CollectionException('Key type must be a scalar or null, ' . gettype($key) . ' given');
+        }
     }
 }

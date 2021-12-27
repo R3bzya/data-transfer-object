@@ -2,44 +2,63 @@
 
 namespace Rbz\Data\Components;
 
+use Rbz\Data\Exceptions\CollectorException;
 use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
+use ReflectionClass;
 
 class Collector implements CollectorInterface
 {
-    private array $collectable;
+    private array $collectables;
 
-    public function __construct(array $collectable)
+    public function __construct(array $collectables)
     {
-        $this->collectable = $collectable;
+        $this->collectables = $collectables;
     }
 
-    public static function make(array $collectable): CollectorInterface
+    public static function make(array $collectables): CollectorInterface
     {
-        return new self($collectable);
+        return new static($collectables);
     }
 
-    public function collectable(): array
+    public function toCollect(string $property, array $data): array
     {
-        return $this->collectable;
+        return array_map(fn(array $datum) => $this->collect($this->get($property), $datum), $data);
     }
 
-    public function getCollectable(): array
+    private function collect(string $objectClass, array $data)
     {
-        return $this->collectable();
+        $reflection = new ReflectionClass($objectClass);
+        if (! $reflection->isInstantiable()) {
+            throw new CollectorException("Cannot instantiate class {$reflection->getName()}");
+        }
+        if (! $reflection->hasMethod('make')) {
+            throw new CollectorException("Method make does not exist {$reflection->getName()}::make()");
+        }
+        return $this->makeInstance($reflection, $data);
     }
 
-    public function collect(string $property, array $data): array
+    private function makeInstance(ReflectionClass $reflection, array $data)
     {
-        return array_map(fn(array $datum) => call_user_func([$this->get($property), 'make'], $datum), $data);
+        $methodMake = $reflection->getMethod('make');
+        if (! $methodMake->isPublic()) {
+            throw new CollectorException("Method make is non public {$reflection->getName()}::make()");
+        }
+        if (! $methodMake->isStatic()) {
+            throw new CollectorException("Method make is non static {$reflection->getName()}::make()");
+        }
+        return $methodMake->invoke(null, $data);
     }
 
     public function has(string $property): bool
     {
-        return key_exists($property, $this->collectable());
+        return key_exists($property, $this->collectables);
     }
 
     public function get(string $property): string
     {
-        return $this->collectable()[$property];
+        if (! $this->has($property)) {
+            throw new CollectorException("Collector does not have $property");
+        }
+        return $this->collectables[$property];
     }
 }

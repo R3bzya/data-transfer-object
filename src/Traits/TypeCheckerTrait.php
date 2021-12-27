@@ -4,52 +4,57 @@ namespace Rbz\Data\Traits;
 
 trait TypeCheckerTrait
 {
-    public function isString(string $key): bool
+    public function isString($key): bool
     {
         return is_string($this->get($key));
     }
 
-    public function isInteger(string $key): bool
+    public function isInteger($key): bool
     {
         return is_integer($this->get($key));
     }
 
-    public function isFloat(string $key): bool
+    public function isFloat($key): bool
     {
         return is_float($this->get($key));
     }
 
-    public function isArray(string $key): bool
+    public function isArray($key): bool
     {
         return is_array($this->get($key));
     }
 
-    public function isObject(string $key): bool
+    public function isObject($key): bool
     {
         return is_object($this->get($key));
     }
 
-    public function isCallable(string $key): bool
+    public function isCallable($key): bool
     {
         return is_callable($this->get($key));
     }
 
-    public function isBool(string $key): bool
+    public function isBool($key): bool
     {
         return is_bool($this->get($key));
     }
 
-    public function isNull(string $key): bool
+    public function isNull($key): bool
     {
         return is_null($this->get($key));
     }
 
-    public function isIterable(string $key): bool
+    public function isIterable($key): bool
     {
         return is_iterable($this->get($key));
     }
 
-    public function isInstanceOf(string $key, $instance): bool
+    public function isScalar($key): bool
+    {
+        return is_scalar($this->get($key));
+    }
+
+    public function isInstanceOf($key, $instance): bool
     {
         return $this->get($key) instanceof $instance;
     }

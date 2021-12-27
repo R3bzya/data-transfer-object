@@ -19,10 +19,10 @@ class Path implements PathInterface
     public static function make($path): PathInterface
     {
         switch (gettype($path)) {
-            case 'string': return new self($path);
-            case 'array': return new self(self::makeString($path));
+            case 'string': return new static($path);
+            case 'array': return new static(static::makeString($path));
         }
-        throw new PathException('Path type must be array or string');
+        throw new PathException('Path type must be an array or a string');
     }
 
     public static function separator(): string
@@ -32,7 +32,7 @@ class Path implements PathInterface
 
     public static function getSeparator(): string
     {
-        return self::separator();
+        return static::separator();
     }
 
     public function get(): string
@@ -40,29 +40,29 @@ class Path implements PathInterface
         return $this->path;
     }
 
-    public function isInternal(): bool
+    public function isNested(): bool
     {
         return $this->count() > 1;
     }
 
     public function with(PathInterface $path): PathInterface
     {
-        return new static($this->get().self::separator().$path->get());
+        return new static($this->get().static::separator().$path->get());
     }
 
     public static function makeString(array $path): string
     {
-        return implode(self::separator(), $path);
+        return implode(static::separator(), $path);
     }
 
     public static function makeArray(string $path): array
     {
-        return explode(self::separator(), $path);
+        return explode(static::separator(), $path);
     }
 
     public function toArray(): array
     {
-        return self::makeArray($this->get());
+        return static::makeArray($this->get());
     }
 
     public function getIterator(): ArrayIterator

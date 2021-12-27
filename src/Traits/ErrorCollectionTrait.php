@@ -30,6 +30,6 @@ trait ErrorCollectionTrait
 
     public function hasErrors(): bool
     {
-        return $this->errors()->isNotEmpty();
+        return $this->getErrors()->isNotEmpty();
     }
 }

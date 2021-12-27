@@ -3,29 +3,31 @@
 namespace Rbz\Data\Interfaces\Collections\Error;
 
 use Rbz\Data\Interfaces\Collections\CollectionInterface as BaseCollectionInterface;
-use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
-interface ErrorCollectionInterface extends BaseCollectionInterface, PathProviderInterface
+interface ErrorCollectionInterface extends BaseCollectionInterface
 {
     /**
+     * Add the item to the error collection.
+     *
      * @param ErrorItemInterface $item
      * @return static
      */
     public function addItem(ErrorItemInterface $item);
 
-    public function getFirstMessage(?string $property = null): ?string;
-
-    public function getFirst(string $property);
+    /**
+     * Get the first error message from the error collection.
+     *
+     * @param string|null $property
+     * @return string|null
+     */
+    public function getFirstMessage(string $property = null): ?string;
 
     /**
-     * @param ErrorCollectionInterface $collection
+     * Add the path to the path beginning of each item.
+     *
+     * @param PathInterface $path
      * @return static
      */
-    public function with($collection);
-
-    /**
-     * @param ErrorCollectionInterface $collection
-     * @return static
-     */
-    public function merge($collection);
+    public function withPathAtTheBeginning(PathInterface $path);
 }

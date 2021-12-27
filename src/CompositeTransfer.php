@@ -3,25 +3,29 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Collections\Collection;
+use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
+use Rbz\Data\Interfaces\TransferInterface;
+use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ContainerTrait;
-use Rbz\Data\Validation\PropertyHelper;
+use Rbz\Data\Validation\Helpers\PropertyHelper;
 
 abstract class CompositeTransfer extends Transfer
     implements CompositeTransferInterface
 {
-    use ContainerTrait;
+    use ContainerTrait,
+        CollectorTrait;
 
     public function load($data): bool
     {
         $collection = Collection::make($data);
-        parent::load($collection->toArray());
-        $this->container()->toCollection()->each(function (Transfer $transfer, string $property) use ($collection) {
-            $transfer->load($collection->isArray($property) ? $collection->get($property) : $collection->toArray());
+        $this->container()->toCollection()->each(function (TransferInterface $transfer, string $property) use ($collection) {
+            $transfer->load($collection->isArray($property) ? $collection->detach($property) : $collection->toArray());
         });
+        parent::load($collection->toArray());
         return $this->errors()->isEmpty();
     }
 
@@ -32,15 +36,27 @@ abstract class CompositeTransfer extends Transfer
     {
         $properties = new PropertyHelper($properties);
         parent::validate($properties->get(), $clearErrors);
-        $this->container()->toCollection()->each(fn(Transfer $transfer, $property) => $transfer->validate($properties->get($property), $clearErrors));
+        $this->container()->toCollection()->each(function (TransferInterface $transfer, $property) use ($properties, $clearErrors) {
+            $transfer->validate($properties->get($property), $clearErrors);
+        });
         return $this->errors()->isEmpty();
     }
 
     public function errors(): ErrorCollectionInterface
     {
         $collection = parent::errors();
-        $this->container()->toCollection()->each(fn(Transfer $transfer) => $collection->merge($transfer->getErrors()));
+        $this->container()->toCollection()->each(function (TransferInterface $transfer, string $property) use ($collection) {
+            $collection->merge($transfer->getErrors()->withPathAtTheBeginning(Path::make($property)));
+        });
         return $collection;
+    }
+
+    public function setProperty(string $property, $value): void
+    {
+        if ($this->collector()->has($property)) {
+            $value = $this->collector()->toCollect($property, $value);
+        }
+        parent::setProperty($property, $value);
     }
 
     public function getProperties(): CollectionInterface

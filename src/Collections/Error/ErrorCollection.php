@@ -3,59 +3,50 @@
 namespace Rbz\Data\Collections\Error;
 
 use Rbz\Data\Collections\Collection;
-use Rbz\Data\Components\Path;
+use Rbz\Data\Exceptions\CollectionException;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
-use Rbz\Data\Traits\PathTrait;
+use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 class ErrorCollection extends Collection implements ErrorCollectionInterface
 {
-    use PathTrait;
-
-    public function set(string $key, $value = null)
+    public function set($key, $value = null)
     {
-        return $this->addItem(ErrorItem::make($key, $this->makeArrayFrom($value), Path::make($key)));
+        $this->assertKey($key);
+        return $this->addItem(ErrorItem::make($key, $this->makeArrayFrom($value)));
     }
 
     public function addItem(ErrorItemInterface $item)
     {
-        if ($this->has($item->getProperty())) {
-            $this->get($item->getProperty())->addMessages($item->getMessages());
+        if ($this->has($item->getPath()->get())) {
+            $this->get($item->getPath()->get())->addMessages($item->getMessages());
         } else {
             parent::set($item->getPath()->get(), $item);
         }
         return $this;
     }
 
-    public function getFirst(?string $property = null): ?ErrorItemInterface
+    public function getFirstMessage(string $property = null): ?string
     {
-        if (! is_null($property)) {
-            return $this->get($property);
-        }
-        foreach ($this->items() as $item) {
-            return $item;
-        }
-        return null;
-    }
-
-    public function getFirstMessage(?string $property = null): ?string
-    {
-        if ($error = $this->getFirst($property)) {
+        /** @var ErrorItemInterface $error */
+        if ($error = $property ? $this->get($property) : $this->first()) {
             return $error->getMessage();
         }
         return null;
     }
 
-    public function merge($collection)
+    public function assertKey($key): void
     {
-        /** @var ErrorItemInterface $item */
-        foreach ($collection->getItems() as $item) {
-            if ($collection->hasPath()) {
-                $this->addItem($item->clone()->setPath($collection->getPath()->with($item->getPath())));
-            } else {
-                $this->addItem($item);
-            }
+        if (! is_string($key)) {
+            throw new CollectionException('Key type must be a string, ' . gettype($key) . ' given');
         }
-        return $this;
+    }
+
+    public function withPathAtTheBeginning(PathInterface $path)
+    {
+        return $this->clone()->mapWithKeys(function (ErrorItemInterface $item) use ($path) {
+            $path = $path->with($item->getPath());
+            return [$path->get() => $item->clone()->setPath($path)];
+        });
     }
 }

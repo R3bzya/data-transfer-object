@@ -8,60 +8,63 @@ class CollectionTest extends BaseCase
 {
     public function testAdd()
     {
-        $data = $this->collection();
-        $data->set('test', 'test');
+        $collection = $this->collection();
+        $collection->add('test');
 
-        $this->assertEquals(['test' => 'test'], $data->toArray());
+        $this->assertEquals([0 => 'test'], $collection->toArray());
+        $this->assertEquals('test', $collection->get(0));
     }
 
     public function testRemove()
     {
-        $data = $this->collection(['test' => 'test',]);
-        $data->remove('test');
+        $collection = $this->collection(['test' => 'test',]);
+        $collection->remove('test');
 
-        $this->assertEquals([], $data->toArray());
+        $this->assertEquals([], $collection->toArray());
     }
 
     public function testGet()
     {
-        $data = $this->collection(['test' => 'test_2']);
+        $collection = $this->collection(['test' => 'test_2']);
 
-        $this->assertEquals('test_2', $data->get('test'));
+        $this->assertEquals('test_2', $collection->get('test'));
     }
 
     public function testHas()
     {
-        $data = $this->collection(['test' => 'test_2']);
+        $collection = $this->collection(['test_1' => 'test_1', 2 => 'test_2', null => 'test_null']);
 
-        $this->assertTrue($data->has('test'));
-        $this->assertFalse($data->has('test_2'));
+        $this->assertTrue($collection->has('test_1'));
+        $this->assertTrue($collection->has(2));
+        $this->assertTrue($collection->has(null));
+        $this->assertFalse($collection->has('test_2'));
     }
 
     public function testOnly()
     {
-        $data = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
+        $collection = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test' => 'test_2'], $data->only(['test'])->toArray());
+        $this->assertEquals(['test' => 'test_2'], $collection->only(['test'])->toArray());
     }
 
     public function testExcept()
     {
-        $data = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
+        $collection = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test_3' => 'test_4'], $data->except(['test'])->toArray());
+        $this->assertEquals(['test_3' => 'test_4'], $collection->except(['test'])->toArray());
     }
 
     public function testCount()
     {
-        $data = $this->collection(['test' => 'test_2']);
+        $collection = $this->collection(['test' => 'test_2']);
 
-        $this->assertEquals(1, $data->count());
+        $this->assertEquals(1, $collection->count());
     }
 
     public function testKeys()
     {
-        $data = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
+        $collection = $this->collection(['test' => 'test_2', 'test_3' => 'test_4']);
 
-        $this->assertEquals(['test', 'test_3'], $data->keys()->toArray());
+        $this->assertEquals(['test', 'test_3'], $collection->keys()->toArray());
     }
 }

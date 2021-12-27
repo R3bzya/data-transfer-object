@@ -23,7 +23,7 @@ abstract class Properties implements PropertiesInterface
 
     public function setProperty(string $property, $value): void
     {
-        if (! $this->isPublicProperty($property)) {
+        if (! $this->hasProperty($property)) {
             throw new PropertyException('Setting private property:' . get_class($this) . '::' . $property);
         }
         $this->$property = $value;
@@ -38,7 +38,7 @@ abstract class Properties implements PropertiesInterface
 
     public function getProperty(string $property)
     {
-        if (! $this->isPublicProperty($property)) {
+        if (! $this->hasProperty($property)) {
             throw new PropertyException('Getting private property:' . get_class($this) . '::' . $property);
         }
         return $this->$property;
@@ -54,18 +54,8 @@ abstract class Properties implements PropertiesInterface
         return isset($this->$property);
     }
 
-    public function isNullProperty(string $property): bool
-    {
-        return is_null($this->getProperty($property));
-    }
-
     public function getReflectionInstance(): ReflectionClass
     {
         return new ReflectionClass($this);
-    }
-
-    public function isPublicProperty(string $property): bool
-    {
-        return $this->hasProperty($property);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
-namespace Rbz\Data\Validation;
+namespace Rbz\Data\Validation\Helpers;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Validation\Validator;
 
 class RuleHelper
 {
@@ -47,16 +48,16 @@ class RuleHelper
      * @param array $properties
      * @return array
      */
-    public function resolve(array $properties): array
+    public function run(array $properties): array
     {
         if (! $this->hasRules()) {
             return $this->makeDefaultRules($properties)->toArray();
         }
-        $resolved = Collection::make($this->rules)->only($properties);
-        $differentProperties = Collection::make($properties)->diff($resolved->keys());
+        $rules = Collection::make($this->rules)->only($properties);
+        $differentProperties = Collection::make($properties)->diff($rules->keys());
         return $differentProperties->isEmpty()
-            ? $resolved->toArray()
-            : $resolved->merge($this->makeDefaultRules($differentProperties->toArray()))->toArray();
+            ? $rules->toArray()
+            : $rules->merge($this->makeDefaultRules($differentProperties->toArray()))->toArray();
     }
 
     private function hasRules(): bool
@@ -66,6 +67,6 @@ class RuleHelper
 
     private function makeDefaultRules(array $properties): CollectionInterface
     {
-        return Collection::make($properties)->flip()->map(fn($value, string $property) => ['present']);
+        return Collection::make($properties)->flip()->map(fn($value, string $property) => Validator::getDefaultRules());
     }
 }

@@ -4,13 +4,39 @@ namespace Rbz\Data\Traits;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Container;
-use Rbz\Data\Interfaces\Components\ContainerInterface;
+use Rbz\Data\Exceptions\PropertyException;
+use Rbz\Data\Interfaces\Components\Container\ContainerInterface;
+use Rbz\Data\Interfaces\TransferInterface;
 
 trait ContainerTrait
 {
     private ContainerInterface $_container;
 
-    abstract public function internalTransfers(): array;
+    public function __get($name)
+    {
+        if ($this->container()->has($name)) {
+            return $this->container()->get($name);
+        }
+        return parent::__get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        if (Collection::make($this->internalTransfers())->in($name, true)) {
+            if (! $value instanceof TransferInterface) {
+                throw new PropertyException('Property ' . $name . ' must implement interface ' . TransferInterface::class . ', ' . gettype($value) . ' given');
+            }
+            $this->container()->add($name, $value);
+        } else {
+            parent::__set($name, $value);
+        }
+    }
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->_container = $container;
+        return $this;
+    }
 
     public function container(): ContainerInterface
     {
@@ -25,20 +51,8 @@ trait ContainerTrait
         return $this->container();
     }
 
-    public function __get($name)
+    public function internalTransfers(): array
     {
-        if ($this->container()->has($name)) {
-            return $this->container()->get($name);
-        }
-        return parent::__get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        if (Collection::make($this->internalTransfers())->in($name, true)) {
-            $this->container()->add($name, $value);
-        } else {
-            parent::__set($name, $value);
-        }
+        return [];
     }
 }

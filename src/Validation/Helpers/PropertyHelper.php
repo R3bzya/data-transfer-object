@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Validation;
+namespace Rbz\Data\Validation\Helpers;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
@@ -18,15 +18,15 @@ class PropertyHelper
     public function __construct(array $data)
     {
         foreach ($data as $path) {
-            $this->items = array_merge($this->items, $this->resolve(Path::make($path)));
+            $this->items = array_merge($this->items, $this->explode(Path::make($path)));
         }
     }
 
-    private function resolve(PathInterface $path): array
+    private function explode(PathInterface $path): array
     {
         $items = [];
-        $path->isInternal()
-            ? $items[$path->firstSection()->get()] = $this->resolve($path->slice(1))
+        $path->isNested()
+            ? $items[$path->firstSection()->get()] = $this->explode($path->slice(1))
             : $items[] = $path->get();
         return $items;
     }
@@ -36,11 +36,22 @@ class PropertyHelper
         if (is_null($key)) {
             return $this->getCurrents();
         }
-        return $this->items[$key] ?? [];
+        if ($this->has($key)) {
+            return $this->items[$key];
+        }
+        if ($this->has('!'.$key)) {
+            return ['__toExclude__'];
+        }
+        return [];
     }
 
     private function getCurrents(): array
     {
         return Collection::make($this->items)->filter(fn($value) => ! is_array($value))->toArray();
+    }
+
+    private function has(string $key): bool
+    {
+        return key_exists($key, $this->items);
     }
 }

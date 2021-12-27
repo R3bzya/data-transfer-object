@@ -3,7 +3,7 @@
 namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validation\PropertyHelper;
+use Rbz\Data\Validation\Helpers\PropertyHelper;
 
 class PropertyHelperTest extends BaseCase
 {

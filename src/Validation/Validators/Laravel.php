@@ -27,4 +27,9 @@ class Laravel extends AbstractValidator
     {
         return ErrorCollection::make()->load(Validator::make($this->data, $this->rules)->getMessageBag()->toArray());
     }
+
+    protected static function defaultRules(): array
+    {
+        return ['present'];
+    }
 }
