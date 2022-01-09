@@ -50,7 +50,7 @@ abstract class Transfer extends Properties
         $this->errors()->clear();
         $collection = Collection::make($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
-        return self::errors()->isEmpty() && $this->validate($collection->keys()->toArray());
+        return $collection->isNotEmpty() && $this->errors()->isEmpty();
     }
 
     public function validate(array $properties = [], bool $clearErrors = true): bool

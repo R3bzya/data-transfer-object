@@ -62,12 +62,20 @@ interface PathInterface extends Arrayable, IteratorAggregate, Countable
     public static function getSeparator(): string;
 
     /**
-     * Determine if the current path is equal to the given path.
+     * Determine if two paths is same.
      *
      * @param PathInterface $path
      * @return bool
      */
-    public function equalTo(PathInterface $path): bool;
+    public function is(PathInterface $path): bool;
+
+    /**
+     * Determine if two paths are not the same.
+     *
+     * @param PathInterface $path
+     * @return bool
+     */
+    public function isNot(PathInterface $path): bool;
 
     /**
      * Get the first section of the path.

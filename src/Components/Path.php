@@ -16,6 +16,9 @@ class Path implements PathInterface
         $this->path = $path;
     }
 
+    /**
+     * @throws PathException
+     */
     public static function make($path): PathInterface
     {
         switch (gettype($path)) {
@@ -75,9 +78,14 @@ class Path implements PathInterface
         return count($this->toArray());
     }
 
-    public function equalTo(PathInterface $path): bool
+    public function is(PathInterface $path): bool
     {
         return $this->get() === $path->get();
+    }
+
+    public function isNot(PathInterface $path): bool
+    {
+        return $this->get() !== $path->get();
     }
 
     public function lastSection(): PathInterface

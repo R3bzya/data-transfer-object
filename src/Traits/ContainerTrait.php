@@ -4,9 +4,7 @@ namespace Rbz\Data\Traits;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Container;
-use Rbz\Data\Exceptions\PropertyException;
 use Rbz\Data\Interfaces\Components\Container\ContainerInterface;
-use Rbz\Data\Interfaces\TransferInterface;
 
 trait ContainerTrait
 {
@@ -23,9 +21,6 @@ trait ContainerTrait
     public function __set($name, $value)
     {
         if (Collection::make($this->internalTransfers())->in($name, true)) {
-            if (! $value instanceof TransferInterface) {
-                throw new PropertyException('Property ' . $name . ' must implement interface ' . TransferInterface::class . ', ' . gettype($value) . ' given');
-            }
             $this->container()->add($name, $value);
         } else {
             parent::__set($name, $value);

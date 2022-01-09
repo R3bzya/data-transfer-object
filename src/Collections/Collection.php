@@ -115,7 +115,7 @@ class Collection implements CollectionInterface
      */
     public function notIn($value, bool $strict = false): bool
     {
-        return ! in_array($value, $this->items(), $strict);
+        return ! $this->in($value, $strict);
     }
 
     public function count(): int
@@ -130,7 +130,7 @@ class Collection implements CollectionInterface
 
     public function isNotEmpty(): bool
     {
-        return $this->count() > 0;
+        return ! $this->isEmpty();
     }
 
     public function toArray(): array

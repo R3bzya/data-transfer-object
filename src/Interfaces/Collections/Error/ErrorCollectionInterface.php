@@ -30,4 +30,11 @@ interface ErrorCollectionInterface extends BaseCollectionInterface
      * @return static
      */
     public function withPathAtTheBeginning(PathInterface $path);
+
+    /**
+     * Count messages of error items.
+     *
+     * @return int
+     */
+    public function countMessages(): int;
 }

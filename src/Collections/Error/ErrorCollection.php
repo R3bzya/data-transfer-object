@@ -49,4 +49,13 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
             return [$path->get() => $item->clone()->setPath($path)];
         });
     }
+
+    public function countMessages(): int
+    {
+        $result = 0;
+        $this->each(function (ErrorItemInterface $item) use (&$result) {
+            $result += $item->count();
+        });
+        return $result;
+    }
 }

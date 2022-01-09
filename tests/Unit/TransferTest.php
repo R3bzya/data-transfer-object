@@ -2,10 +2,19 @@
 
 namespace Rbz\Data\Tests\Unit;
 
+use Rbz\Data\Exceptions\PropertyException;
 use Rbz\Data\Tests\BaseCase;
 
 class TransferTest extends BaseCase
 {
+    public function testUnknownProperty()
+    {
+        $transfer = $this->transfer();
+
+        $this->expectException(PropertyException::class);
+        $transfer->unknown = '123';
+    }
+
     /**
      * @dataProvider getValidData
      */
@@ -74,9 +83,11 @@ class TransferTest extends BaseCase
     public function testConsistentLoading()
     {
         $transfer = $this->transfer();
-        $transfer->load([]);
+        $transfer->load([
+            'a_one_s' => []
+        ]);
 
-        $this->assertEquals(3, $transfer->getErrors()->count());
+        $this->assertEquals(1, $transfer->getErrors()->count());
 
         $transfer->load([
             'a_one_s' => 'string',
@@ -142,7 +153,7 @@ class TransferTest extends BaseCase
                 [],
                 [
                     'load' => false,
-                    'count' => 3
+                    'count' => 0
                 ]
             ],
             'types is bad' => [

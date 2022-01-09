@@ -2,7 +2,6 @@
 
 namespace Rbz\Data\Tests\Unit;
 
-use Rbz\Data\Exceptions\PropertyException;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Tests\Unit\Transfers\DefaultTransfer;
 
@@ -12,7 +11,7 @@ class CompositeTransferTest extends BaseCase
     {
         $transfer = $this->compositeTransfer();
 
-        $this->expectException(PropertyException::class);
+        $this->expectException(\TypeError::class);
         $transfer->default = [];
 
         $transfer->default = DefaultTransfer::make(['a_one_s' => 'its okay']);
@@ -48,38 +47,49 @@ class CompositeTransferTest extends BaseCase
     }
 
     /**
-     * @dataProvider validData
+     * @dataProvider getData
      */
-    public function testValidData($data)
+    public function testLoad($data, $errors)
     {
         $transfer = $this->compositeTransfer();
 
-        $this->assertTrue($transfer->load($data));
-        $this->assertEquals(0, $transfer->getErrors()->count());
-
-        $this->assertEquals(
-            [
-                'b_one_s' => 'string',
-                'default' => $transfer->default
-            ],
-            $transfer->toArray()
-        );
-    }
-
-    /**
-     * @dataProvider invalidData
-     */
-    public function testInvalidData($data, $errors)
-    {
-        $transfer = $this->compositeTransfer();
-
-        $this->assertFalse($transfer->load($data));
+        $this->assertEquals($errors['load'], $transfer->load($data));
         $this->assertEquals($errors['count'], $transfer->getErrors()->count());
     }
 
-    public function validData()
+    public function testDeepLoading()
+    {
+        $transfer = $this->compositeTransfer();
+        $transfer->load(['a_two_i' => 123]);
+        $transfer->load(['default' => ['a_one_s' => 'string']]);
+
+        $this->assertEquals(123, $transfer->default->a_two_i);
+        $this->assertEquals('string', $transfer->default->a_one_s);
+    }
+
+    public function getData(): array
     {
         return [
+            [
+                [
+                    'a_two_i' => 1,
+                ],
+                [
+                    'load' => true,
+                    'count' => 0
+                ]
+            ],
+            [
+                [
+                    'default' => [
+                        'a_two_i' => 1
+                    ],
+                ],
+                [
+                    'load' => true,
+                    'count' => 0
+                ]
+            ],
             [
                 [
                     'b_one_s' => 'string',
@@ -88,6 +98,12 @@ class CompositeTransferTest extends BaseCase
                     'a_three_a' => [],
                 ],
                 [
+                    'load' => true,
+                    'count' => 0
+                ]
+            ],
+            [
+                [
                     'b_one_s' => 'string',
                     'default' => [
                         'a_one_s' => 'string_2',
@@ -95,6 +111,12 @@ class CompositeTransferTest extends BaseCase
                         'a_three_a' => [],
                     ]
                 ],
+                [
+                    'load' => true,
+                    'count' => 0
+                ]
+            ],
+            [
                 [
                     'b_one_s' => 'string',
                     [
@@ -103,13 +125,11 @@ class CompositeTransferTest extends BaseCase
                         'a_three_a' => [],
                     ]
                 ],
-            ]
-        ];
-    }
-
-    public function invalidData()
-    {
-        return [
+                [
+                    'load' => true,
+                    'count' => 0
+                ]
+            ],
             [
                 [
                     'default' => [
@@ -118,12 +138,13 @@ class CompositeTransferTest extends BaseCase
                     ]
                 ],
                 [
-                    'count' => 3
+                    'load' => false,
+                    'count' => 1
                 ]
             ],
             [
                 [
-                    'b_one_s' => 'string',
+                    'b_one_s' => [],
                     'default' => [
                         'a_one_s' => 1,
                         'a_two_i' => [],
@@ -131,7 +152,8 @@ class CompositeTransferTest extends BaseCase
                     ]
                 ],
                 [
-                    'count' => 1
+                    'load' => false,
+                    'count' => 2
                 ]
             ]
         ];
