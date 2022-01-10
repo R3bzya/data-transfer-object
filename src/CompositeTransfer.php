@@ -51,12 +51,37 @@ abstract class CompositeTransfer extends Transfer
         return $collection;
     }
 
+    public function getProperty(string $property)
+    {
+        if ($this->container()->has($property)) {
+            return $this->container()->get($property);
+        }
+        return parent::getProperty($property);
+    }
+
+    public function __set($name, $value)
+    {
+        if (Collection::make($this->internalTransfers())->in($name, true)) {
+            $this->container()->add($name, $value);
+        } else {
+            parent::__set($name, $value);
+        }
+    }
+
     public function setProperty(string $property, $value): void
     {
-        if ($this->collector()->has($property)) {
-            $value = $this->collector()->toCollect($property, $value);
+        if (Collection::make($this->internalTransfers())->in($property, true)) {
+            $this->container()->add($property, $value);
+        } elseif ($this->collector()->has($property)) {
+            parent::setProperty($property, $this->collector()->toCollect($property, $value));
+        } else {
+            parent::setProperty($property, $value);
         }
-        parent::setProperty($property, $value);
+    }
+
+    public function isSetProperty(string $property): bool
+    {
+        return $this->container()->has($property) || parent::isSetProperty($property);
     }
 
     public function getProperties(): CollectionInterface

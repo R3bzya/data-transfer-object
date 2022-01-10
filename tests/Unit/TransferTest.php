@@ -2,19 +2,10 @@
 
 namespace Rbz\Data\Tests\Unit;
 
-use Rbz\Data\Exceptions\PropertyException;
 use Rbz\Data\Tests\BaseCase;
 
 class TransferTest extends BaseCase
 {
-    public function testUnknownProperty()
-    {
-        $transfer = $this->transfer();
-
-        $this->expectException(PropertyException::class);
-        $transfer->unknown = '123';
-    }
-
     /**
      * @dataProvider getValidData
      */

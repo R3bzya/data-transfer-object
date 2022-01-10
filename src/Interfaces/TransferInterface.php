@@ -7,7 +7,7 @@ use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
 use Rbz\Data\Interfaces\Collections\Collectable;
 
 interface TransferInterface extends PropertiesInterface, ErrorCollectionProviderInterface,
-    Cloneable, Arrayable, Collectable, Adaptable
+    Cloneable, Arrayable, Collectable
 {
     /**
      * Make the new transfer instance.

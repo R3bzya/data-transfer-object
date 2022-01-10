@@ -6,7 +6,6 @@ use Rbz\Data\Collections\Collection;
 use Rbz\Data\Exceptions\TransferException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
-use Rbz\Data\Traits\AdapterTrait;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Validation\Validator as AbstractValidator;
 use Rbz\Data\Validation\Helpers\RuleHelper;
@@ -17,8 +16,7 @@ use Throwable;
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    use ErrorCollectionTrait,
-        AdapterTrait;
+    use ErrorCollectionTrait;
 
     /**
      * @param mixed $data

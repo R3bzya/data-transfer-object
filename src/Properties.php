@@ -18,12 +18,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function __get($name)
     {
-        if ($this->hasGetter($name)) {
-            return $this->getter($name);
-        } elseif ($this->hasProperty($name)) {
-            return $this->$name;
-        }
-        throw new PropertyException('Getting unknown property: ' . get_class($this) . '::' . $name);
+        return $this->getProperty($name);
     }
 
     /**
@@ -34,15 +29,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function __set($name, $value)
     {
-        if ($this->hasSetter($name)) {
-            $this->setter($name, $value);
-        } elseif ($this->hasProperty($name)) {
-            $this->$name = $value;
-        } elseif ($this->hasGetter($name)) {
-            throw new PropertyException('Setting read-only property: ' . get_class($this) . '::' . $name);
-        } else {
-            throw new PropertyException('Setting unknown property: ' . get_class($this) . '::' . $name);
-        }
+        $this->setProperty($name, $value);
     }
 
     /**
@@ -51,10 +38,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function __isset($name)
     {
-        if ($this->hasGetter($name)) {
-            return $this->getter($name) !== null;
-        }
-        return isset($this->$name);
+        return $this->isSetProperty($name);
     }
 
     /**
@@ -77,7 +61,15 @@ abstract class Properties implements PropertiesInterface
      */
     public function setProperty(string $property, $value): void
     {
-        $this->__set($property, $value);
+        if ($this->hasSetter($property)) {
+            $this->setter($property, $value);
+        } elseif ($this->hasProperty($property)) {
+            $this->$property = $value;
+        } elseif ($this->hasGetter($property)) {
+            throw new PropertyException('Setting read-only property: ' . get_class($this) . '::' . $property);
+        } else {
+            throw new PropertyException('Setting unknown property: ' . get_class($this) . '::' . $property);
+        }
     }
 
     /**
@@ -97,7 +89,12 @@ abstract class Properties implements PropertiesInterface
      */
     public function getProperty(string $property)
     {
-        return $this->__get($property);
+        if ($this->hasGetter($property)) {
+            return $this->getter($property);
+        } elseif ($this->hasProperty($property)) {
+            return $this->$property;
+        }
+        throw new PropertyException('Getting unknown property: ' . get_class($this) . '::' . $property);
     }
 
     /**
@@ -115,7 +112,10 @@ abstract class Properties implements PropertiesInterface
      */
     public function isSetProperty(string $property): bool
     {
-        return $this->__isset($property);
+        if ($this->hasGetter($property)) {
+            return $this->getter($property) !== null;
+        }
+        return isset($this->$property);
     }
 
     /**
