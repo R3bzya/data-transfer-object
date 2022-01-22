@@ -59,15 +59,6 @@ abstract class CompositeTransfer extends Transfer
         return parent::getProperty($property);
     }
 
-    public function __set($name, $value)
-    {
-        if (Collection::make($this->internalTransfers())->in($name, true)) {
-            $this->container()->add($name, $value);
-        } else {
-            parent::__set($name, $value);
-        }
-    }
-
     public function setProperty(string $property, $value): void
     {
         if (Collection::make($this->internalTransfers())->in($property, true)) {

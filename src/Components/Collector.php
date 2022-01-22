@@ -4,7 +4,6 @@ namespace Rbz\Data\Components;
 
 use Rbz\Data\Exceptions\CollectorException;
 use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
-use ReflectionClass;
 
 class Collector implements CollectorInterface
 {
@@ -27,26 +26,10 @@ class Collector implements CollectorInterface
 
     private function collect(string $objectClass, array $data)
     {
-        $reflection = new ReflectionClass($objectClass);
-        if (! $reflection->isInstantiable()) {
-            throw new CollectorException("Cannot instantiate class {$reflection->getName()}");
+        if  (! method_exists($objectClass, 'make')) {
+            throw new CollectorException("Method make does not exist {$objectClass}::make()");
         }
-        if (! $reflection->hasMethod('make')) {
-            throw new CollectorException("Method make does not exist {$reflection->getName()}::make()");
-        }
-        return $this->makeInstance($reflection, $data);
-    }
-
-    private function makeInstance(ReflectionClass $reflection, array $data)
-    {
-        $methodMake = $reflection->getMethod('make');
-        if (! $methodMake->isPublic()) {
-            throw new CollectorException("Method make is non public {$reflection->getName()}::make()");
-        }
-        if (! $methodMake->isStatic()) {
-            throw new CollectorException("Method make is non static {$reflection->getName()}::make()");
-        }
-        return $methodMake->invoke(null, $data);
+        return call_user_func([$objectClass, 'make'], $data);
     }
 
     public function has(string $property): bool
