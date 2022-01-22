@@ -5,16 +5,18 @@ namespace Rbz\Data\Interfaces\Components\Path;
 use Countable;
 use Rbz\Data\Interfaces\Arrayable;
 use IteratorAggregate;
+use Rbz\Data\Interfaces\Cloneable;
+use Rbz\Data\Interfaces\Collections\Collectable;
 
-interface PathInterface extends Arrayable, IteratorAggregate, Countable
+interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Countable, Cloneable
 {
     /**
      * Make the new path instance.
      *
      * @param string|array $path
-     * @return PathInterface
+     * @return static
      */
-    public static function make($path): PathInterface;
+    public static function make($path);
 
     /**
      * Get path as string.
@@ -31,12 +33,20 @@ interface PathInterface extends Arrayable, IteratorAggregate, Countable
     public function isNested(): bool;
 
     /**
+     * Merge the path with the given path.
+     *
+     * @param static $path
+     * @return static
+     */
+    public function merge($path);
+
+    /**
      * Get the new path merged with the given path.
      *
-     * @param PathInterface $path
-     * @return PathInterface
+     * @param static $path
+     * @return static
      */
-    public function with(PathInterface $path): PathInterface;
+    public function with($path);
 
     /**
      * Make string path from array.
@@ -64,39 +74,39 @@ interface PathInterface extends Arrayable, IteratorAggregate, Countable
     /**
      * Determine if two paths is same.
      *
-     * @param PathInterface $path
+     * @param static $path
      * @return bool
      */
-    public function is(PathInterface $path): bool;
+    public function is($path): bool;
 
     /**
      * Determine if two paths are not the same.
      *
-     * @param PathInterface $path
+     * @param static $path
      * @return bool
      */
-    public function isNot(PathInterface $path): bool;
+    public function isNot($path): bool;
 
     /**
      * Get the first section of the path.
      *
-     * @return PathInterface
+     * @return static
      */
-    public function firstSection(): PathInterface;
+    public function firstSection();
 
     /**
      * Get the last section of the path.
      *
-     * @return PathInterface
+     * @return static
      */
-    public function lastSection(): PathInterface;
+    public function lastSection();
 
     /**
      * Extract a slice of the path.
      *
      * @param int $offset
      * @param int|null $length
-     * @return PathInterface
+     * @return static
      */
-    public function slice(int $offset = 0, int $length = null): PathInterface;
+    public function slice(int $offset = 0, int $length = null);
 }

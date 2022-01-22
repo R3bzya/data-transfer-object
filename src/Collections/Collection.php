@@ -3,7 +3,6 @@
 namespace Rbz\Data\Collections;
 
 use ArrayIterator;
-use Illuminate\Contracts\Support\Arrayable as LaravelArrayable;
 use Rbz\Data\Exceptions\CollectionException;
 use Rbz\Data\Interfaces\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
@@ -29,7 +28,7 @@ class Collection implements CollectionInterface
     {
         if (is_array($value)) {
             return $value;
-        } elseif ($value instanceof Arrayable || $value instanceof LaravelArrayable) {
+        } elseif ($value instanceof Arrayable) {
             return $value->toArray();
         }
         return (array) $value;

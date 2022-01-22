@@ -52,10 +52,10 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
 
     public function countMessages(): int
     {
-        $result = 0;
-        $this->each(function (ErrorItemInterface $item) use (&$result) {
-            $result += $item->count();
+        $count = 0;
+        $this->each(function (ErrorItemInterface $item) use (&$count) {
+            $count += $item->count();
         });
-        return $result;
+        return $count;
     }
 }
