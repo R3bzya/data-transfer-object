@@ -67,6 +67,15 @@ class CompositeTransferTest extends BaseCase
         $this->assertEquals('string', $transfer->default->a_one_s);
     }
 
+    public function testHasProperty()
+    {
+        $transfer = $this->compositeTransfer();
+
+        $this->assertTrue($transfer->hasProperty('default'));
+        $this->assertTrue($transfer->hasProperty('b_one_s'));
+        $this->assertTrue($transfer->hasProperty('test'));
+    }
+
     public function getData(): array
     {
         return [

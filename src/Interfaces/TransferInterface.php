@@ -5,9 +5,12 @@ namespace Rbz\Data\Interfaces;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
 use Rbz\Data\Interfaces\Collections\Collectable;
+use Rbz\Data\Interfaces\Support\Arrayable;
+use Rbz\Data\Interfaces\Support\Cloneable;
+use Rbz\Data\Interfaces\Support\Jsonable;
 
 interface TransferInterface extends PropertiesInterface, ErrorCollectionProviderInterface,
-    Cloneable, Arrayable, Collectable
+    Cloneable, Arrayable, Collectable, Jsonable
 {
     /**
      * Make the new transfer instance.

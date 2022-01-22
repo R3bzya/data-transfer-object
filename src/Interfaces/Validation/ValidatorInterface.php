@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Validators;
+namespace Rbz\Data\Interfaces\Validation;
 
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 

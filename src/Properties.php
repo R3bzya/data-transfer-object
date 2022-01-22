@@ -103,7 +103,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function hasProperty(string $property): bool
     {
-        return property_exists($this, $property);
+        return $this->getProperties()->in($property, true) || $this->hasGetter($property);
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function hasGetter(string $property): bool
     {
-        return method_exists($this, 'get' . $property);
+        return method_exists($this, "get{$property}Attribute");
     }
 
     /**
@@ -133,8 +133,7 @@ abstract class Properties implements PropertiesInterface
      */
     protected function getter(string $property)
     {
-        $getter = 'get' . $property;
-        return $this->$getter();
+        return $this->{"get{$property}Attribute"}();
     }
 
     /**
@@ -143,7 +142,7 @@ abstract class Properties implements PropertiesInterface
      */
     public function hasSetter(string $property): bool
     {
-        return method_exists($this, 'set' . $property);
+        return method_exists($this, "set{$property}Attribute");
     }
 
     /**
@@ -153,7 +152,6 @@ abstract class Properties implements PropertiesInterface
      */
     protected function setter(string $property, $value): void
     {
-        $setter = 'set' . $property;
-        $this->$setter($value);
+        $this->{"set{$property}Attribute"}($value);
     }
 }

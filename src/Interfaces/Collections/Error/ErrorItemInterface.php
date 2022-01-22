@@ -3,7 +3,7 @@
 namespace Rbz\Data\Interfaces\Collections\Error;
 
 use Countable;
-use Rbz\Data\Interfaces\Arrayable;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 

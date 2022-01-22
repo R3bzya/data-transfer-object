@@ -20,4 +20,9 @@ class DefaultCompositeTransfer extends CompositeTransfer
     {
         return ['default'];
     }
+
+    public function getTestAttribute(): string
+    {
+        return 'Test getter';
+    }
 }

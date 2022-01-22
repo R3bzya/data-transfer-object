@@ -82,6 +82,11 @@ abstract class Transfer extends Properties
         return $this->toCollection()->toArray();
     }
 
+    public function toJson(): string
+    {
+        return $this->toCollection()->toJson();
+    }
+
     public function toCollection(): CollectionInterface
     {
         return $this->getProperties()

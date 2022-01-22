@@ -3,9 +3,9 @@
 namespace Rbz\Data\Interfaces\Components\Path;
 
 use Countable;
-use Rbz\Data\Interfaces\Arrayable;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use IteratorAggregate;
-use Rbz\Data\Interfaces\Cloneable;
+use Rbz\Data\Interfaces\Support\Cloneable;
 use Rbz\Data\Interfaces\Collections\Collectable;
 
 interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Countable, Cloneable

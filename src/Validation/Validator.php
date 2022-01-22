@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Validation;
 
-use Rbz\Data\Interfaces\Validators\ValidatorInterface;
+use Rbz\Data\Interfaces\Validation\ValidatorInterface;
 use Rbz\Data\Validation\Validators\Laravel;
 
 abstract class Validator implements ValidatorInterface

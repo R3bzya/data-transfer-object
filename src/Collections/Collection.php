@@ -4,8 +4,9 @@ namespace Rbz\Data\Collections;
 
 use ArrayIterator;
 use Rbz\Data\Exceptions\CollectionException;
-use Rbz\Data\Interfaces\Arrayable;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\Jsonable;
 use Rbz\Data\Traits\TypeCheckerTrait;
 
 class Collection implements CollectionInterface
@@ -30,6 +31,8 @@ class Collection implements CollectionInterface
             return $value;
         } elseif ($value instanceof Arrayable) {
             return $value->toArray();
+        } elseif ($value instanceof Jsonable) {
+            return json_decode($value->toJson());
         }
         return (array) $value;
     }
@@ -249,7 +252,7 @@ class Collection implements CollectionInterface
      */
     public function merge($collection)
     {
-        $this->items = array_merge($this->items, $collection->getItems());
+        $this->items = array_merge($this->items(), $collection->getItems());
         return $this;
     }
 
@@ -292,7 +295,7 @@ class Collection implements CollectionInterface
      */
     public function replace($data)
     {
-        $this->items = $data instanceof $this ? $data->items : $this->makeArrayFrom($data);
+        $this->items = $data instanceof $this ? $data->items() : $this->makeArrayFrom($data);
         return $this;
     }
 
@@ -331,7 +334,7 @@ class Collection implements CollectionInterface
 
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
     {
-        return new static(array_slice($this->items, $offset, $length, $preserveKeys));
+        return new static(array_slice($this->items(), $offset, $length, $preserveKeys));
     }
 
     public function first($default = null)
@@ -352,5 +355,10 @@ class Collection implements CollectionInterface
         if (! is_scalar($key) && ! is_null($key)) {
             throw new CollectionException('Key type must be a scalar or null, ' . gettype($key) . ' given');
         }
+    }
+
+    public function toJson(): string
+    {
+        return json_encode($this->items());
     }
 }

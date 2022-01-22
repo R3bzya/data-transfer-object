@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces;
+namespace Rbz\Data\Interfaces\Support;
 
 interface Arrayable
 {

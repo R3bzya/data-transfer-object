@@ -4,12 +4,13 @@ namespace Rbz\Data\Interfaces\Collections;
 
 use ArrayAccess;
 use Countable;
-use Rbz\Data\Interfaces\Arrayable;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use IteratorAggregate;
-use Rbz\Data\Interfaces\Cloneable;
+use Rbz\Data\Interfaces\Support\Cloneable;
+use Rbz\Data\Interfaces\Support\Jsonable;
 
 interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable,
-    ArrayAccess, TypeCheckerInterface
+    ArrayAccess, TypeCheckerInterface, Jsonable
 {
     /**
      * Make the new instance of collection.

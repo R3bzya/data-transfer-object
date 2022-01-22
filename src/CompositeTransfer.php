@@ -79,14 +79,4 @@ abstract class CompositeTransfer extends Transfer
     {
         return parent::getProperties()->with($this->container()->keys());
     }
-
-    public function toCollection(): CollectionInterface
-    {
-        return parent::toCollection()->with($this->container()->toCollection());
-    }
-
-    public function toSafeCollection(): CollectionInterface
-    {
-        return parent::toSafeCollection()->with($this->container()->toCollection());
-    }
 }

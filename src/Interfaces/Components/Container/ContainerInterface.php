@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Interfaces\Components\Container;
 
-use Rbz\Data\Interfaces\Arrayable;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\Collectable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;

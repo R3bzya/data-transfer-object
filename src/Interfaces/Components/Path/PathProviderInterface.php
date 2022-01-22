@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Interfaces\Components\Path;
 
-use Rbz\Data\Interfaces\Cloneable;
+use Rbz\Data\Interfaces\Support\Cloneable;
 
 interface PathProviderInterface extends Cloneable
 {
