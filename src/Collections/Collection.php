@@ -225,7 +225,9 @@ class Collection implements CollectionInterface
     public function each(callable $callable)
     {
         foreach ($this->items() as $key => $item) {
-            $callable($item, $key);
+            if ($callable($item, $key) === false) {
+                break;
+            };
         }
         return $this;
     }
@@ -295,7 +297,7 @@ class Collection implements CollectionInterface
      */
     public function replace($data)
     {
-        $this->items = $data instanceof $this ? $data->items() : $this->makeArrayFrom($data);
+        $this->items = $this->makeArrayFrom($data);
         return $this;
     }
 

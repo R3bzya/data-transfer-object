@@ -72,7 +72,7 @@ abstract class Transfer extends Properties
         }
     }
 
-    public function clone(): TransferInterface
+    public function clone()
     {
         return clone $this;
     }
@@ -90,8 +90,7 @@ abstract class Transfer extends Properties
     public function toCollection(): CollectionInterface
     {
         return $this->getProperties()
-            ->flip()
-            ->map(fn($value, string $property) => $this->getProperty($property));
+            ->mapWithKeys(fn(string $property) => [$property => $this->getProperty($property)]);
     }
 
     public function toSafeCollection(): CollectionInterface
