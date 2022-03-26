@@ -2,10 +2,13 @@
 
 namespace Rbz\Data\Interfaces\Validation;
 
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
 
-interface ValidatorInterface
+interface ValidatorInterface extends ErrorCollectionProviderInterface
 {
+    public static function make(array $data, array $rules): ValidatorInterface;
+
     /**
      * Validate the data of the transfer.
      *
@@ -13,17 +16,5 @@ interface ValidatorInterface
      */
     public function validate(): bool;
 
-    /**
-     * Collect errors of the transfer.
-     *
-     * @return ErrorCollectionInterface
-     */
-    public function getErrors(): ErrorCollectionInterface;
-
-    /**
-     * Get default rules of the validation.
-     *
-     * @return array
-     */
-    public static function getDefaultRules(): array;
+    public function validated(): CollectionInterface;
 }

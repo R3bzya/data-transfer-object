@@ -4,7 +4,6 @@ namespace Rbz\Data\Validation\Helpers;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Validation\Validator;
 
 class RuleHelper
 {
@@ -67,6 +66,6 @@ class RuleHelper
 
     private function makeDefaultRules(array $properties): CollectionInterface
     {
-        return Collection::make($properties)->flip()->map(fn($value, string $property) => Validator::getDefaultRules());
+        return Collection::make($properties)->flip()->map(fn($value, string $property) => ['present']); // TODO тут не должно быть `present`
     }
 }

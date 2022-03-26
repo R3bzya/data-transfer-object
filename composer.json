@@ -6,7 +6,6 @@
     "homepage": "https://github.com/R3bzya/data-transfer-object",
     "require": {
         "php": ">=7.4.0",
-        "laravel/framework": ">=8.0.0",
         "ext-json": "*"
     },
     "license": "MIT",

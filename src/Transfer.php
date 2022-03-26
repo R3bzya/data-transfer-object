@@ -7,8 +7,8 @@ use Rbz\Data\Exceptions\TransferException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Traits\ErrorCollectionTrait;
-use Rbz\Data\Validation\Validator as AbstractValidator;
 use Rbz\Data\Validation\Helpers\RuleHelper;
+use Rbz\Data\Validation\Validator;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -53,7 +53,7 @@ abstract class Transfer extends Properties
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
-        $errors = AbstractValidator::make(
+        $errors = Validator::make(
             $this->toSafeCollection()->toArray(),
             (new RuleHelper($this->rules()))->run(RuleHelper::toValidation($this->getProperties(), $properties))
         )->getErrors();
@@ -96,8 +96,7 @@ abstract class Transfer extends Properties
     public function toSafeCollection(): CollectionInterface
     {
         return $this->getProperties()
-            ->flip()
-            ->filter(fn($value, string $property) => $this->isSetProperty($property))
-            ->map(fn($value, string $property) => $this->getProperty($property));
+            ->filter(fn(string $property) => $this->isSetProperty($property))
+            ->mapWithKeys(fn(string $property) => [$property => $this->getProperty($property)]);
     }
 }
