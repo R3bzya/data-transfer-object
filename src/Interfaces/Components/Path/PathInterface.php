@@ -92,14 +92,14 @@ interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Count
      *
      * @return static
      */
-    public function firstSection();
+    public function first();
 
     /**
      * Get the last section of the path.
      *
      * @return static
      */
-    public function lastSection();
+    public function last();
 
     /**
      * Extract a slice of the path.

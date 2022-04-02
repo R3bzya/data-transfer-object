@@ -5,8 +5,10 @@ namespace Rbz\Data\Validation;
 use Rbz\Data\Exceptions\ValidationException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Validation\ValidatorInterface;
+use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\ErrorCollectionTrait;
 use Rbz\Data\Traits\ValidatesPropertiesTrait;
+use Rbz\Data\Validation\Support\Data;
 
 class Validator implements ValidatorInterface
 {
@@ -18,13 +20,13 @@ class Validator implements ValidatorInterface
 
     public function __construct(array $data, array $rules)
     {
-        $this->data = $data;
+        $this->data = Data::encode($data);
         $this->rules = $rules;
     }
 
     public static function make(array $data, array $rules): ValidatorInterface
     {
-        return new Validator($data, $rules);
+        return new static($data, $rules);
     }
 
     public function validate(): bool
@@ -46,15 +48,12 @@ class Validator implements ValidatorInterface
     private function validateProperty(string $property, $rule)
     {
         if (! $this->{"validate{$rule}"}($property, $this->getValue($property))) {
-            $this->errors()->set($property, Messenger::getMessage($property, $rule));
+            $this->errors()->set($property, (new Messenger())->getMessage($property, $rule));
         }
     }
 
     private function getValue(string $property)
     {
-        if (! key_exists($property, $this->data)) {
-            throw new ValidationException("Key `{$property}` is undefined");
-        }
-        return $this->data[$property];
+        return Arr::get($this->data, $property);
     }
 }

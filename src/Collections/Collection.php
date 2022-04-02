@@ -7,6 +7,7 @@ use Rbz\Data\Exceptions\CollectionException;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Support\Jsonable;
+use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\TypeCheckerTrait;
 
 class Collection implements CollectionInterface
@@ -27,7 +28,7 @@ class Collection implements CollectionInterface
 
     public function makeArrayFrom($value): array
     {
-        if (is_array($value)) {
+        if (Arr::is($value)) {
             return $value;
         } elseif ($value instanceof Arrayable) {
             return $value->toArray();
@@ -69,7 +70,7 @@ class Collection implements CollectionInterface
     public function get($key, $default = null)
     {
         $this->assertKey($key);
-        return $this->items[$key] ?? $default;
+        return Arr::get($this->items(), $key, $default);
     }
 
     /**
@@ -80,7 +81,7 @@ class Collection implements CollectionInterface
     public function remove($key)
     {
         $this->assertKey($key);
-        unset($this->items[$key]);
+        Arr::unset($this->items, $key);
         return $this;
     }
 
@@ -97,7 +98,7 @@ class Collection implements CollectionInterface
     public function has($key): bool
     {
         $this->assertKey($key);
-        return key_exists($key, $this->items());
+        return Arr::has($this->items, $key);
     }
 
     /**
@@ -107,7 +108,7 @@ class Collection implements CollectionInterface
      */
     public function in($value, bool $strict = false): bool
     {
-        return in_array($value, $this->items(), $strict);
+        return Arr::in($this->items(), $value, $strict);
     }
 
     /**
@@ -142,12 +143,12 @@ class Collection implements CollectionInterface
 
     public function keys(): CollectionInterface
     {
-        return new self(array_keys($this->items()));
+        return new self(Arr::keys($this->items()));
     }
 
     public function getIterator(): ArrayIterator
     {
-        return new ArrayIterator($this->items());
+        return Arr::getIterator($this->items());
     }
 
     /**
@@ -174,7 +175,7 @@ class Collection implements CollectionInterface
      */
     public function only(array $keys)
     {
-        $keys = Collection::make($keys);
+        $keys = new self($keys);
         return $this->filter(fn($value, $key) => $keys->in($key, true));
     }
 
@@ -184,18 +185,18 @@ class Collection implements CollectionInterface
      */
     public function except(array $keys)
     {
-        $keys = Collection::make($keys);
+        $keys = new self($keys);
         return $this->filter(fn($value, $key) => $keys->notIn($key, true));
     }
 
     public function filter(?callable $callable)
     {
-        return new static(array_filter($this->items(), $callable, ARRAY_FILTER_USE_BOTH));
+        return new static(Arr::filter($this->items(), $callable, ARRAY_FILTER_USE_BOTH));
     }
 
     public function clear()
     {
-        $this->items = [];
+        Arr::clear($this->items);
         return $this;
     }
 
@@ -206,14 +207,14 @@ class Collection implements CollectionInterface
     public function map(?callable $callable)
     {
         $keys = $this->keys()->toArray();
-        return new static(array_combine($keys, array_map($callable, $this->items(), $keys)));
+        return new static(Arr::combine($keys, array_map($callable, $this->items(), $keys)));
     }
 
     public function mapWithKeys(callable $callable)
     {
         $items = [];
         foreach ($this->items() as $key => $item) {
-            $items = array_merge($items, $callable($item, $key));
+            $items = Arr::merge($items, $callable($item, $key));
         }
         return new static($items);
     }
@@ -245,7 +246,7 @@ class Collection implements CollectionInterface
      */
     public function flip()
     {
-        return new static(array_flip($this->items()));
+        return new static(Arr::flip($this->items()));
     }
 
     /**
@@ -254,7 +255,7 @@ class Collection implements CollectionInterface
      */
     public function merge($collection)
     {
-        $this->items = array_merge($this->items(), $collection->getItems());
+        $this->items = Arr::merge($this->items(), $collection->getItems());
         return $this;
     }
 
@@ -331,20 +332,17 @@ class Collection implements CollectionInterface
      */
     public function diff($data)
     {
-        return new static(array_diff($this->items(), $this->makeArrayFrom($data)));
+        return new static(Arr::diff($this->items(), $this->makeArrayFrom($data)));
     }
 
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
     {
-        return new static(array_slice($this->items(), $offset, $length, $preserveKeys));
+        return new static(Arr::slice($this->items(), $offset, $length, $preserveKeys));
     }
 
     public function first($default = null)
     {
-        foreach ($this->items() as $item) {
-            return $item;
-        }
-        return $default;
+        return Arr::first($this->items());
     }
 
     /**

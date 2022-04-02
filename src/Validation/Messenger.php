@@ -3,25 +3,35 @@
 namespace Rbz\Data\Validation;
 
 use Rbz\Data\Exceptions\MessageException;
+use Rbz\Data\Support\Arr;
+use Rbz\Data\Support\Str;
 
 class Messenger
 {
-    public static function getMessage(string $property, string $rule): string
+    private array $templates = [
+        'integer' => 'Property :property will be an integer.',
+        'numeric' => 'Property :property will be a numeric.',
+        'string' => 'Property :property will be a string.',
+        'array' => 'Property :property will be an array.',
+        'present' => 'Property :property will be a present.',
+    ];
+
+    public function getMessage(string $property, string $rule): string
     {
-        return str_replace(':property', $property, self::getTemplate($rule));
+        return Str::replace(':property', $property, $this->getTemplate($rule));
     }
 
-    private static function getTemplates(): array
+    private function getTemplate(string $rule): string
     {
-        return require 'templates.php';
-    }
-
-    private static function getTemplate(string $rule): string
-    {
-        $templates = self::getTemplates();
-        if (! key_exists($rule, $templates)) {
+        $templates = $this->getTemplates();
+        if (! Arr::has($templates, $rule)) {
             throw new MessageException("Template for {$rule} not found");
         }
         return $templates[$rule];
+    }
+
+    private function getTemplates(): array
+    {
+        return $this->templates;
     }
 }

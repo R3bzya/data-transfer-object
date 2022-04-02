@@ -3,16 +3,17 @@
 namespace Rbz\Data\Components;
 
 use ArrayIterator;
-use Rbz\Data\Collections\Collection;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Support\Arr;
+use Rbz\Data\Support\Str;
 
 class Path implements PathInterface
 {
     private string $path;
 
-    public function __construct(string $path)
+    public function __construct(string $path = '')
     {
         $this->path = $path;
     }
@@ -24,7 +25,7 @@ class Path implements PathInterface
      * @return static
      * @throws PathException
      */
-    public static function make($path)
+    public static function make($path = '')
     {
         switch (gettype($path)) {
             case 'string': return new static($path);
@@ -99,7 +100,7 @@ class Path implements PathInterface
      */
     public static function makeString(array $path): string
     {
-        return implode(static::separator(), $path);
+        return Arr::implode($path, static::separator());
     }
 
     /**
@@ -110,7 +111,7 @@ class Path implements PathInterface
      */
     public static function makeArray(string $path): array
     {
-        return explode(static::separator(), $path);
+        return Str::explode($path, static::separator());
     }
 
     public function toArray(): array
@@ -120,12 +121,12 @@ class Path implements PathInterface
 
     public function toCollection(): CollectionInterface
     {
-        return Collection::make(static::makeArray($this->get()));
+        return Arr::collect(static::makeArray($this->get()));
     }
 
     public function getIterator(): ArrayIterator
     {
-        return new ArrayIterator($this->toArray());
+        return Arr::getIterator($this->toArray());
     }
 
     public function count(): int
@@ -161,7 +162,7 @@ class Path implements PathInterface
      * @return static
      * @throws PathException
      */
-    public function firstSection()
+    public function first()
     {
         return $this->slice(0, 1);
     }
@@ -172,7 +173,7 @@ class Path implements PathInterface
      * @return static
      * @throws PathException
      */
-    public function lastSection()
+    public function last()
     {
         return $this->slice($this->count());
     }

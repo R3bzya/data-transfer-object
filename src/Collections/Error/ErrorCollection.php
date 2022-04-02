@@ -7,6 +7,7 @@ use Rbz\Data\Exceptions\CollectionException;
 use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Support\Str;
 
 class ErrorCollection extends Collection implements ErrorCollectionInterface
 {
@@ -29,7 +30,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
     public function getFirstMessage(string $property = null): ?string
     {
         /** @var ErrorItemInterface $error */
-        if ($error = $property ? $this->get($property) : $this->first()) {
+        if ($error = is_null($property) ? $this->first() : $this->get($property)) {
             return $error->getMessage();
         }
         return null;
@@ -37,7 +38,7 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
 
     public function assertKey($key): void
     {
-        if (! is_string($key)) {
+        if (Str::isNot($key)) {
             throw new CollectionException('Key type must be a string, ' . gettype($key) . ' given');
         }
     }
@@ -57,5 +58,10 @@ class ErrorCollection extends Collection implements ErrorCollectionInterface
             $count += $item->count();
         });
         return $count;
+    }
+
+    public function flip()
+    {
+        throw new CollectionException('Error collection cant flipped');
     }
 }

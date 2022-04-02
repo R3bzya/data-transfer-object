@@ -20,11 +20,4 @@ interface PathProviderInterface extends Cloneable
      * @return PathInterface
      */
     public function getPath(): PathInterface;
-
-    /**
-     * Determine if the path exists in the instance.
-     *
-     * @return bool
-     */
-    public function hasPath(): bool;
 }

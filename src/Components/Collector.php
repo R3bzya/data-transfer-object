@@ -4,6 +4,7 @@ namespace Rbz\Data\Components;
 
 use Rbz\Data\Exceptions\CollectorException;
 use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
+use Rbz\Data\Support\Arr;
 
 class Collector implements CollectorInterface
 {
@@ -21,7 +22,7 @@ class Collector implements CollectorInterface
 
     public function toCollect(string $property, array $data): array
     {
-        return array_map(fn(array $datum) => $this->collect($this->get($property), $datum), $data);
+        return Arr::map(fn(array $datum) => $this->collect($this->get($property), $datum), $data);
     }
 
     private function collect(string $objectClass, array $data)
@@ -34,7 +35,7 @@ class Collector implements CollectorInterface
 
     public function has(string $property): bool
     {
-        return key_exists($property, $this->collectables);
+        return Arr::has($this->collectables, $property);
     }
 
     public function get(string $property): string

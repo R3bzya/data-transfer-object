@@ -6,6 +6,7 @@ use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\PathTrait;
 
 class ErrorItem implements ErrorItemInterface
@@ -76,7 +77,7 @@ class ErrorItem implements ErrorItemInterface
 
     public function addMessages(array $messages): void
     {
-        $this->messages = array_unique(array_merge($this->messages(), $messages));
+        $this->messages = Arr::unique((Arr::merge($this->messages(), $messages)));
     }
 
     public function getMessage(): ?string

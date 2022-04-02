@@ -1,13 +1,14 @@
 <?php
 
-namespace Rbz\Data\Validation\Helpers;
+namespace Rbz\Data\Support\Transfer;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Support\Arr;
 
-class PropertyHelper
+class Properties
 {
     private array $items = [];
 
@@ -18,7 +19,7 @@ class PropertyHelper
     public function __construct(array $data)
     {
         foreach ($data as $path) {
-            $this->items = array_merge($this->items, $this->explode(Path::make($path)));
+            $this->items = Arr::merge($this->items, $this->explode(Path::make($path)));
         }
     }
 
@@ -26,7 +27,7 @@ class PropertyHelper
     {
         $items = [];
         $path->isNested()
-            ? $items[$path->firstSection()->get()] = $this->explode($path->slice(1))
+            ? $items[$path->first()->get()] = $this->explode($path->slice(1))
             : $items[] = $path->get();
         return $items;
     }
@@ -36,10 +37,10 @@ class PropertyHelper
         if (is_null($key)) {
             return $this->getCurrents();
         }
-        if ($this->has($key)) {
+        if (Arr::has($this->items, $key)) {
             return $this->items[$key];
         }
-        if ($this->has('!'.$key)) {
+        if (Arr::has($this->items,'!'.$key)) {
             return ['__toExclude__'];
         }
         return [];
@@ -47,11 +48,6 @@ class PropertyHelper
 
     private function getCurrents(): array
     {
-        return Collection::make($this->items)->filter(fn($value) => ! is_array($value))->toArray();
-    }
-
-    private function has(string $key): bool
-    {
-        return key_exists($key, $this->items);
+        return Collection::make($this->items)->filter(fn($value) => Arr::isNot($value))->toArray();
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Rbz\Data;
 
-use Rbz\Data\Collections\Collection;
 use Rbz\Data\Exceptions\TransferException;
 use Rbz\Data\Interfaces\Collections\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
+use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\ErrorCollectionTrait;
-use Rbz\Data\Validation\Helpers\RuleHelper;
+use Rbz\Data\Support\Transfer\Rules;
 use Rbz\Data\Validation\Validator;
 use ReflectionClass;
 use ReflectionException;
@@ -46,7 +46,7 @@ abstract class Transfer extends Properties
     public function load($data): bool
     {
         $this->errors()->clear();
-        $collection = Collection::make($data)->only($this->getProperties()->toArray());
+        $collection = Arr::collect($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
         return $collection->isNotEmpty() && $this->errors()->isEmpty();
     }
@@ -55,7 +55,7 @@ abstract class Transfer extends Properties
     {
         $errors = Validator::make(
             $this->toSafeCollection()->toArray(),
-            (new RuleHelper($this->rules()))->run(RuleHelper::toValidation($this->getProperties(), $properties))
+            (new Rules($this->rules()))->run(Rules::toValidation($this->getProperties(), $properties))
         )->getErrors();
 
         return $clearErrors

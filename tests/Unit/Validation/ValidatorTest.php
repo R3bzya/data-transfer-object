@@ -7,17 +7,18 @@ use Rbz\Data\Validation\Validator;
 
 class ValidatorTest extends BaseCase
 {
-    /**
-     * @dataProvider testedCases
-     */
-    public function testValidation(array $data, array $rules)
+    public function testValidation()
     {
-        $this->assertTrue(Validator::make($data, $rules)->validate());
+        $this->assertTrue(Validator::make(['deep_array' => ['string']], ['deep_array.*' => ['string']])->validate());
     }
 
     public function testedCases(): array
     {
         return [
+            'deep_array' => [
+                ['deep_array' => ['string']],
+                ['deep_array.*' => ['string']]
+            ],
             'integer' => [
                 ['integer_value' => 1],
                 ['integer_value' => ['integer']]
@@ -37,7 +38,7 @@ class ValidatorTest extends BaseCase
             'present' => [
                 ['present_value' => 'present_value'],
                 ['present_value' => ['present']]
-            ]
+            ],
         ];
     }
 }

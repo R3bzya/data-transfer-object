@@ -33,9 +33,9 @@ $transfer->load($associativeArray);
 Now you can get properties from the ExampleTransfer.
 
 ```
-$transfer->property_string; // will return example
-$transfer->property_integer; // will return 1234
-$transfer->property_array; // will return []
+$transfer->property_string; // return example
+$transfer->property_integer; // return 1234
+$transfer->property_array; // return []
 ```
 
 ### Errors

@@ -4,7 +4,7 @@ namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Collections\Collection;
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validation\Helpers\RuleHelper as ValidatorHelper;
+use Rbz\Data\Support\Transfer\Rules;
 
 class RuleHelperTest extends BaseCase
 {
@@ -13,12 +13,12 @@ class RuleHelperTest extends BaseCase
      */
     public function testPropertiesHasRules(array $properties, array $result)
     {
-        $rules = (new ValidatorHelper([
+        $rules = (new Rules([
             'property1' => ['value1'],
             'property2' => ['value2'],
             'property3' => ['value3'],
             'property4' => ['value4'],
-        ]))->run(ValidatorHelper::toValidation(Collection::make([
+        ]))->run(Rules::toValidation(Collection::make([
             'property1',
             'property2',
             'property3',
@@ -33,11 +33,11 @@ class RuleHelperTest extends BaseCase
      */
     public function testNotAllPropertiesHasRules(array $properties, array $result)
     {
-        $rules = (new ValidatorHelper([
+        $rules = (new Rules([
             'property1' => ['value1'],
             'property2' => ['value2'],
             'property3' => ['value3'],
-        ]))->run(ValidatorHelper::toValidation(Collection::make([
+        ]))->run(Rules::toValidation(Collection::make([
             'property1',
             'property2',
             'property3',

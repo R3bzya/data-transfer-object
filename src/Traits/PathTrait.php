@@ -2,6 +2,7 @@
 
 namespace Rbz\Data\Traits;
 
+use Rbz\Data\Components\Path;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 trait PathTrait
@@ -16,16 +17,14 @@ trait PathTrait
 
     public function path(): PathInterface
     {
+        if (! isset($this->_path)) {
+            $this->_path = Path::make();
+        }
         return $this->_path;
     }
 
     public function getPath(): PathInterface
     {
         return $this->path();
-    }
-
-    public function hasPath(): bool
-    {
-        return isset($this->_path);
     }
 }

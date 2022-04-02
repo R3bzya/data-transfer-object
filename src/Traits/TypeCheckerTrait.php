@@ -2,11 +2,14 @@
 
 namespace Rbz\Data\Traits;
 
+use Rbz\Data\Support\Arr;
+use Rbz\Data\Support\Str;
+
 trait TypeCheckerTrait
 {
     public function isString($key): bool
     {
-        return is_string($this->get($key));
+        return Str::is($this->get($key));
     }
 
     public function isInteger($key): bool
@@ -21,7 +24,7 @@ trait TypeCheckerTrait
 
     public function isArray($key): bool
     {
-        return is_array($this->get($key));
+        return Arr::is($this->get($key));
     }
 
     public function isObject($key): bool
