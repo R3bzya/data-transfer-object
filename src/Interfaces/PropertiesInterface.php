@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Interfaces;
 
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 
 interface PropertiesInterface
 {

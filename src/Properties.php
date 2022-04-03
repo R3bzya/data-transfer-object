@@ -2,9 +2,9 @@
 
 namespace Rbz\Data;
 
-use Rbz\Data\Collections\Collection;
+use Rbz\Data\Support\Collection;
 use Rbz\Data\Exceptions\PropertyException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\PropertiesInterface;
 use ReflectionClass;
 use ReflectionProperty;

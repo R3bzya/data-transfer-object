@@ -1,19 +1,20 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Collections\Error;
+namespace Rbz\Data\Interfaces\Errors;
 
-use Rbz\Data\Interfaces\Collections\CollectionInterface as BaseCollectionInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Interfaces\Support\Arrayable;
+use Rbz\Data\Interfaces\Support\Cloneable;
 
-interface ErrorCollectionInterface extends BaseCollectionInterface
+interface ErrorBagInterface extends Cloneable, Arrayable
 {
     /**
      * Add the item to the error collection.
      *
-     * @param ErrorItemInterface $item
+     * @param ErrorInterface $item
      * @return static
      */
-    public function addItem(ErrorItemInterface $item);
+    public function addItem(ErrorInterface $item);
 
     /**
      * Get the first error message from the error collection.
@@ -37,4 +38,20 @@ interface ErrorCollectionInterface extends BaseCollectionInterface
      * @return int
      */
     public function countMessages(): int;
+
+    public function count(): int;
+
+    public function isEmpty(): bool;
+
+    public function isNotEmpty(): bool;
+
+    public function clear(): void;
+
+    public function replace(ErrorBagInterface $bag);
+
+    public function merge(ErrorBagInterface $bag);
+
+    public function with(ErrorBagInterface $bag);
+
+    public function first();
 }

@@ -3,8 +3,9 @@
 namespace Rbz\Data\Support;
 
 use ArrayIterator;
-use Rbz\Data\Collections\Collection;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\Arrayable;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
+use Rbz\Data\Interfaces\Support\Jsonable;
 
 class Arr
 {
@@ -142,5 +143,22 @@ class Arr
     public static function getIterator(array $array): ArrayIterator
     {
         return new ArrayIterator($array);
+    }
+
+    public static function make($value): array
+    {
+        if (self::is($value)) {
+            return $value;
+        } elseif ($value instanceof Arrayable) {
+            return $value->toArray();
+        } elseif ($value instanceof Jsonable) {
+            return json_decode($value->toJson());
+        }
+        return (array) $value;
+    }
+
+    public static function count(array $array): int
+    {
+        return count($array);
     }
 }

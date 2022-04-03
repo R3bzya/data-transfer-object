@@ -2,8 +2,8 @@
 
 namespace Rbz\Data\Support\Transfer;
 
-use Rbz\Data\Collections\Collection;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Support\Collection;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Support\Str;
 
@@ -26,7 +26,7 @@ class Rules
      */
     public static function toValidation(CollectionInterface $transferProperties, array $properties): array
     {
-        if (! count($properties)) {
+        if (! Arr::count($properties)) {
             return $transferProperties->toArray();
         }
         return $transferProperties

@@ -4,7 +4,7 @@ namespace Rbz\Data\Components;
 
 use ArrayIterator;
 use Rbz\Data\Exceptions\PathException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Support\Str;

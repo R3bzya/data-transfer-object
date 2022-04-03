@@ -1,13 +1,10 @@
 <?php
 
-namespace Rbz\Data\Collections;
+namespace Rbz\Data\Support;
 
 use ArrayIterator;
 use Rbz\Data\Exceptions\CollectionException;
-use Rbz\Data\Interfaces\Support\Arrayable;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Support\Jsonable;
-use Rbz\Data\Support\Arr;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Traits\TypeCheckerTrait;
 
 class Collection implements CollectionInterface
@@ -16,26 +13,14 @@ class Collection implements CollectionInterface
 
     private array $items;
 
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
-        $this->items = $this->makeArrayFrom($data);
+        $this->items = Arr::make($data);
     }
 
     public static function make($data = [])
     {
         return new static($data);
-    }
-
-    public function makeArrayFrom($value): array
-    {
-        if (Arr::is($value)) {
-            return $value;
-        } elseif ($value instanceof Arrayable) {
-            return $value->toArray();
-        } elseif ($value instanceof Jsonable) {
-            return json_decode($value->toJson());
-        }
-        return (array) $value;
     }
 
     /**
@@ -123,7 +108,7 @@ class Collection implements CollectionInterface
 
     public function count(): int
     {
-        return count($this->items());
+        return Arr::count($this->items());
     }
 
     public function isEmpty(): bool
@@ -158,7 +143,7 @@ class Collection implements CollectionInterface
      */
     public function load($data)
     {
-        foreach ($this->makeArrayFrom($data) as $key => $value) {
+        foreach (Arr::make($data) as $key => $value) {
             $this->set($key, $value);
         }
         return $this;
@@ -298,7 +283,7 @@ class Collection implements CollectionInterface
      */
     public function replace($data)
     {
-        $this->items = $this->makeArrayFrom($data);
+        $this->items = Arr::make($data);
         return $this;
     }
 
@@ -332,7 +317,7 @@ class Collection implements CollectionInterface
      */
     public function diff($data)
     {
-        return new static(Arr::diff($this->items(), $this->makeArrayFrom($data)));
+        return new static(Arr::diff($this->items(), Arr::make($data)));
     }
 
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)

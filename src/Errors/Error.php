@@ -1,15 +1,15 @@
 <?php
 
-namespace Rbz\Data\Collections\Error;
+namespace Rbz\Data\Errors;
 
 use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
-use Rbz\Data\Interfaces\Collections\Error\ErrorItemInterface;
+use Rbz\Data\Interfaces\Errors\ErrorInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\PathTrait;
 
-class ErrorItem implements ErrorItemInterface
+class Error implements ErrorInterface
 {
     use PathTrait;
 
@@ -33,10 +33,10 @@ class ErrorItem implements ErrorItemInterface
      * @param string $property
      * @param array $messages
      * @param PathInterface|null $path
-     * @return ErrorItemInterface
+     * @return ErrorInterface
      * @throws PathException
      */
-    public static function make(string $property, array $messages, PathInterface $path = null): ErrorItemInterface
+    public static function make(string $property, array $messages, PathInterface $path = null): ErrorInterface
     {
         return new self($property, $messages, $path);
     }
@@ -82,15 +82,12 @@ class ErrorItem implements ErrorItemInterface
 
     public function getMessage(): ?string
     {
-        foreach ($this->messages as $message) {
-            return $message;
-        }
-        return null;
+        return Arr::first($this->messages());
     }
 
     public function count(): int
     {
-        return count($this->messages());
+        return Arr::count($this->messages());
     }
 
     public function clone()

@@ -3,17 +3,17 @@
 namespace Rbz\Data\Validation;
 
 use Rbz\Data\Exceptions\ValidationException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\Validation\ValidatorInterface;
 use Rbz\Data\Support\Arr;
-use Rbz\Data\Traits\ErrorCollectionTrait;
+use Rbz\Data\Traits\ErrorBagTrait;
 use Rbz\Data\Traits\ValidatesPropertiesTrait;
 use Rbz\Data\Validation\Support\Data;
 
 class Validator implements ValidatorInterface
 {
     use ValidatesPropertiesTrait,
-        ErrorCollectionTrait;
+        ErrorBagTrait;
 
     private array $data;
     private array $rules;

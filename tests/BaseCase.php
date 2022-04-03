@@ -2,8 +2,8 @@
 
 namespace Rbz\Data\Tests;
 
-use Rbz\Data\Collections\Collection;
-use Rbz\Data\Collections\Error\ErrorCollection;
+use Rbz\Data\Support\Collection;
+use Rbz\Data\Errors\ErrorBag;
 use Rbz\Data\Tests\Unit\Transfers\CollectableTransfer;
 use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;
@@ -32,9 +32,9 @@ class BaseCase extends TestCase
         return new CollectableTransfer();
     }
 
-    public function errorCollection(): ErrorCollection
+    public function errorCollection(): ErrorBag
     {
-        return ErrorCollection::make();
+        return ErrorBag::make();
     }
 
     public function collection($data = []): Collection

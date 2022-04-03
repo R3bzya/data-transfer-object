@@ -4,8 +4,8 @@ namespace Rbz\Data;
 
 use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
+use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;
@@ -42,7 +42,7 @@ abstract class CompositeTransfer extends Transfer
         return $this->errors()->isEmpty();
     }
 
-    public function errors(): ErrorCollectionInterface
+    public function errors(): ErrorBagInterface
     {
         $collection = parent::errors();
         $this->container()->toCollection()->each(function (TransferInterface $transfer, string $property) use ($collection) {

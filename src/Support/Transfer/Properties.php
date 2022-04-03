@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Support\Transfer;
 
-use Rbz\Data\Collections\Collection;
+use Rbz\Data\Support\Collection;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Collections;
+namespace Rbz\Data\Interfaces\Support;
 
 interface TypeCheckerInterface
 {

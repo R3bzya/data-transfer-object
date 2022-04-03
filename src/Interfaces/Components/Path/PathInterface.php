@@ -6,7 +6,7 @@ use Countable;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use IteratorAggregate;
 use Rbz\Data\Interfaces\Support\Cloneable;
-use Rbz\Data\Interfaces\Collections\Collectable;
+use Rbz\Data\Interfaces\Support\Collectable;
 
 interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Countable, Cloneable
 {

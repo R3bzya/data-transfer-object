@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Tests\Unit\Transfers;
 
-use Rbz\Data\Collections\Collection;
+use Rbz\Data\Support\Collection;
 use Rbz\Data\CompositeTransfer;
 
 class CollectableTransfer extends CompositeTransfer

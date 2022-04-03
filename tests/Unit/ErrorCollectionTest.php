@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Tests\Unit;
 
-use Rbz\Data\Collections\Error\ErrorItem;
+use Rbz\Data\Errors\Error;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 
@@ -15,8 +15,8 @@ class ErrorCollectionTest extends BaseCase
     public function testOneNameDifferentPath()
     {
         $collection = $this->errorCollection();
-        $firstError = ErrorItem::make(self::PROPERTY_FIRST, ['first message']);
-        $secondError = ErrorItem::make(self::PROPERTY_FIRST, ['second message'], Path::make('second.first_property'));
+        $firstError = Error::make(self::PROPERTY_FIRST, ['first message']);
+        $secondError = Error::make(self::PROPERTY_FIRST, ['second message'], Path::make('second.first_property'));
 
         $this->assertEquals(2, $collection->addItem($firstError)->addItem($secondError)->count());
     }
@@ -64,11 +64,11 @@ class ErrorCollectionTest extends BaseCase
     public function testAddItem()
     {
         $collection = $this->errorCollection();
-        $collection->addItem(ErrorItem::make(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR));
+        $collection->addItem(Error::make(self::PROPERTY_FIRST, (array) self::MESSAGE_ERROR));
 
         $this->assertEquals(1, $collection->count());
 
-        $collection->addItem(ErrorItem::make(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR));
+        $collection->addItem(Error::make(self::PROPERTY_SECOND, (array) self::MESSAGE_ERROR));
 
         $this->assertEquals(2, $collection->count());
     }
@@ -140,13 +140,5 @@ class ErrorCollectionTest extends BaseCase
         $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
 
         $this->assertTrue($collection->has(self::PROPERTY_FIRST));
-    }
-
-    public function testKeys()
-    {
-        $collection = $this->errorCollection();
-        $collection->set(self::PROPERTY_FIRST, self::MESSAGE_ERROR);
-
-        $this->assertEquals([self::PROPERTY_FIRST], $collection->keys()->toArray());
     }
 }

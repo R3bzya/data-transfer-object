@@ -3,7 +3,7 @@
 namespace Rbz\Data\Components;
 
 use Rbz\Data\Exceptions\ContainerException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\Components\Container\ContainerInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;

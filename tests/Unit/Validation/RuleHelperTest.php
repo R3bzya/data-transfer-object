@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Tests\Unit\Validation;
 
-use Rbz\Data\Collections\Collection;
+use Rbz\Data\Support\Collection;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Support\Transfer\Rules;
 

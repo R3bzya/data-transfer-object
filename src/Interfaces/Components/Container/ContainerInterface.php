@@ -3,8 +3,8 @@
 namespace Rbz\Data\Interfaces\Components\Container;
 
 use Rbz\Data\Interfaces\Support\Arrayable;
-use Rbz\Data\Interfaces\Collections\Collectable;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\Collectable;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 
 interface ContainerInterface extends Arrayable, Collectable

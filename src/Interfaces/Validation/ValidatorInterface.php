@@ -2,10 +2,10 @@
 
 namespace Rbz\Data\Interfaces\Validation;
 
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
+use Rbz\Data\Interfaces\Errors\ErrorBagProviderInterface;
 
-interface ValidatorInterface extends ErrorCollectionProviderInterface
+interface ValidatorInterface extends ErrorBagProviderInterface
 {
     public static function make(array $data, array $rules): ValidatorInterface;
 

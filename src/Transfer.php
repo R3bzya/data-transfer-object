@@ -3,10 +3,10 @@
 namespace Rbz\Data;
 
 use Rbz\Data\Exceptions\TransferException;
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;
-use Rbz\Data\Traits\ErrorCollectionTrait;
+use Rbz\Data\Traits\ErrorBagTrait;
 use Rbz\Data\Support\Transfer\Rules;
 use Rbz\Data\Validation\Validator;
 use ReflectionClass;
@@ -16,7 +16,7 @@ use Throwable;
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    use ErrorCollectionTrait;
+    use ErrorBagTrait;
 
     /**
      * @param mixed $data

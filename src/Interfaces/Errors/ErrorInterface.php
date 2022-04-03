@@ -1,13 +1,13 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Collections\Error;
+namespace Rbz\Data\Interfaces\Errors;
 
 use Countable;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Components\Path\PathProviderInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
-interface ErrorItemInterface extends Arrayable, Countable, PathProviderInterface
+interface ErrorInterface extends Arrayable, Countable, PathProviderInterface
 {
     /**
      * Make the new error item instance.
@@ -15,9 +15,9 @@ interface ErrorItemInterface extends Arrayable, Countable, PathProviderInterface
      * @param string $property
      * @param array $messages
      * @param PathInterface|null $path
-     * @return ErrorItemInterface
+     * @return ErrorInterface
      */
-    public static function make(string $property, array $messages, PathInterface $path = null): ErrorItemInterface;
+    public static function make(string $property, array $messages, PathInterface $path = null): ErrorInterface;
 
     /**
      * Get the property from the error item.

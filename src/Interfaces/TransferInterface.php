@@ -2,14 +2,14 @@
 
 namespace Rbz\Data\Interfaces;
 
-use Rbz\Data\Interfaces\Collections\CollectionInterface;
-use Rbz\Data\Interfaces\Collections\Error\ErrorCollectionProviderInterface;
-use Rbz\Data\Interfaces\Collections\Collectable;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
+use Rbz\Data\Interfaces\Errors\ErrorBagProviderInterface;
+use Rbz\Data\Interfaces\Support\Collectable;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Support\Cloneable;
 use Rbz\Data\Interfaces\Support\Jsonable;
 
-interface TransferInterface extends PropertiesInterface, ErrorCollectionProviderInterface,
+interface TransferInterface extends PropertiesInterface, ErrorBagProviderInterface,
     Cloneable, Arrayable, Collectable, Jsonable
 {
     /**
