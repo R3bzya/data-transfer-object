@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Errors;
+namespace Rbz\Data\Support\Errors;
 
 use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 use Rbz\Data\Interfaces\Errors\ErrorInterface;
@@ -29,17 +29,17 @@ class ErrorBag implements ErrorBagInterface
         return Arr::has($this->items(), $key);
     }
 
-    public function set(string $key, $value = null)
+    public function set(string $key, $value = null): ?ErrorBagInterface
     {
         return $this->addItem(Error::make($key, Arr::make($value)));
     }
 
     public function addItem(ErrorInterface $item)
     {
-        if (Arr::has($this->items(), $item->getPath()->get())) {
+        if ($this->has($item->getPath()->get())) {
             $this->get($item->getPath()->get())->addMessages($item->getMessages());
         } else {
-            $this->items[$item->getPath()->get()] = $item;
+            Arr::set($this->items, $item->getPath()->get(), $item);
         }
         return $this;
     }
@@ -53,15 +53,13 @@ class ErrorBag implements ErrorBagInterface
         return null;
     }
 
-    public function withPathAtTheBeginning(PathInterface $path)
+    public function withPathAtTheBeginning(PathInterface $path): ErrorBagInterface
     {
         $bag = new self();
-
         $bag->items = Arr::collect($this->items())->mapWithKeys(function (ErrorInterface $item) use ($path) {
             $path = $path->with($item->getPath());
             return [$path->get() => $item->clone()->setPath($path)];
         })->toArray();
-
         return $bag;
     }
 
@@ -81,7 +79,7 @@ class ErrorBag implements ErrorBagInterface
 
     public function isEmpty(): bool
     {
-        return $this->count() == 0;
+        return Arr::isEmpty($this->items());
     }
 
     public function isNotEmpty(): bool
@@ -116,17 +114,17 @@ class ErrorBag implements ErrorBagInterface
         return $this;
     }
 
-    public function toArray(): array
-    {
-        return $this->items();
-    }
-
     public function with(ErrorBagInterface $bag)
     {
         return $this->clone()->merge($bag);
     }
 
-    public function first()
+    public function toArray(): array
+    {
+        return $this->items();
+    }
+
+    public function first(): ?ErrorInterface
     {
         return Arr::first($this->items());
     }

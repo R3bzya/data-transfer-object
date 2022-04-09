@@ -150,18 +150,18 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     /**
      * Merge the collection with the given collection.
      *
-     * @param static $collection
+     * @param Arrayable|mixed $data
      * @return static
      */
-    public function merge($collection);
+    public function merge($data);
 
     /**
      * Get the new collection merged with the given collection.
      *
-     * @param static $collection
+     * @param Arrayable|mixed $data
      * @return static
      */
-    public function with($collection);
+    public function with($data);
 
     /**
      * Replace the collection items with the given items.
@@ -234,6 +234,17 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
      * @return static
      */
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false);
+
+    /**
+     * Extract a slice items from the collection by string.
+     *
+     * @param string $offset
+     * @param int|null $length
+     * @param bool $preserveKeys
+     * @param bool $strict
+     * @return static
+     */
+    public function sliceBy(string $offset, int $length = null, bool $preserveKeys = false, bool $strict = false);
 
     /**
      * Get the first item from the collection.

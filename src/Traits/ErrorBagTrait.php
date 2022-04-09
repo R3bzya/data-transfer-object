@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Traits;
 
-use Rbz\Data\Errors\ErrorBag;
+use Rbz\Data\Support\Errors\ErrorBag;
 use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 
 trait ErrorBagTrait

@@ -3,7 +3,7 @@
 namespace Rbz\Data\Tests;
 
 use Rbz\Data\Support\Collection;
-use Rbz\Data\Errors\ErrorBag;
+use Rbz\Data\Support\Errors\ErrorBag;
 use Rbz\Data\Tests\Unit\Transfers\CollectableTransfer;
 use Rbz\Data\Tests\Unit\Transfers\CustomRulesTransfer;
 use Rbz\Data\Tests\Unit\Transfers\DefaultCompositeTransfer;

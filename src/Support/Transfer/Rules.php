@@ -26,7 +26,7 @@ class Rules
      */
     public static function toValidation(CollectionInterface $transferProperties, array $properties): array
     {
-        if (! Arr::count($properties)) {
+        if (Arr::isEmpty($properties)) {
             return $transferProperties->toArray();
         }
         return $transferProperties

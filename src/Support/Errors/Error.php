@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Errors;
+namespace Rbz\Data\Support\Errors;
 
 use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;

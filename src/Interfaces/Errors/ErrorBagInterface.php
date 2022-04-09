@@ -8,6 +8,12 @@ use Rbz\Data\Interfaces\Support\Cloneable;
 
 interface ErrorBagInterface extends Cloneable, Arrayable
 {
+    public function get(string $key);
+
+    public function has(string $key): bool;
+
+    public function set(string $key, $value = null);
+
     /**
      * Add the item to the error collection.
      *
@@ -28,9 +34,9 @@ interface ErrorBagInterface extends Cloneable, Arrayable
      * Add the path to the path beginning of each item.
      *
      * @param PathInterface $path
-     * @return static
+     * @return ErrorBagInterface
      */
-    public function withPathAtTheBeginning(PathInterface $path);
+    public function withPathAtTheBeginning(PathInterface $path): ErrorBagInterface;
 
     /**
      * Count messages of error items.
@@ -53,5 +59,5 @@ interface ErrorBagInterface extends Cloneable, Arrayable
 
     public function with(ErrorBagInterface $bag);
 
-    public function first();
+    public function first(): ?ErrorInterface;
 }

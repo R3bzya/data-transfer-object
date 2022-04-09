@@ -109,4 +109,13 @@ interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Count
      * @return static
      */
     public function slice(int $offset = 0, int $length = null);
+
+    /**
+     * Extract a slice of the path by string.
+     *
+     * @param string $offset
+     * @param int|null $length
+     * @return static
+     */
+    public function sliceBy(string $offset, int $length = null);
 }

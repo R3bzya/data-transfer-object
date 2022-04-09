@@ -4,6 +4,7 @@ namespace Rbz\Data\Support;
 
 use ArrayIterator;
 use Rbz\Data\Exceptions\CollectionException;
+use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Traits\TypeCheckerTrait;
 
@@ -13,7 +14,7 @@ class Collection implements CollectionInterface
 
     private array $items;
 
-    public function __construct(array $data = [])
+    public function __construct($data = [])
     {
         $this->items = Arr::make($data);
     }
@@ -113,7 +114,7 @@ class Collection implements CollectionInterface
 
     public function isEmpty(): bool
     {
-        return $this->count() == 0;
+        return Arr::isEmpty($this->items());
     }
 
     public function isNotEmpty(): bool
@@ -235,22 +236,22 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * @param CollectionInterface $collection
+     * @param Arrayable|mixed $data
      * @return static
      */
-    public function merge($collection)
+    public function merge($data)
     {
-        $this->items = Arr::merge($this->items(), $collection->getItems());
+        $this->items = Arr::merge($this->items(), Arr::make($data));
         return $this;
     }
 
     /**
-     * @param CollectionInterface $collection
+     * @param Arrayable|mixed $data
      * @return static
      */
-    public function with($collection)
+    public function with($data)
     {
-        return $this->clone()->merge($collection);
+        return $this->clone()->merge($data);
     }
 
     public function offsetExists($offset): bool
@@ -323,6 +324,11 @@ class Collection implements CollectionInterface
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
     {
         return new static(Arr::slice($this->items(), $offset, $length, $preserveKeys));
+    }
+
+    public function sliceBy(string $offset, int $length = null, bool $preserveKeys = false, bool $strict = false)
+    {
+        return new static(Arr::sliceBy($this->items(), $offset, $length, $preserveKeys, $strict));
     }
 
     public function first($default = null)

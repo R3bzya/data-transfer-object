@@ -16,7 +16,7 @@ class Arr
             if (Arr::is($value) && ! empty($value)) {
                 $dotted = Arr::merge($dotted, self::dot($value, $path.$key.'.'));
             } else {
-                $dotted[$path.$key] = $value;
+                Arr::set($dotted, $path.$key, $value);
             }
         }
         return $dotted;
@@ -33,6 +33,16 @@ class Arr
     public static function get(array $array, $key, $default = null)
     {
         return $array[$key] ?? $default;
+    }
+
+    public static function set(array &$array, $key, $value): void
+    {
+        $array[$key] = $value;
+    }
+
+    public static function add(array &$array, $value): void
+    {
+        $array[] = $value;
     }
 
     /**
@@ -140,6 +150,11 @@ class Arr
         return array_slice($array, $offset, $length, $preserveKeys);
     }
 
+    public static function sliceBy(array $array, string $offset, ?int $length = null, bool $preserveKeys = false, $strict = false): array
+    {
+        return static::slice($array, Arr::search($array, $offset, $strict) + 1, $length, $preserveKeys); // TODO над +1 нужно подумать, там может вылететь false или string
+    }
+
     public static function getIterator(array $array): ArrayIterator
     {
         return new ArrayIterator($array);
@@ -160,5 +175,56 @@ class Arr
     public static function count(array $array): int
     {
         return count($array);
+    }
+
+    public static function countEq(array $array, int $int): bool
+    {
+        return self::count($array) == $int;
+    }
+
+    public static function countNe(array $array, int $int): bool
+    {
+        return self::count($array) != $int;
+    }
+
+    public static function countGt(array $array, int $int): bool
+    {
+        return self::count($array) > $int;
+    }
+
+    public static function countGte(array $array, int $int): bool
+    {
+        return self::count($array) >= $int;
+    }
+
+    public static function countLt(array $array, int $int): bool
+    {
+        return self::count($array) < $int;
+    }
+
+    public static function countLte(array $array, int $int): bool
+    {
+        return self::count($array) <= $int;
+    }
+
+    public static function isEmpty(array $array): bool
+    {
+        return self::countEq($array, 0);
+    }
+
+    public static function isNotEmpty(array $array): bool
+    {
+        return ! self::isEmpty($array);
+    }
+
+    /**
+     * @param array $array
+     * @param string $search
+     * @param bool $strict
+     * @return false|int|string
+     */
+    public static function search(array $array, string $search, bool $strict = false)
+    {
+        return array_search($search, $array, $strict);
     }
 }

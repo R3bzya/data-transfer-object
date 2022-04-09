@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Tests\Unit;
 
-use Rbz\Data\Errors\Error;
+use Rbz\Data\Support\Errors\Error;
 use Rbz\Data\Components\Path;
 use Rbz\Data\Tests\BaseCase;
 
