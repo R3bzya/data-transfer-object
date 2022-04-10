@@ -31,4 +31,17 @@ trait ValidatesPropertiesTrait
     {
         return ! empty($value);
     }
+
+    public function validateRequired(string $property, $value): bool
+    {
+        if (is_null($value)) {
+            return false;
+        } elseif (is_string($value) && trim($value) === '') {
+            return false;
+        } elseif (is_array($value) && count($value) < 1) {
+            return false;
+        }
+
+        return true;
+    }
 }

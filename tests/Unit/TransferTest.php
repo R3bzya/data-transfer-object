@@ -213,32 +213,6 @@ class TransferTest extends BaseCase
                     'count' => 0
                 ]
             ],
-            [
-                [
-                    'a_one_s' => 'st',
-                    'a_two_i' => 1,
-                    'a_three_a' => [],
-                ],
-                [
-                    'a_one_s',
-                ],
-                [
-                    'validate' => false,
-                    'count' => 1
-                ]
-            ],
-            [
-                [
-                    'a_one_s' => 'st',
-                    'a_two_i' => 1,
-                    'a_three_a' => [],
-                ],
-                [],
-                [
-                    'validate' => false,
-                    'count' => 1
-                ]
-            ],
         ];
     }
 }

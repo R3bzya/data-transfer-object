@@ -28,25 +28,6 @@ class RuleHelperTest extends BaseCase
         $this->assertEquals($result, $rules);
     }
 
-    /**
-     * @dataProvider getNotAllPropertiesHasRules
-     */
-    public function testNotAllPropertiesHasRules(array $properties, array $result)
-    {
-        $rules = (new Rules([
-            'property1' => ['value1'],
-            'property2' => ['value2'],
-            'property3' => ['value3'],
-        ]))->run(Rules::toValidation(Collection::make([
-            'property1',
-            'property2',
-            'property3',
-            'property4',
-        ]), $properties));
-
-        $this->assertEquals($result, $rules);
-    }
-
     public function getPropertiesHasRules(): array
     {
         return [
@@ -95,20 +76,6 @@ class RuleHelperTest extends BaseCase
                     // can be empty, because we don`t have __toExclude__
                 ]
             ],
-        ];
-    }
-
-    public function getNotAllPropertiesHasRules(): array
-    {
-        return [
-            [
-                [
-                    'property4'
-                ],
-                [
-                    'property4' => ['present'],
-                ]
-            ]
         ];
     }
 }

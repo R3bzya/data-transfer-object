@@ -13,10 +13,10 @@ class Arr
     {
         $dotted = [];
         foreach ($array as $key => $value) {
-            if (Arr::is($value) && ! empty($value)) {
-                $dotted = Arr::merge($dotted, self::dot($value, $path.$key.'.'));
+            if (static::is($value) && ! empty($value)) {
+                $dotted = static::merge($dotted, static::dot($value, $path.$key.'.'));
             } else {
-                Arr::set($dotted, $path.$key, $value);
+                static::set($dotted, $path.$key, $value);
             }
         }
         return $dotted;
@@ -32,7 +32,23 @@ class Arr
 
     public static function get(array $array, $key, $default = null)
     {
-        return $array[$key] ?? $default;
+        if (static::has($array, $key)) {
+            return $array[$key];
+        }
+
+        if (! Str::has($key, '.')) {
+            return $array[$key] ?? $default;
+        }
+
+        foreach (Str::explode($key) as $value) {
+            if (static::has($array, $value)) {
+                $array = $array[$value];
+            } else {
+                return $default;
+            }
+        }
+
+        return $array;
     }
 
     public static function set(array &$array, $key, $value): void
@@ -62,7 +78,7 @@ class Arr
 
     public static function isNot($value): bool
     {
-        return ! self::is($value);
+        return ! static::is($value);
     }
 
     public static function clear(array &$items): void
@@ -70,9 +86,9 @@ class Arr
         $items = [];
     }
 
-    public static function unset(array &$items, $key): void
+    public static function unset(array &$array, $key): void
     {
-        unset($items[$key]);
+        unset($array[$key]);
     }
 
     public static function unique(array $param, int $flag = SORT_STRING): array
@@ -91,13 +107,13 @@ class Arr
     }
 
     /**
-     * @param array|null $path
+     * @param array|null $array
      * @param array|string $separator
      * @return string
      */
-    public static function implode(array $path = null, $separator = ''): string
+    public static function implode(array $array = null, $separator = '.'): string
     {
-        return implode($separator, $path);
+        return implode($separator, $array);
     }
 
     public static function in(array $haystack, $needle, bool $strict = false): bool
@@ -107,7 +123,7 @@ class Arr
 
     public static function notIn(array $haystack, $needle, bool $strict = false): bool
     {
-        return ! self::in($haystack, $needle, $strict);
+        return ! static::in($haystack, $needle, $strict);
     }
 
     public static function merge(array $array1, array $array2): array
@@ -150,11 +166,6 @@ class Arr
         return array_slice($array, $offset, $length, $preserveKeys);
     }
 
-    public static function sliceBy(array $array, string $offset, ?int $length = null, bool $preserveKeys = false, $strict = false): array
-    {
-        return static::slice($array, Arr::search($array, $offset, $strict) + 1, $length, $preserveKeys); // TODO над +1 нужно подумать, там может вылететь false или string
-    }
-
     public static function getIterator(array $array): ArrayIterator
     {
         return new ArrayIterator($array);
@@ -162,7 +173,7 @@ class Arr
 
     public static function make($value): array
     {
-        if (self::is($value)) {
+        if (static::is($value)) {
             return $value;
         } elseif ($value instanceof Arrayable) {
             return $value->toArray();
@@ -179,42 +190,42 @@ class Arr
 
     public static function countEq(array $array, int $int): bool
     {
-        return self::count($array) == $int;
+        return static::count($array) == $int;
     }
 
     public static function countNe(array $array, int $int): bool
     {
-        return self::count($array) != $int;
+        return static::count($array) != $int;
     }
 
     public static function countGt(array $array, int $int): bool
     {
-        return self::count($array) > $int;
+        return static::count($array) > $int;
     }
 
     public static function countGte(array $array, int $int): bool
     {
-        return self::count($array) >= $int;
+        return static::count($array) >= $int;
     }
 
     public static function countLt(array $array, int $int): bool
     {
-        return self::count($array) < $int;
+        return static::count($array) < $int;
     }
 
     public static function countLte(array $array, int $int): bool
     {
-        return self::count($array) <= $int;
+        return static::count($array) <= $int;
     }
 
     public static function isEmpty(array $array): bool
     {
-        return self::countEq($array, 0);
+        return static::countEq($array, 0);
     }
 
     public static function isNotEmpty(array $array): bool
     {
-        return ! self::isEmpty($array);
+        return ! static::isEmpty($array);
     }
 
     /**
@@ -226,5 +237,12 @@ class Arr
     public static function search(array $array, string $search, bool $strict = false)
     {
         return array_search($search, $array, $strict);
+    }
+
+    public static function detach(array &$array, $key, $default = null)
+    {
+        $value = static::get($array, $key, $default);
+        static::unset($array, $key);
+        return $value;
     }
 }

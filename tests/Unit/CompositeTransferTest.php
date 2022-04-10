@@ -27,7 +27,6 @@ class CompositeTransferTest extends BaseCase
         $this->assertFalse($transfer->validate());
         $this->assertEquals(2, $transfer->getErrors()->count());
         $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
-        $this->assertTrue($transfer->getErrors()->has('default.a_three_a'));
     }
 
     public function testSetSelfProperty()

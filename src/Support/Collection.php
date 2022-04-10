@@ -303,13 +303,10 @@ class Collection implements CollectionInterface
      * @param mixed $key
      * @param mixed $default
      * @return mixed
-     * @throws CollectionException
      */
     public function detach($key, $default = null)
     {
-        $value = $this->get($key, $default);
-        $this->remove($key);
-        return $value;
+        return Arr::detach($this->items, $key, $default);
     }
 
     /**
@@ -324,11 +321,6 @@ class Collection implements CollectionInterface
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false)
     {
         return new static(Arr::slice($this->items(), $offset, $length, $preserveKeys));
-    }
-
-    public function sliceBy(string $offset, int $length = null, bool $preserveKeys = false, bool $strict = false)
-    {
-        return new static(Arr::sliceBy($this->items(), $offset, $length, $preserveKeys, $strict));
     }
 
     public function first($default = null)
@@ -351,5 +343,10 @@ class Collection implements CollectionInterface
     public function toJson(): string
     {
         return json_encode($this->items());
+    }
+
+    public function dot()
+    {
+        return new static(Arr::dot($this->items()));
     }
 }

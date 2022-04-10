@@ -4,17 +4,20 @@ namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Validation\Support\Data;
-use Rbz\Data\Validation\Support\RuleExploder;
+use Rbz\Data\Validation\Support\Rule\Exploder;
 use Rbz\Data\Validation\Validator;
 
 class ValidatorTest extends BaseCase
 {
-    public function testValidation()
+    /**
+     * @dataProvider cases
+     */
+    public function testValidation(array $data, array $rules)
     {
-        $this->assertTrue(Validator::make(['deep_array' => ['string']], ['deep_array.*' => ['string']])->validate());
+        $this->assertTrue(Validator::make($data, $rules)->validate());
     }
 
-    public function testedCases(): array
+    public function cases(): array
     {
         return [
             'deep_array' => [
@@ -49,7 +52,7 @@ class ValidatorTest extends BaseCase
      */
     public function testExplode(array $data, array $rules, array $result)
     {
-        $exploded = (new RuleExploder(Data::encode($data)))->explode($rules);
+        $exploded = (new Exploder(Data::encode($data)))->explode($rules);
 
         $this->assertEquals($result, $exploded);
     }

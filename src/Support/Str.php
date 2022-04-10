@@ -4,7 +4,7 @@ namespace Rbz\Data\Support;
 
 class Str
 {
-    public static function startWith(?string $haystack, ?string $needle): bool
+    public static function startWith(string $haystack, string $needle): bool
     {
         return str_starts_with($haystack, $needle);
     }
@@ -19,7 +19,7 @@ class Str
         return ! static::is($value);
     }
 
-    public static function explode(string $path, string $separator): array
+    public static function explode(string $path, string $separator = '.'): array
     {
         return explode($separator, $path);
     }
@@ -54,5 +54,23 @@ class Str
     public static function concat(string $string1, string $string2, string $separator = ''): string
     {
         return $string1.$separator.$string2;
+    }
+
+    public static function has(string $haystack, string $needle): bool
+    {
+        return static::pos($haystack, $needle) !== false;
+    }
+
+    /**
+     * @return int|false
+     */
+    public static function pos(string $haystack, string $needle)
+    {
+        return strpos($haystack, $needle);
+    }
+
+    public static function notContains(string $haystack, string $needle): bool
+    {
+        return ! static::contains($haystack, $needle);
     }
 }

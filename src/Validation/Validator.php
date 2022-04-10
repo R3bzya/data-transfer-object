@@ -9,6 +9,8 @@ use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\ErrorBagTrait;
 use Rbz\Data\Traits\ValidatesPropertiesTrait;
 use Rbz\Data\Validation\Support\Data;
+use Rbz\Data\Validation\Support\Messenger;
+use Rbz\Data\Validation\Support\Rule\Exploder;
 
 class Validator implements ValidatorInterface
 {
@@ -21,7 +23,7 @@ class Validator implements ValidatorInterface
     public function __construct(array $data, array $rules)
     {
         $this->data = Data::encode($data);
-        $this->rules = $rules;
+        $this->rules = (new Exploder($this->data))->explode($rules);
     }
 
     public static function make(array $data, array $rules): ValidatorInterface

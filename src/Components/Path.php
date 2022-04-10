@@ -13,7 +13,7 @@ class Path implements PathInterface
 {
     private string $path;
 
-    public function __construct(string $path = '')
+    public function __construct(string $path)
     {
         $this->path = $path;
     }
@@ -191,49 +191,8 @@ class Path implements PathInterface
         return static::make($this->toCollection()->slice($offset, $length)->toArray());
     }
 
-    public function sliceBy(string $offset, int $length = null)
-    {
-        return static::make($this->toCollection()->sliceBy($offset, $length, false, true)->toArray());
-    }
-
     public function clone()
     {
         return clone $this;
-    }
-
-    /**
-     * TODO очень не нравится этот метод, по крайней мере тут
-     *
-     * @param string $search
-     * @param string $replacement
-     * @param int|null $count
-     * @return PathInterface
-     */
-    public function replace(string $search, string $replacement, ?int $count = null): PathInterface
-    {
-        $result = [];
-        $replaced = 0;
-
-        foreach ($this as $path) {
-            if (Arr::isNotEmpty($result)) {
-                $result[] = static::separator();
-            }
-
-            if (Str::cpm($path, $search, true) && (! is_null($count) && $replaced < $count)) {
-                Arr::add($result, $replacement);
-                $replaced++;
-            } else {
-                Arr::add($result, $path);
-            }
-        }
-
-        $this->path = Arr::implode($result);
-
-        return $this;
-    }
-
-    public function section(int $int): PathInterface
-    {
-        return Path::make($this->toArray()[$int]);
     }
 }

@@ -16,7 +16,7 @@ trait ErrorBagTrait
     }
 
     public function errors(): ErrorBagInterface
-    {
+     {
         if (! isset($this->_errors)) {
             $this->_errors = ErrorBag::make();
         }

@@ -53,14 +53,16 @@ abstract class Transfer extends Properties
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
-        $errors = Validator::make(
+        $validator = Validator::make(
             $this->toSafeCollection()->toArray(),
             (new Rules($this->rules()))->run(Rules::toValidation($this->getProperties(), $properties))
-        )->getErrors();
+        );
+
+        $validator->validate();
 
         return $clearErrors
-            ? $this->errors()->replace($errors)->isEmpty()
-            : $this->errors()->merge($errors)->isEmpty();
+            ? $this->errors()->replace($validator->getErrors())->isEmpty()
+            : $this->errors()->merge($validator->getErrors())->isEmpty();
     }
 
     public function setProperty(string $property, $value): void

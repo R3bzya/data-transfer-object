@@ -236,20 +236,14 @@ interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, C
     public function slice(int $offset = 0, int $length = null, bool $preserveKeys = false);
 
     /**
-     * Extract a slice items from the collection by string.
-     *
-     * @param string $offset
-     * @param int|null $length
-     * @param bool $preserveKeys
-     * @param bool $strict
-     * @return static
-     */
-    public function sliceBy(string $offset, int $length = null, bool $preserveKeys = false, bool $strict = false);
-
-    /**
      * Get the first item from the collection.
      *
      * @return mixed
      */
     public function first($default = null);
+
+    /**
+     * @return static
+     */
+    public function dot();
 }
