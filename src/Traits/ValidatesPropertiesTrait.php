@@ -7,6 +7,12 @@ use Rbz\Data\Support\Str;
 
 trait ValidatesPropertiesTrait
 {
+    public function validateRule(string $rule, string $property, $value): bool
+    {
+        $method = "validate{$rule}";
+        return $this->$method($property, $value);
+    }
+
     public function validateInteger(string $property, $value): bool
     {
         return is_integer($value);

@@ -205,4 +205,14 @@ class Path implements PathInterface
     {
         return $this->is(static::make($path));
     }
+
+    public function isContains(string $needle): bool
+    {
+        return Str::contains($this->get(), $needle);
+    }
+
+    public function isNotContains(string $needle): bool
+    {
+        return ! $this->isContains($needle);
+    }
 }

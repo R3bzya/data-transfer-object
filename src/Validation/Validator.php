@@ -23,7 +23,6 @@ class Validator implements ValidatorInterface
     public function __construct(array $data, array $rules)
     {
         $this->data = Data::encode($data);
-        dd(Exploder::explode($this->data, $rules));
         $this->rules = Exploder::explode($this->data, $rules);
     }
 
@@ -48,9 +47,9 @@ class Validator implements ValidatorInterface
         throw new ValidationException('Implement validated() method.');
     }
 
-    private function validateProperty(string $property, $rule)
+    private function validateProperty(string $property, string $rule)
     {
-        if (! $this->{"validate{$rule}"}($property, $this->getValue($property))) {
+        if (! $this->validateRule($rule, $property, $this->getValue($property))) {
             $this->errors()->set($property, Messenger::getMessage($property, $rule));
         }
     }
