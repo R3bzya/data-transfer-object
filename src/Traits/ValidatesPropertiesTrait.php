@@ -32,6 +32,11 @@ trait ValidatesPropertiesTrait
         return ! empty($value);
     }
 
+    public function validateBool(string $property, $value): bool
+    {
+        return is_bool($value);
+    }
+
     public function validateRequired(string $property, $value): bool
     {
         if (is_null($value)) {

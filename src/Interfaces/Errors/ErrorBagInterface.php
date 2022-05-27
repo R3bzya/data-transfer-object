@@ -5,8 +5,9 @@ namespace Rbz\Data\Interfaces\Errors;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Support\Cloneable;
+use Rbz\Data\Interfaces\Support\Collectable;
 
-interface ErrorBagInterface extends Cloneable, Arrayable
+interface ErrorBagInterface extends Cloneable, Arrayable, Collectable
 {
     public function get(string $key);
 
@@ -60,4 +61,6 @@ interface ErrorBagInterface extends Cloneable, Arrayable
     public function with(ErrorBagInterface $bag);
 
     public function first(): ?ErrorInterface;
+
+    public function getMessages(): array;
 }

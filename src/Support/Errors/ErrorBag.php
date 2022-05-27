@@ -5,6 +5,7 @@ namespace Rbz\Data\Support\Errors;
 use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 use Rbz\Data\Interfaces\Errors\ErrorInterface;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
+use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Support\Arr;
 
 class ErrorBag implements ErrorBagInterface
@@ -21,12 +22,12 @@ class ErrorBag implements ErrorBagInterface
 
     public function get(string $key)
     {
-        return Arr::get($this->items(), $key);
+        return $this->toCollection()->get($key);
     }
 
     public function has(string $key): bool
     {
-        return Arr::has($this->items(), $key);
+        return $this->toCollection()->has($key);
     }
 
     public function set(string $key, $value = null): ?ErrorBagInterface
@@ -66,7 +67,7 @@ class ErrorBag implements ErrorBagInterface
     public function countMessages(): int
     {
         $count = 0;
-        Arr::collect($this->items())->each(function (ErrorInterface $item) use (&$count) {
+        $this->toCollection()->each(function (ErrorInterface $item) use (&$count) {
             $count += $item->count();
         });
         return $count;
@@ -74,12 +75,12 @@ class ErrorBag implements ErrorBagInterface
 
     public function count(): int
     {
-        return Arr::count($this->items());
+        return $this->toCollection()->count();
     }
 
     public function isEmpty(): bool
     {
-        return Arr::isEmpty($this->items());
+        return $this->toCollection()->isEmpty();
     }
 
     public function isNotEmpty(): bool
@@ -121,11 +122,23 @@ class ErrorBag implements ErrorBagInterface
 
     public function toArray(): array
     {
-        return $this->items();
+        return $this->toCollection()->toArray();
     }
 
     public function first(): ?ErrorInterface
     {
-        return Arr::first($this->items());
+        return $this->toCollection()->first();
+    }
+
+    public function getMessages(): array
+    {
+        return $this->toCollection()
+            ->mapWithKeys(fn(Error $error) => [$error->getProperty() => $error->getMessages()])
+            ->toArray();
+    }
+
+    public function toCollection(): CollectionInterface
+    {
+        return Arr::collect($this->items());
     }
 }

@@ -3,21 +3,27 @@
 namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validation\Support\Data;
-use Rbz\Data\Validation\Support\Rule\Exploder;
 use Rbz\Data\Validation\Validator;
 
 class ValidatorTest extends BaseCase
 {
     /**
-     * @dataProvider cases
+     * @dataProvider correctConditions
      */
-    public function testValidation(array $data, array $rules)
+    public function testCorrectConditions(array $data, array $rules)
     {
         $this->assertTrue(Validator::make($data, $rules)->validate());
     }
 
-    public function cases(): array
+//    /**
+//     * @dataProvider incorrectConditions
+//     */
+//    public function testIncorrectConditions(array $data, array $rules)
+//    {
+//        $this->assertTrue(Validator::make($data, $rules)->validate());
+//    }
+
+    public function correctConditions(): array
     {
         return [
             'deep_array' => [
@@ -44,83 +50,21 @@ class ValidatorTest extends BaseCase
                 ['present_value' => 'present_value'],
                 ['present_value' => ['present']]
             ],
+            'bool' => [
+                ['boolean_value' => false],
+                ['boolean_value' => ['bool']]
+            ],
+            'empty_rules' => [
+                ['value' => 'string'],
+                []
+            ]
         ];
     }
 
-    /**
-     * @dataProvider getExplode
-     */
-    public function testExplode(array $data, array $rules, array $result)
-    {
-        $exploded = (new Exploder(Data::encode($data)))->explode($rules);
-
-        $this->assertEquals($result, $exploded);
-    }
-
-    public function getExplode(): array
+    public function incorrectConditions()
     {
         return [
-            [
-                [
-                    'key' => [
-                        ['key_1' => 'value'],
-                        ['key_1' => 'value'],
-                        ['key_1' => 'value'],
-                    ],
-                ],
-                [
-                    'key.*.key_1' => ['string'],
-                ],
-                [
-                    'key.0.key_1' => ['string'],
-                    'key.1.key_1' => ['string'],
-                    'key.2.key_1' => ['string'],
-                ]
-            ],
-            [
-                [
-                    'key' => [
-                        ['key_1' => 'value'],
-                        ['data']
-                    ],
-                ],
-                [
-                    'key.*' => ['string'],
-                ],
-                [
-                    'key.0' => ['string'],
-                    'key.1' => ['string'],
-                ]
-            ],
-            [
-                [
-                    'key' => [
-                        ['value_1', 'value_2'],
-                        ['value_3', 'value_4'],
-                    ],
-                ],
-                [
-                    'key.*.*' => ['string'],
-                ],
-                [
-                    'key.0.0' => ['string'],
-                    'key.0.1' => ['string'],
-                    'key.1.0' => ['string'],
-                    'key.1.1' => ['string'],
-                ]
-            ],
-            [
-                [
-                    'key' => 123,
-                ],
-                [
 
-                    'key' => ['integer']
-                ],
-                [
-                    'key' => ['integer']
-                ]
-            ]
         ];
     }
 }

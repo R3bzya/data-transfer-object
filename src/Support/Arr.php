@@ -71,6 +71,16 @@ class Arr
         return key_exists($key, $array);
     }
 
+    /**
+     * @param array $array
+     * @param int|string $key
+     * @return bool
+     */
+    public static function notHas(array $array, string $key): bool
+    {
+        return ! static::has($array, $key);
+    }
+
     public static function is($value): bool
     {
         return is_array($value);

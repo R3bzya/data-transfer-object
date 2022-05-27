@@ -195,4 +195,14 @@ class Path implements PathInterface
     {
         return clone $this;
     }
+
+    public function isString(string $path): bool
+    {
+        return $this->is(static::make($path));
+    }
+
+    public function isArray(array $path): bool
+    {
+        return $this->is(static::make($path));
+    }
 }

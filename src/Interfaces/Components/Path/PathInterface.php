@@ -109,4 +109,8 @@ interface PathInterface extends Arrayable, Collectable, IteratorAggregate, Count
      * @return static
      */
     public function slice(int $offset = 0, int $length = null);
+
+    public function isString(string $path): bool;
+
+    public function isArray(array $path): bool;
 }

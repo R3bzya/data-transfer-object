@@ -5,7 +5,7 @@ namespace Rbz\Data\Tests\Unit\Validation;
 use Rbz\Data\Tests\BaseCase;
 use Rbz\Data\Support\Transfer\Properties;
 
-class PropertyHelperTest extends BaseCase
+class PropertiesTest extends BaseCase
 {
     public function testBase()
     {

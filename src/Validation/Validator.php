@@ -23,7 +23,8 @@ class Validator implements ValidatorInterface
     public function __construct(array $data, array $rules)
     {
         $this->data = Data::encode($data);
-        $this->rules = (new Exploder($this->data))->explode($rules);
+        dd(Exploder::explode($this->data, $rules));
+        $this->rules = Exploder::explode($this->data, $rules);
     }
 
     public static function make(array $data, array $rules): ValidatorInterface
@@ -50,7 +51,7 @@ class Validator implements ValidatorInterface
     private function validateProperty(string $property, $rule)
     {
         if (! $this->{"validate{$rule}"}($property, $this->getValue($property))) {
-            $this->errors()->set($property, (new Messenger())->getMessage($property, $rule));
+            $this->errors()->set($property, Messenger::getMessage($property, $rule));
         }
     }
 
