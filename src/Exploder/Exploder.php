@@ -22,6 +22,8 @@ class Exploder
             }
         }
 
+        dd($result);
+
         return $result;
     }
 
@@ -39,25 +41,28 @@ class Exploder
         $result = [];
 
         if (! $path->first()->isString('*')) {
-            foreach (Arr::get($array, $path->first()->get(), []) as $key => $value) {
-                $result[$path->first()->get().'.'.$key] = $this->explodeAsterisk(
-                    Arr::get($array, $path->first()->get(), []), $path->slice(1), $rules
-                );
+            $data = Arr::get($array, $path->first()->get());
+
+
+            if (Arr::is($data)) {
+                foreach ($data as $key => $value) {
+                    $result[$path->first()->get()][$key] = $this->explodeAsterisk($data, $path->slice(1), $rules);
+                }
+            } else {
+                $result[$path->get()] = $rules;
             }
 
-            return $result;
-        }
-
-        if ($path->first()->isString('*')) {
+        } else {
             foreach ($array as $key => $value) {
-                if (Arr::is($value)) {
+                if (Arr::is($value) && $path->isContains('*')) {
                     $result[$key] = $this->explodeAsterisk($value, $path->slice(1), $rules);
                 } else {
                     $result[$path->get()] = $rules;
                 }
             }
+
         }
 
-        return $rules;
+        return $result;
     }
 }
