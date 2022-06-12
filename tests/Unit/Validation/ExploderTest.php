@@ -3,85 +3,93 @@
 namespace Rbz\Data\Tests\Unit\Validation;
 
 use Rbz\Data\Tests\BaseCase;
-use Rbz\Data\Validation\Support\Data;
 use Rbz\Data\Validation\Support\Rule\Exploder;
 
 class ExploderTest extends BaseCase
 {
     /**
-     * @dataProvider getExplode
+     * @dataProvider defaultProvider
      */
-    public function testExplode(array $data, array $rules, array $result)
+    public function testDefault(array $rules, array $result)
     {
-        $exploded = Exploder::explode(Data::encode($data), $rules);
+        $array = Exploder::explode([
+            'key_1' => [
+                'key_2' => [
+                    'key_3' => 'value_3',
+                    'key_4' => 'value_4',
+                    'key_5' => []
+                ],
+                'key_6' => 'value_6',
+                'key_7' => null,
+            ]
+        ], $rules);
 
-        $this->assertEquals($result, $exploded);
+        $this->assertEquals($result, $array);
     }
 
-    public function getExplode(): array
+    public function defaultProvider(): array
     {
         return [
+//            [
+//                [
+//                    'key_1.*.key_5.*' => ['string']
+//                ],
+//                [
+//                    'key_1.key_2.key_5' => ['array'],
+//                    'key_1.key_6' => ['array'],
+//                    'key_1.key_7' => ['array'],
+//                ]
+//            ],
             [
                 [
-                    'key' => [
-                        ['key_1' => 'value'],
-                        ['data']
-                    ],
+                    'key_1.key_6.key_8.*' => ['string']
                 ],
                 [
-                    'key.*' => ['string'],
-                ],
-                [
-                    'key.0' => ['string'],
-                    'key.1' => ['string'],
+                    'key_1.key_6' => ['array'],
                 ]
             ],
             [
                 [
-                    'key' => 123,
+                    'key_1.*.*' => ['string']
                 ],
                 [
-
-                    'key' => ['integer']
-                ],
-                [
-                    'key' => ['integer']
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_4' => ['string'],
+                    'key_1.key_2.key_5' => ['string'],
+                    'key_1.key_6' => ['array'],
+                    'key_1.key_7' => ['array'],
                 ]
             ],
-//            [
-//                [
-//                    'key' => [
-//                        ['key_1' => 'value'],
-//                        ['key_1' => 'value'],
-//                        ['key_1' => 'value'],
-//                    ],
-//                ],
-//                [
-//                    'key.*.key_1' => ['string'],
-//                ],
-//                [
-//                    'key.0.key_1' => ['string'],
-//                    'key.1.key_1' => ['string'],
-//                    'key.2.key_1' => ['string'],
-//                ]
-//            ],
-//            [
-//                [
-//                    'key' => [
-//                        ['value_1', 'value_2'],
-//                        ['value_3', 'value_4'],
-//                    ],
-//                ],
-//                [
-//                    'key.*.*' => ['string'],
-//                ],
-//                [
-//                    'key.0.0' => ['string'],
-//                    'key.0.1' => ['string'],
-//                    'key.1.0' => ['string'],
-//                    'key.1.1' => ['string'],
-//                ]
-//            ],
+            [
+                [
+                    'key_1.key_2.*.key_8' => ['integer']
+                ],
+                [
+                    'key_1.key_2.key_3' => ['array'],
+                    'key_1.key_2.key_4' => ['array'],
+                    'key_1.key_2.key_5.key_8' => ['integer'],
+                ]
+            ],
+            [
+                [
+                    'key_1.key_2.*' => ['array']
+                ],
+                [
+                    'key_1.key_2.key_3' => ['array'],
+                    'key_1.key_2.key_4' => ['array'],
+                    'key_1.key_2.key_5' => ['array'],
+                ]
+            ],
+            [
+                [
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_3.key_4' => ['integer'],
+                ],
+                [
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_3.key_4' => ['integer'],
+                ]
+            ]
         ];
     }
 }

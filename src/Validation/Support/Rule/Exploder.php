@@ -2,67 +2,78 @@
 
 namespace Rbz\Data\Validation\Support\Rule;
 
-use Rbz\Data\Components\Path;
-use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Support\Str;
-use Rbz\Data\Validation\Support\Data;
 
 class Exploder
 {
     private array $data;
-
+    
     public function __construct(array $data)
     {
         $this->data = $data;
     }
-
+    
     public static function explode(array $data, array $rules): array
     {
-        return (new static($data))->run($rules);
+        return (new static($data))->execute($rules);
     }
-
-    public function run(array $rules): array
+    
+    public function execute(array $rules): array
     {
         $result = [];
-
-        foreach ($rules as $key => $rule) {
-            if (Str::notContains($key, Data::ASTERISK)) {
-                Arr::set($result, $key, $this->formatRules($rule));
-                continue;
+        
+        foreach ($rules as $key => $keyRules) {
+            if (Str::notContains($key, '*')) {
+                Arr::set($result, $key, $this->formatRules($keyRules));
+            } else {
+                $result = Arr::merge($result, $this->explodeAsterisk($key, $this->formatRules($keyRules)));
             }
-
-            $result = Arr::merge($result, $this->explodeAsterisk(Path::make($key), $this->formatRules($rule)));
         }
-
+        
         return $result;
     }
-
+    
     private function formatRules($rules): array
     {
         return Str::is($rules) ? Str::explode($rules, '|') : $rules;
     }
-
-    /**
-     * @throws PathException
-     */
-    public function explodeAsterisk(Path $path, array $rules): array
+    
+    private function explodeAsterisk(string $key, array $rules): array
     {
-        if ($path->first()->is(Data::ASTERISK)) {
-            return $this->each($this->data, $rules);
+        $result = [];
+        
+        foreach ($this->data as $dataKey => $value) {
+            if (Str::cmp($key, '*')) {
+                $result[$dataKey] = $rules;
+                continue;
+            }
+    
+            $path = Str::explode($key);
+            $previousKey = Str::cmp($path[0], '*') ? $dataKey : $path[0];
+            unset($path[0]);
+            $path = Arr::implode($path);
+            
+            if (Arr::is($value)) {
+                $result = Arr::merge($result, $this->explodeArray($value, $path, $previousKey, $rules));
+                continue;
+            }
+    
+            if (Str::startWith($key, '*') || Str::startWith($key, $dataKey)) {
+                $result[$dataKey] = ['array'];
+            }
         }
-
-        return [$path->first()->get() => static::explode(
-            Arr::get($this->data, $path->first()->get(), []), [$path->slice(1)->get() => $rules]
-        )];
+        
+        return $result;
     }
-
-    private function each(array $data, array $rules): array
+    
+    private static function addPreviousKey(array $keys, string $previousKey): array
     {
-        $each = [];
-        foreach ($data as $key => $value) {
-            $each[$key] = $rules;
-        }
-        return $each;
+        return Arr::collect($keys)->mapWithKeys(fn(array $value, string $key) => [$previousKey . '.' . $key => $value])->toArray();
+    }
+    
+    private function explodeArray(array $data, string $key, string $previousKey, array $rules): array
+    {
+        return static::addPreviousKey(static::explode($data, [$key => $rules]), $previousKey);
     }
 }
