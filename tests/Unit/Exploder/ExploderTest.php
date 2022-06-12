@@ -10,43 +10,75 @@ class ExploderTest extends BaseCase
     /**
      * @dataProvider defaultProvider
      */
-    public function testDefault(array $array, array $rules, array $expected)
+    public function testDefault(array $rules, array $result)
     {
-        $exploder = new Exploder();
-        $result = $exploder->explode($array, $rules);
-
-        $this->assertEquals($expected, $result);
+        $array = Exploder::explode([
+            'key_1' => [
+                'key_2' => [
+                    'key_3' => 'value_3',
+                    'key_4' => 'value_4',
+                    'key_5' => []
+                ],
+                'key_6' => 'value_6',
+                'key_7' => null,
+            ]
+        ], $rules);
+        
+        $this->assertEquals($result, $array);
     }
 
     public function defaultProvider(): array
     {
         return [
             [
-                ['key_0' => [
-                    ['key_1' => 'value_1'],
-                    ['key_1' => 'value_2']
-                ]],
-                ['key_0.*.key_1' => 'string'],
                 [
-                    'key_0.0.key_1' => ['string'],
-                    'key_0.1.key_1' => ['string'],
+                    'key_1.key_6.key_8.*' => ['string']
+                ],
+                [
+                    'key_1.key_6' => ['array'],
                 ]
             ],
             [
-                ['key_0' => [
-                    'value_1',
-                    'value_2'
-                ]],
-                ['key_0.*' => 'string'],
                 [
-                    'key_0.0' => ['string'],
-                    'key_0.1' => ['string'],
+                    'key_1.*.*' => ['string']
+                ],
+                [
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_4' => ['string'],
+                    'key_1.key_2.key_5' => ['string'],
+                    'key_1.key_6' => ['array'],
+                    'key_1.key_7' => ['array'],
                 ]
             ],
             [
-                ['key_0' => 'value'],
-                ['key_0' => 'string'],
-                ['key_0' => ['string']]
+                [
+                    'key_1.key_2.*.key_8' => ['integer']
+                ],
+                [
+                    'key_1.key_2.key_3.key_8' => ['integer'],
+                    'key_1.key_2.key_4.key_8' => ['integer'],
+                    'key_1.key_2.key_5.key_8' => ['integer'],
+                ]
+            ],
+            [
+                [
+                    'key_1.key_2.*' => ['array']
+                ],
+                [
+                    'key_1.key_2.key_3' => ['array'],
+                    'key_1.key_2.key_4' => ['array'],
+                    'key_1.key_2.key_5' => ['array'],
+                ]
+            ],
+            [
+                [
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_3.key_4' => ['integer'],
+                ],
+                [
+                    'key_1.key_2.key_3' => ['string'],
+                    'key_1.key_2.key_3.key_4' => ['integer'],
+                ]
             ]
         ];
     }

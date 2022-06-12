@@ -2,67 +2,93 @@
 
 namespace Rbz\Data\Exploder;
 
-use Rbz\Data\Components\Path;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Support\Str;
 
 class Exploder
 {
-    public function explode(array $array, array $rules): array
+    private array $data;
+    
+    public function __construct(array $data)
+    {
+        $this->data = $data;
+    }
+    
+    public static function explode(array $data, array $rules): array
+    {
+        return (new static($data))->execute($rules);
+    }
+    
+    public function execute(array $rules): array
     {
         $result = [];
-
-        foreach ($rules as $path => $pathRules) {
-            $path = Path::make($path);
-
-            if ($path->isNotContains('*')) {
-                $result[$path->get()] = $this->formatRules($pathRules);
+        
+        foreach ($rules as $key => $keyRules) {
+            if (Str::notContains($key, '*')) {
+                Arr::set($result, $key, $this->formatRules($keyRules));
             } else {
-                $result = Arr::merge($result, $this->explodeAsterisk($array, $path, $this->formatRules($pathRules)));
+                $result = Arr::merge($result, $this->explodeAsterisk($key, $this->formatRules($keyRules)));
             }
         }
-
-        dd($result);
-
+        
         return $result;
     }
-
-    /**
-     * @param string|array $rules
-     * @return array
-     */
-    public function formatRules($rules): array
+    
+    private function formatRules($rules): array
     {
-        return Arr::is($rules) ? $rules : Str::explode($rules, '|');
+        return Str::is($rules) ? Str::explode($rules, '|') : $rules;
     }
-
-    private function explodeAsterisk(array $array, Path $path, array $rules): array
+    
+    private function explodeAsterisk(string $key, array $rules): array
     {
         $result = [];
-
-        if (! $path->first()->isString('*')) {
-            $data = Arr::get($array, $path->first()->get());
-
-
-            if (Arr::is($data)) {
-                foreach ($data as $key => $value) {
-                    $result[$path->first()->get()][$key] = $this->explodeAsterisk($data, $path->slice(1), $rules);
-                }
-            } else {
-                $result[$path->get()] = $rules;
+        
+        foreach ($this->data as $dataKey => $value) {
+            $path = Str::explode($key);
+            $previousKey = $path[0];
+            unset($path[0]);
+            
+            if (Str::cmp($key, '*')) {
+                $result[$dataKey] = $rules;
+                continue;
             }
-
-        } else {
-            foreach ($array as $key => $value) {
-                if (Arr::is($value) && $path->isContains('*')) {
-                    $result[$key] = $this->explodeAsterisk($value, $path->slice(1), $rules);
+            
+    
+            if (Str::startWith($key, '*')) {
+                
+                if (is_array($value)) {
+                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [Arr::implode($path) => $rules]), $dataKey));
                 } else {
-                    $result[$path->get()] = $rules;
+                    if (Str::startWith(Arr::implode($path), '*')) {
+                        $result[$dataKey] = ['array'];
+                    } else {
+                        $result[$dataKey . '.' . Arr::implode($path)] = $rules;
+                    }
+                }
+                
+                continue;
+            }
+            
+            if (Str::startWith($key, $dataKey)) {
+                if (is_array($value)) {
+                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [Arr::implode($path) => $rules]), $previousKey));
+                } else {
+                    $result[$dataKey] = ['array'];
                 }
             }
-
         }
-
+        
+        return $result;
+    }
+    
+    private static function addPreviousKey(array $keys, string $previousKey): array
+    {
+        $result = [];
+        
+        foreach ($keys as $key => $value) {
+            $result[$previousKey . '.' . $key] = $value;
+        }
+        
         return $result;
     }
 }

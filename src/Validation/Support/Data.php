@@ -16,9 +16,7 @@ class Data
     {
         $encoded = [];
         foreach ($data as $key => $value) {
-            $encoded[Str::replace([self::DOT, self::ASTERISK], [self::DOT_ENCODED, self::ASTERISK_ENCODED], $key)] = Arr::is($value)
-                ? self::encode($value)
-                : $value;
+            $encoded[static::encodeKey($key)] = Arr::is($value) ? self::encode($value) : $value;
         }
         return $encoded;
     }
@@ -27,10 +25,18 @@ class Data
     {
         $decoded = [];
         foreach ($data as $key => $value) {
-            $decoded[Str::replace([self::DOT_ENCODED, self::ASTERISK_ENCODED], [self::DOT, self::ASTERISK], $key)] = Arr::is($value)
-                ? self::decode($value)
-                : $value;
+            $decoded[static::decodeKey($key)] = Arr::is($value) ? self::decode($value) : $value;
         }
         return $decoded;
+    }
+    
+    private static function encodeKey(string $key): string
+    {
+        return Str::replace([self::DOT, self::ASTERISK], [self::DOT_ENCODED, self::ASTERISK_ENCODED], $key);
+    }
+    
+    private static function decodeKey(string $key): string
+    {
+        return Str::replace([self::DOT_ENCODED, self::ASTERISK_ENCODED], [self::DOT, self::ASTERISK], $key);
     }
 }

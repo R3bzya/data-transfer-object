@@ -19,9 +19,9 @@ class Str
         return ! static::is($value);
     }
 
-    public static function explode(string $path, string $separator = '.'): array
+    public static function explode(string $string, string $separator = '.'): array
     {
-        return explode($separator, $path);
+        return explode($separator, $string);
     }
 
     /**
@@ -36,7 +36,7 @@ class Str
         return str_replace($search, $replace, $subject, $count);
     }
 
-    public static function cpm(string $string1, string $string2, bool $strict = false): bool
+    public static function cmp(string $string1, string $string2, bool $strict = false): bool
     {
         return $strict ? $string1 === $string2 : $string1 == $string2;
     }

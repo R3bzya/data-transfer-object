@@ -142,7 +142,7 @@ class Path implements PathInterface
      */
     public function is($path): bool
     {
-        return Str::cpm($this->get(), $path->get(), true);
+        return Str::cmp($this->get(), $path->get(), true);
     }
 
     /**
