@@ -44,26 +44,30 @@ class Exploder
         $result = [];
         
         foreach ($this->data as $dataKey => $value) {
-            $path = Str::explode($key);
-            $previousKey = $path[0];
-            unset($path[0]);
-            
             if (Str::cmp($key, '*')) {
                 $result[$dataKey] = $rules;
                 continue;
             }
+    
+            $path = Str::explode($key);
+            $previousKey = $path[0];
+            unset($path[0]);
+            $path = Arr::implode($path);
             
+//            if (Arr::is($value)) {
+//                $this->explodeArray($value, $dataKey, $path, $rules);
+//            } else {
+//                $result[$dataKey] = ['array'];
+//            }
+            
+
     
             if (Str::startWith($key, '*')) {
                 
                 if (is_array($value)) {
-                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [Arr::implode($path) => $rules]), $dataKey));
+                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [$path => $rules]), $dataKey));
                 } else {
-                    if (Str::startWith(Arr::implode($path), '*')) {
-                        $result[$dataKey] = ['array'];
-                    } else {
-                        $result[$dataKey . '.' . Arr::implode($path)] = $rules;
-                    }
+                    $result[$dataKey] = ['array'];
                 }
                 
                 continue;
@@ -71,7 +75,7 @@ class Exploder
             
             if (Str::startWith($key, $dataKey)) {
                 if (is_array($value)) {
-                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [Arr::implode($path) => $rules]), $previousKey));
+                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [$path => $rules]), $previousKey));
                 } else {
                     $result[$dataKey] = ['array'];
                 }
@@ -83,12 +87,16 @@ class Exploder
     
     private static function addPreviousKey(array $keys, string $previousKey): array
     {
-        $result = [];
-        
-        foreach ($keys as $key => $value) {
-            $result[$previousKey . '.' . $key] = $value;
-        }
-        
-        return $result;
+        return Arr::collect($keys)->mapWithKeys(fn(array $value, string $key) => [$previousKey . '.' . $key => $value])->toArray();
+    }
+    
+    private function explodeArray()
+    {
+    
+    }
+    
+    private function explodeNotArray()
+    {
+    
     }
 }
