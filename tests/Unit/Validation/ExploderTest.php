@@ -30,16 +30,15 @@ class ExploderTest extends BaseCase
     public function defaultProvider(): array
     {
         return [
-//            [
-//                [
-//                    'key_1.*.key_5.*' => ['string']
-//                ],
-//                [
-//                    'key_1.key_2.key_5' => ['array'],
-//                    'key_1.key_6' => ['array'],
-//                    'key_1.key_7' => ['array'],
-//                ]
-//            ],
+            [
+                [
+                    'key_1.*.key_5.*' => ['string']
+                ],
+                [
+                    'key_1.key_6' => ['array'],
+                    'key_1.key_7' => ['array'],
+                ]
+            ],
             [
                 [
                     'key_1.key_6.key_8.*' => ['string']

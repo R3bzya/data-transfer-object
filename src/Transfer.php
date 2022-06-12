@@ -8,6 +8,7 @@ use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\ErrorBagTrait;
 use Rbz\Data\Support\Transfer\Rules;
+use Rbz\Data\Traits\TransferEventsTrait;
 use Rbz\Data\Validation\Validator;
 use ReflectionClass;
 use ReflectionException;
@@ -16,7 +17,8 @@ use Throwable;
 abstract class Transfer extends Properties
     implements TransferInterface
 {
-    use ErrorBagTrait;
+    use ErrorBagTrait,
+        TransferEventsTrait;
 
     /**
      * @param mixed $data
@@ -45,20 +47,24 @@ abstract class Transfer extends Properties
 
     public function load($data): bool
     {
+        $this->beforeLoadEvents();
         $this->errors()->clear();
         $collection = Arr::collect($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
+        $this->afterLoadEvents();
         return $collection->isNotEmpty() && $this->errors()->isEmpty();
     }
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
+        $this->beforeValidateEvents();
         $validator = Validator::make(
             $this->toSafeCollection()->toArray(),
             (new Rules($this->rules()))->run(Rules::toValidation($this->getProperties(), $properties))
         );
 
         $validator->validate();
+        $this->afterValidateEvents();
 
         return $clearErrors
             ? $this->errors()->replace($validator->getErrors())->isEmpty()

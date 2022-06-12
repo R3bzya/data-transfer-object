@@ -7,11 +7,6 @@ use Rbz\Data\Support\Str;
 
 class Data
 {
-    const DOT = '.';
-    const ASTERISK = '*';
-    const DOT_ENCODED = '__dot__';
-    const ASTERISK_ENCODED = '__asterisk__';
-
     public static function encode(array $data): array
     {
         $encoded = [];
@@ -32,11 +27,11 @@ class Data
     
     private static function encodeKey(string $key): string
     {
-        return Str::replace([self::DOT, self::ASTERISK], [self::DOT_ENCODED, self::ASTERISK_ENCODED], $key);
+        return Str::replace(['.', '*'], ['__dot__', '__asterisk__'], $key);
     }
     
     private static function decodeKey(string $key): string
     {
-        return Str::replace([self::DOT_ENCODED, self::ASTERISK_ENCODED], [self::DOT, self::ASTERISK], $key);
+        return Str::replace(['__dot__', '__asterisk__'], ['.', '*'], $key);
     }
 }
