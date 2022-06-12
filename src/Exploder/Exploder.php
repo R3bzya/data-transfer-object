@@ -50,35 +50,17 @@ class Exploder
             }
     
             $path = Str::explode($key);
-            $previousKey = $path[0];
+            $previousKey = Str::cmp($path[0], '*') ? $dataKey : $path[0];
             unset($path[0]);
             $path = Arr::implode($path);
             
-//            if (Arr::is($value)) {
-//                $this->explodeArray($value, $dataKey, $path, $rules);
-//            } else {
-//                $result[$dataKey] = ['array'];
-//            }
-            
-
-    
-            if (Str::startWith($key, '*')) {
-                
-                if (is_array($value)) {
-                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [$path => $rules]), $dataKey));
-                } else {
-                    $result[$dataKey] = ['array'];
-                }
-                
+            if (Arr::is($value)) {
+                $result = Arr::merge($result, $this->explodeArray($value, $path, $previousKey, $rules));
                 continue;
             }
-            
-            if (Str::startWith($key, $dataKey)) {
-                if (is_array($value)) {
-                    $result = Arr::merge($result, static::addPreviousKey(static::explode($value, [$path => $rules]), $previousKey));
-                } else {
-                    $result[$dataKey] = ['array'];
-                }
+    
+            if (Str::startWith($key, '*') || Str::startWith($key, $dataKey)) {
+                $result[$dataKey] = ['array'];
             }
         }
         
@@ -90,13 +72,8 @@ class Exploder
         return Arr::collect($keys)->mapWithKeys(fn(array $value, string $key) => [$previousKey . '.' . $key => $value])->toArray();
     }
     
-    private function explodeArray()
+    private function explodeArray(array $data, string $key, string $previousKey, array $rules): array
     {
-    
-    }
-    
-    private function explodeNotArray()
-    {
-    
+        return static::addPreviousKey(static::explode($data, [$key => $rules]), $previousKey);
     }
 }
