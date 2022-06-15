@@ -2,11 +2,13 @@
 
 namespace Rbz\Data\Events;
 
-class EventManager extends EventStorage
+use Rbz\Data\Interfaces\Events\StorageInterface;
+
+class EventManager
 {
     private bool $isEnable = true;
     
-    private EventStorage $eventStorage;
+    private StorageInterface $eventStorage;
     
     public function __construct()
     {

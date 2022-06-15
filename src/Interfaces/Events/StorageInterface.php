@@ -2,18 +2,9 @@
 
 namespace Rbz\Data\Interfaces\Events;
 
-use Closure;
-use Rbz\Data\Interfaces\Support\Arrayable;
+use Rbz\Data\Interfaces\Components\StorageInterface as BaseStorage;
 
-interface StorageInterface extends Arrayable
+interface StorageInterface extends BaseStorage
 {
-    public function add(string $group, Closure $closure): void;
-    
-    public function remove(string $group): void;
-    
-    public function has(string $group): bool;
-    
-    public function get(string $group): StorageInterface;
-    
     public function getEvents(): array;
 }

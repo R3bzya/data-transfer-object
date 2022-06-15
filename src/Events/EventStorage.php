@@ -9,18 +9,19 @@ use Rbz\Data\Support\Str;
 
 class EventStorage implements StorageInterface
 {
+    /** @var static[]|Closure[]|array  */
     private array $groups = [];
     
     /**
-     * @param string $group
-     * @param Closure $closure
+     * @param string $key
+     * @param Closure $value
      * @return void
      */
-    public function add(string $group, Closure $closure): void
+    public function add(string $key, $value): void
     {
         $storage = $this;
         
-        foreach (Str::explode($group) as $group) {
+        foreach (Str::explode($key) as $group) {
             if ($storage->has($group)) {
                 $storage = $storage->get($group);
             } else {
@@ -28,13 +29,17 @@ class EventStorage implements StorageInterface
             }
         }
         
-        $storage->groups[] = $closure;
+        $storage->groups[] = $value;
     }
     
-    public function remove(string $group): void
+    /**
+     * @param string $key
+     * @return void
+     */
+    public function remove(string $key): void
     {
         $storage = $this;
-        $groups = Str::explode($group);
+        $groups = Str::explode($key);
         
         foreach ($groups as $key => $group) {
             if (Arr::countEq($groups, 1)) {
@@ -52,10 +57,14 @@ class EventStorage implements StorageInterface
         }
     }
     
-    public function has(string $group): bool
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
     {
         $storage = $this;
-        $groups = Str::explode($group);
+        $groups = Str::explode($key);
         
         if (Arr::countEq($groups, 0)) {
             return false;
@@ -71,11 +80,15 @@ class EventStorage implements StorageInterface
         return true;
     }
     
-    public function get(string $group): StorageInterface
+    /**
+     * @param string $key
+     * @return static
+     */
+    public function get(string $key)
     {
         $storage = $this;
         
-        foreach (Str::explode($group) as $group) {
+        foreach (Str::explode($key) as $group) {
             if ($this->has($group)) {
                 $storage = $storage->groups[$group];
             } else {
