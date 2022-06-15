@@ -26,7 +26,7 @@ abstract class CompositeTransfer extends Transfer
             $transfer->load($collection->isArray($property) ? $collection->detach($property) : $collection->toArray());
         });
         parent::load($collection->toArray());
-        return $this->errors()->isEmpty();
+        return $this->isLoad();
     }
 
     /**
@@ -35,11 +35,11 @@ abstract class CompositeTransfer extends Transfer
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $properties = new Properties($properties);
-        parent::validate($properties->get(), $clearErrors);
         $this->container()->toCollection()->each(function (TransferInterface $transfer, $property) use ($properties, $clearErrors) {
             $transfer->validate($properties->get($property), $clearErrors);
         });
-        return $this->errors()->isEmpty();
+        parent::validate($properties->get(), $clearErrors);
+        return $this->isValidate();
     }
 
     public function errors(): ErrorBagInterface
@@ -78,5 +78,31 @@ abstract class CompositeTransfer extends Transfer
     public function getProperties(): CollectionInterface
     {
         return parent::getProperties()->with($this->container()->keys());
+    }
+    
+    /**
+     * TODO нужно подумать, нужно ли переопределять или нет
+     * @return bool
+     */
+    public function isLoad(): bool
+    {
+        $isLoad = parent::isLoad();
+        $this->container()->toCollection()->each(function (TransferInterface $transfer) use (&$isLoad) {
+            return $isLoad = $isLoad || $transfer->isLoad();
+        });
+        return $isLoad;
+    }
+    
+    /**
+     * TODO нужно подумать, нужно ли переопределять или нет
+     * @return bool
+     */
+    public function isValidate(): bool
+    {
+        $isValidate = parent::isValidate();
+        $this->container()->toCollection()->each(function (TransferInterface $transfer) use (&$isValidate) {
+            return $isValidate = $isValidate && $transfer->isValidate();
+        });
+        return $isValidate;
     }
 }

@@ -8,7 +8,7 @@ use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\ErrorBagTrait;
 use Rbz\Data\Support\Transfer\Rules;
-use Rbz\Data\Traits\TransferEventsTrait;
+use Rbz\Data\Traits\EventsTrait;
 use Rbz\Data\Validation\Validator;
 use ReflectionClass;
 use ReflectionException;
@@ -18,7 +18,11 @@ abstract class Transfer extends Properties
     implements TransferInterface
 {
     use ErrorBagTrait,
-        TransferEventsTrait;
+        EventsTrait;
+    
+    protected bool $isLoad = false;
+    
+    protected bool $isValidate = false;
 
     /**
      * @param mixed $data
@@ -51,8 +55,10 @@ abstract class Transfer extends Properties
         $this->errors()->clear();
         $collection = Arr::collect($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
+        $this->setIsLoad($collection->isNotEmpty() && $this->errors()->isEmpty());
+        $this->setIsValidate($this->isLoad() && $collection->isEmpty());
         $this->afterLoadEvents();
-        return $collection->isNotEmpty() && $this->errors()->isEmpty();
+        return $this->isLoad();
     }
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
@@ -66,7 +72,7 @@ abstract class Transfer extends Properties
         $validator->validate();
         $this->afterValidateEvents();
 
-        return $clearErrors
+        return $this->isValidate = $clearErrors
             ? $this->errors()->replace($validator->getErrors())->isEmpty()
             : $this->errors()->merge($validator->getErrors())->isEmpty();
     }
@@ -106,5 +112,35 @@ abstract class Transfer extends Properties
         return $this->getProperties()
             ->filter(fn(string $property) => $this->isSetProperty($property))
             ->mapWithKeys(fn(string $property) => [$property => $this->getProperty($property)]);
+    }
+    
+    /**
+     * @param bool $isLoad
+     * @return static
+     */
+    public function setIsLoad(bool $isLoad)
+    {
+        $this->isLoad = $isLoad;
+        return $this;
+    }
+    
+    /**
+     * @param bool $isValidate
+     * @return static
+     */
+    public function setIsValidate(bool $isValidate)
+    {
+        $this->isValidate = $isValidate;
+        return $this;
+    }
+    
+    public function isLoad(): bool
+    {
+        return $this->isLoad;
+    }
+    
+    public function isValidate(): bool
+    {
+        return $this->isValidate;
     }
 }
