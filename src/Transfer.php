@@ -56,7 +56,7 @@ abstract class Transfer extends Properties
         $collection = Arr::collect($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
         $this->setIsLoad($collection->isNotEmpty() && $this->errors()->isEmpty());
-        $this->setIsValidate($this->isLoad() && $collection->isEmpty());
+        $this->setIsValidate($this->isLoad() && $collection->isEmpty()); // TODO
         $this->afterLoadEvents();
         return $this->isLoad();
     }
@@ -64,17 +64,20 @@ abstract class Transfer extends Properties
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $this->beforeValidateEvents();
+        
         $validator = Validator::make(
             $this->toSafeCollection()->toArray(),
-            (new Rules($this->rules()))->run(Rules::toValidation($this->getProperties(), $properties))
+            (new Rules($this->rules()))->only(Rules::toValidation($this->getProperties(), $properties))
         );
-
         $validator->validate();
-        $this->afterValidateEvents();
-
-        return $this->isValidate = $clearErrors
+        
+        $this->setIsValidate($clearErrors
             ? $this->errors()->replace($validator->getErrors())->isEmpty()
-            : $this->errors()->merge($validator->getErrors())->isEmpty();
+            : $this->errors()->merge($validator->getErrors())->isEmpty()
+        );
+        
+        $this->afterValidateEvents();
+        return $this->isValidate();
     }
 
     public function setProperty(string $property, $value): void

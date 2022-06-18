@@ -26,7 +26,7 @@ class Error implements ErrorInterface
     {
         $this->property = $property;
         $this->messages = $messages;
-        $this->_path = $path ?: Path::make($property);
+        $this->path = $path ?: Path::make($property);
     }
 
     /**

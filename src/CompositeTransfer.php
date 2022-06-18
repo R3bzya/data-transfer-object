@@ -2,12 +2,9 @@
 
 namespace Rbz\Data;
 
-use Rbz\Data\Components\Path;
-use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Support\CollectionInterface;
 use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 use Rbz\Data\Interfaces\CompositeTransferInterface;
-use Rbz\Data\Interfaces\TransferInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Traits\CollectorTrait;
 use Rbz\Data\Traits\ContainerTrait;
@@ -21,40 +18,28 @@ abstract class CompositeTransfer extends Transfer
 
     public function load($data): bool
     {
-        $collection = Arr::collect($data);
-        $this->container()->toCollection()->each(function (TransferInterface $transfer, string $property) use ($collection) {
-            $transfer->load($collection->isArray($property) ? $collection->detach($property) : $collection->toArray());
-        });
-        parent::load($collection->toArray());
+        parent::load(Arr::except($data, $this->internalTransfers()));
+        $this->transferManager()->massiveLoad($data);
         return $this->isLoad();
     }
-
-    /**
-     * @throws PathException
-     */
+    
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $properties = new Properties($properties);
-        $this->container()->toCollection()->each(function (TransferInterface $transfer, $property) use ($properties, $clearErrors) {
-            $transfer->validate($properties->get($property), $clearErrors);
-        });
         parent::validate($properties->get(), $clearErrors);
+        $this->transferManager()->massiveValidate($properties->get($this->internalTransfers()), $clearErrors);
         return $this->isValidate();
     }
 
     public function errors(): ErrorBagInterface
     {
-        $collection = parent::errors();
-        $this->container()->toCollection()->each(function (TransferInterface $transfer, string $property) use ($collection) {
-            $collection->merge($transfer->getErrors()->withPathAtTheBeginning(Path::make($property)));
-        });
-        return $collection;
+        return parent::errors()->merge($this->transferManager()->getErrors());
     }
 
     public function getProperty(string $property)
     {
-        if ($this->container()->has($property)) {
-            return $this->container()->get($property);
+        if ($this->transferManager()->has($property)) {
+            return $this->transferManager()->get($property);
         }
         return parent::getProperty($property);
     }
@@ -62,7 +47,7 @@ abstract class CompositeTransfer extends Transfer
     public function setProperty(string $property, $value): void
     {
         if (Arr::in($this->internalTransfers(), $property, true)) {
-            $this->container()->add($property, $value);
+            $this->transferManager()->add($property, $value);
         } elseif ($this->collector()->has($property)) {
             parent::setProperty($property, $this->collector()->toCollect($property, $value));
         } else {
@@ -72,37 +57,21 @@ abstract class CompositeTransfer extends Transfer
 
     public function isSetProperty(string $property): bool
     {
-        return $this->container()->has($property) || parent::isSetProperty($property);
+        return parent::isSetProperty($property) || $this->transferManager()->has($property);
     }
 
     public function getProperties(): CollectionInterface
     {
-        return parent::getProperties()->with($this->container()->keys());
+        return parent::getProperties()->with($this->internalTransfers());
     }
     
-    /**
-     * TODO нужно подумать, нужно ли переопределять или нет
-     * @return bool
-     */
     public function isLoad(): bool
     {
-        $isLoad = parent::isLoad();
-        $this->container()->toCollection()->each(function (TransferInterface $transfer) use (&$isLoad) {
-            return $isLoad = $isLoad || $transfer->isLoad();
-        });
-        return $isLoad;
+        return parent::isLoad() || $this->transferManager()->isLoad();
     }
     
-    /**
-     * TODO нужно подумать, нужно ли переопределять или нет
-     * @return bool
-     */
     public function isValidate(): bool
     {
-        $isValidate = parent::isValidate();
-        $this->container()->toCollection()->each(function (TransferInterface $transfer) use (&$isValidate) {
-            return $isValidate = $isValidate && $transfer->isValidate();
-        });
-        return $isValidate;
+        return parent::isValidate() && $this->transferManager()->isValidate();
     }
 }

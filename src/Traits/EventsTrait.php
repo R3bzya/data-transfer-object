@@ -89,7 +89,7 @@ trait EventsTrait
     /**
      * @return static
      */
-    public function withoutEvents(array $events = [])
+    public function withoutEvents()
     {
         $this->eventManager()->disable();
         return $this;

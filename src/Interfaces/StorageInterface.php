@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Components;
+namespace Rbz\Data\Interfaces;
 
 use Rbz\Data\Interfaces\Support\Arrayable;
 
@@ -13,4 +13,8 @@ interface StorageInterface extends Arrayable
     public function has(string $key): bool;
     
     public function get(string $key);
+    
+    public function count(): int;
+    
+    public function isEmpty(): bool;
 }

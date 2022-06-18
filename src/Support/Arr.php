@@ -50,6 +50,12 @@ class Arr
 
         return $array;
     }
+    
+    public static function getIf(array $array, $key, \Closure $closure, $default = null)
+    {
+        $value = Arr::get($array, $key, $default);
+        return $closure($value) ? $value : $default;
+    }
 
     public static function set(array &$array, $key, $value): void
     {
@@ -80,7 +86,13 @@ class Arr
     {
         return ! static::has($array, $key);
     }
-
+    
+    /**
+     * Determine if the value is array.
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public static function is($value): bool
     {
         return is_array($value);
@@ -254,5 +266,15 @@ class Arr
         $value = static::get($array, $key, $default);
         static::unset($array, $key);
         return $value;
+    }
+    
+    public static function only(array $data, array $keys): array
+    {
+        return static::filter($data, fn($key) => static::in($keys, $key, true), ARRAY_FILTER_USE_KEY);
+    }
+    
+    public static function except(array $data, array $keys): array
+    {
+        return static::filter($data, fn($key) => static::notIn($keys, $key, true), ARRAY_FILTER_USE_KEY);
     }
 }

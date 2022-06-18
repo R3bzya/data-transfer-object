@@ -2,30 +2,18 @@
 
 namespace Rbz\Data\Traits;
 
-use Rbz\Data\Components\Container\TransferManager;
-use Rbz\Data\Interfaces\Components\Container\ContainerInterface;
+use Rbz\Data\Container\TransferManager;
 
 trait ContainerTrait
 {
-    private ContainerInterface $_container;
+    private TransferManager $transferManager;
 
-    public function setContainer(ContainerInterface $container)
+    public function transferManager(): TransferManager
     {
-        $this->_container = $container;
-        return $this;
-    }
-
-    public function container(): ContainerInterface
-    {
-        if (! isset($this->_container)) {
-            $this->_container = new TransferManager();
+        if (! isset($this->transferManager)) {
+            $this->transferManager = new TransferManager();
         }
-        return $this->_container;
-    }
-
-    public function getContainer(): ContainerInterface
-    {
-        return $this->container();
+        return $this->transferManager;
     }
 
     public function internalTransfers(): array

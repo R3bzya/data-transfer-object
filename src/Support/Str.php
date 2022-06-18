@@ -8,7 +8,13 @@ class Str
     {
         return str_starts_with($haystack, $needle);
     }
-
+    
+    /**
+     * Determine if the value is string.
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public static function is($value): bool
     {
         return is_string($value);

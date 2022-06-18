@@ -2,7 +2,7 @@
 
 namespace Rbz\Data\Interfaces\Events;
 
-use Rbz\Data\Interfaces\Components\StorageInterface as BaseStorage;
+use Rbz\Data\Interfaces\StorageInterface as BaseStorage;
 
 interface StorageInterface extends BaseStorage
 {

@@ -54,7 +54,7 @@ class ErrorBag implements ErrorBagInterface
         return null;
     }
 
-    public function withPathAtTheBeginning(PathInterface $path): ErrorBagInterface
+    public function prependPathsWith(PathInterface $path): ErrorBagInterface
     {
         $bag = new self();
         $bag->items = Arr::collect($this->items())->mapWithKeys(function (ErrorInterface $item) use ($path) {

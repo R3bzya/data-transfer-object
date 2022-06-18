@@ -118,4 +118,14 @@ class EventStorage implements StorageInterface
     {
         return $this->groups;
     }
+    
+    public function count(): int
+    {
+        return Arr::count($this->groups);
+    }
+    
+    public function isEmpty(): bool
+    {
+        return Arr::isEmpty($this->groups);
+    }
 }

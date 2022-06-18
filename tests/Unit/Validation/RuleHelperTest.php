@@ -18,7 +18,7 @@ class RuleHelperTest extends BaseCase
             'property2' => ['value2'],
             'property3' => ['value3'],
             'property4' => ['value4'],
-        ]))->run(Rules::toValidation(Collection::make([
+        ]))->only(Rules::toValidation(Collection::make([
             'property1',
             'property2',
             'property3',

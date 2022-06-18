@@ -7,20 +7,20 @@ use Rbz\Data\Interfaces\Components\Path\PathInterface;
 
 trait PathTrait
 {
-    private PathInterface $_path;
+    private PathInterface $path;
 
     public function setPath(PathInterface $path)
     {
-        $this->_path = $path;
+        $this->path = $path;
         return $this;
     }
 
     public function path(): PathInterface
     {
-        if (! isset($this->_path)) {
-            $this->_path = Path::make();
+        if (! isset($this->path)) {
+            $this->path = Path::make();
         }
-        return $this->_path;
+        return $this->path;
     }
 
     public function getPath(): PathInterface

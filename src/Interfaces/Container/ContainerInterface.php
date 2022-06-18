@@ -1,6 +1,6 @@
 <?php
 
-namespace Rbz\Data\Interfaces\Components\Container;
+namespace Rbz\Data\Interfaces\Container;
 
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Support\Collectable;

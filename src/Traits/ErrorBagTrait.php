@@ -7,20 +7,20 @@ use Rbz\Data\Interfaces\Errors\ErrorBagInterface;
 
 trait ErrorBagTrait
 {
-    private ErrorBagInterface $_errors;
+    private ErrorBagInterface $errors;
 
     public function setErrors(ErrorBagInterface $collection)
     {
-        $this->_errors = $collection;
+        $this->errors = $collection;
         return $this;
     }
 
     public function errors(): ErrorBagInterface
      {
-        if (! isset($this->_errors)) {
-            $this->_errors = ErrorBag::make();
+        if (! isset($this->errors)) {
+            $this->errors = ErrorBag::make();
         }
-        return $this->_errors;
+        return $this->errors;
     }
 
     public function getErrors(): ErrorBagInterface

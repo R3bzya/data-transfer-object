@@ -1,9 +1,9 @@
 <?php
 
-namespace Rbz\Data\Components\Container;
+namespace Rbz\Data\Container;
 
 use Rbz\Data\Exceptions\ContainerException;
-use Rbz\Data\Interfaces\Components\StorageInterface;
+use Rbz\Data\Interfaces\StorageInterface;
 use Rbz\Data\Support\Arr;
 
 class TransferStorage implements StorageInterface
@@ -36,5 +36,15 @@ class TransferStorage implements StorageInterface
             throw new ContainerException("Container doesnt have $key");
         }
         return $this->transfers[$key];
+    }
+    
+    public function count(): int
+    {
+        return Arr::count($this->transfers);
+    }
+    
+    public function isEmpty(): bool
+    {
+        return Arr::isEmpty($this->transfers);
     }
 }

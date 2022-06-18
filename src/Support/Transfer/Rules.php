@@ -31,11 +31,11 @@ class Rules
         }
         return $transferProperties
             ->filter(fn(string $property) => Arr::notIn($properties, '!'.$property))
-            ->filter(fn(string $property) => ! self::hasInclusions($properties) || Arr::in($properties, $property))
+            ->filter(fn(string $property) => ! self::hasExclusion($properties) || Arr::in($properties, $property))
             ->toArray();
     }
 
-    private static function hasInclusions(array $properties): bool
+    private static function hasExclusion(array $properties): bool
     {
         foreach ($properties as $property) {
             if (! Str::startWith($property, '!')) {
@@ -50,7 +50,7 @@ class Rules
      * @param array $properties
      * @return array
      */
-    public function run(array $properties): array
+    public function only(array $properties): array
     {
         return Collection::make($this->rules)->only($properties)->toArray();
     }

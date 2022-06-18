@@ -7,25 +7,25 @@ use Rbz\Data\Interfaces\Components\Collector\CollectorInterface;
 
 trait CollectorTrait
 {
-    private CollectorInterface $_collector;
+    private CollectorInterface $collector;
 
     public function setCollector(CollectorInterface $collector)
     {
-        $this->_collector = $collector;
+        $this->collector = $collector;
         return $this;
     }
 
     public function collector(): CollectorInterface
     {
-        if (! isset($this->_collector)) {
-            $this->_collector = Collector::make($this->collectables());
+        if (! isset($this->collector)) {
+            $this->collector = Collector::make($this->collectables());
         }
-        return $this->_collector;
+        return $this->collector;
     }
 
     public function getCollector(): CollectorInterface
     {
-        return $this->_collector;
+        return $this->collector;
     }
 
     public function collectables(): array

@@ -37,7 +37,7 @@ interface ErrorBagInterface extends Cloneable, Arrayable, Collectable
      * @param PathInterface $path
      * @return ErrorBagInterface
      */
-    public function withPathAtTheBeginning(PathInterface $path): ErrorBagInterface;
+    public function prependPathsWith(PathInterface $path): ErrorBagInterface;
 
     /**
      * Count messages of error items.

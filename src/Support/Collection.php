@@ -6,12 +6,9 @@ use ArrayIterator;
 use Rbz\Data\Exceptions\CollectionException;
 use Rbz\Data\Interfaces\Support\Arrayable;
 use Rbz\Data\Interfaces\Support\CollectionInterface;
-use Rbz\Data\Traits\TypeCheckerTrait;
 
 class Collection implements CollectionInterface
 {
-    use TypeCheckerTrait;
-
     private array $items;
 
     public function __construct($data = [])
@@ -161,8 +158,7 @@ class Collection implements CollectionInterface
      */
     public function only(array $keys)
     {
-        $keys = new self($keys);
-        return $this->filter(fn($value, $key) => $keys->in($key, true));
+        return new static(Arr::only($this->items(), $keys));
     }
 
     /**
@@ -171,8 +167,7 @@ class Collection implements CollectionInterface
      */
     public function except(array $keys)
     {
-        $keys = new self($keys);
-        return $this->filter(fn($value, $key) => $keys->notIn($key, true));
+        return new static(Arr::except($this->items(), $keys));
     }
 
     public function filter(?callable $callable)

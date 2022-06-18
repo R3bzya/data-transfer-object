@@ -7,7 +7,7 @@ use Countable;
 use IteratorAggregate;
 
 interface CollectionInterface extends Arrayable, IteratorAggregate, Countable, Cloneable,
-    ArrayAccess, TypeCheckerInterface, Jsonable
+    ArrayAccess, Jsonable
 {
     /**
      * Make the new instance of collection.

@@ -62,7 +62,7 @@ class CompositeTransferTest extends BaseCase
         $transfer->load(['a_two_i' => 123]);
         $transfer->load(['default' => ['a_one_s' => 'string']]);
 
-        $this->assertEquals(123, $transfer->default->a_two_i);
+        $this->assertFalse($transfer->default->isSetProperty('a_two_i'));
         $this->assertEquals('string', $transfer->default->a_one_s);
     }
 
@@ -83,7 +83,7 @@ class CompositeTransferTest extends BaseCase
                     'a_two_i' => 1,
                 ],
                 [
-                    'load' => true,
+                    'load' => false,
                     'count' => 0
                 ]
             ],

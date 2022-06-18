@@ -20,7 +20,7 @@ class EventManager
         $this->eventStorage->add($event, $closure);
     }
     
-    public function release(string $group)
+    public function release(string $group): void
     {
         if (! $this->isEnable()) {
             return;
