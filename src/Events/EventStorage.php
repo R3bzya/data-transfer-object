@@ -3,6 +3,7 @@
 namespace Rbz\Data\Events;
 
 use Closure;
+use Rbz\Data\Exceptions\EventStorageException;
 use Rbz\Data\Interfaces\Events\StorageInterface;
 use Rbz\Data\Support\Arr;
 use Rbz\Data\Support\Str;
@@ -38,23 +39,19 @@ class EventStorage implements StorageInterface
      */
     public function remove(string $key): void
     {
+        if (! $this->has($key)) {
+            return;
+        }
+        
         $storage = $this;
         $groups = Str::explode($key);
+        $key = Arr::pop($groups);
         
-        foreach ($groups as $key => $group) {
-            if (Arr::countEq($groups, 1)) {
-                unset($storage->groups[$group]);
-                break;
-            }
-            
-            if ($storage->has($group)) {
-                $storage = $storage->get($group);
-            } else {
-                break;
-            }
-            
-            unset($groups[$key]);
+        foreach ($groups as $group) {
+            $storage = $storage->get($group);
         }
+    
+        unset($storage->groups[$key]);
     }
     
     /**
@@ -63,14 +60,13 @@ class EventStorage implements StorageInterface
      */
     public function has(string $key): bool
     {
-        $storage = $this;
-        $groups = Str::explode($key);
-        
-        if (Arr::countEq($groups, 0)) {
+        if (Str::isEmpty($key)) {
             return false;
         }
         
-        foreach ($groups as $group) {
+        $storage = $this;
+        
+        foreach (Str::explode($key) as $group) {
             if (Arr::notHas($storage->groups, $group)) {
                 return false;
             }
@@ -89,10 +85,10 @@ class EventStorage implements StorageInterface
         $storage = $this;
         
         foreach (Str::explode($key) as $group) {
-            if ($this->has($group)) {
+            if ($storage->has($group)) {
                 $storage = $storage->groups[$group];
             } else {
-                return new static();
+                throw new EventStorageException("The key not found: $key");
             }
         }
         

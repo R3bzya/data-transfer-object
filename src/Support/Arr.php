@@ -277,4 +277,9 @@ class Arr
     {
         return static::filter($data, fn($key) => static::notIn($keys, $key, true), ARRAY_FILTER_USE_KEY);
     }
+    
+    public static function pop(array &$groups)
+    {
+        return array_pop($groups);
+    }
 }

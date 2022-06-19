@@ -79,4 +79,14 @@ class Str
     {
         return ! static::contains($haystack, $needle);
     }
+    
+    public static function isEmpty(string $string): bool
+    {
+        return trim($string) == '';
+    }
+    
+    public function isNotEmpty(string $string): bool
+    {
+        return ! static::isEmpty($string);
+    }
 }
