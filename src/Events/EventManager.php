@@ -22,7 +22,7 @@ class EventManager
     
     public function release(string $group): void
     {
-        if (! $this->isEnable()) {
+        if (! $this->isEnable() || ! $this->eventStorage->has($group)) {
             return;
         }
         

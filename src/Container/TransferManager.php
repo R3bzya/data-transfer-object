@@ -63,7 +63,7 @@ class TransferManager
     public function massiveLoad(array $data): bool
     {
         foreach ($this->toArray() as $property => $transfer) {
-            $this->transferLoad($transfer, Arr::getIf($data, $property, fn($value) => Arr::is($value), []));
+            $this->transferLoad($transfer, Arr::getIf($data, $property, 'array', []));
         }
         return $this->isLoad();
     }
@@ -71,7 +71,7 @@ class TransferManager
     public function massiveValidate(array $properties = [], bool $clearErrors = true): bool
     {
         foreach ($this->toArray() as $property => $transfer) {
-            $this->transferValidate($transfer, Arr::getIf($properties, $property, fn($value) => Arr::is($value), []), $clearErrors);
+            $this->transferValidate($transfer, Arr::getIf($properties, $property, 'array', []), $clearErrors);
         }
         return $this->isValidate();
     }

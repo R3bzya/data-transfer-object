@@ -51,10 +51,10 @@ class Arr
         return $array;
     }
     
-    public static function getIf(array $array, $key, \Closure $closure, $default = null)
+    public static function getIf(array $array, $key, $condition, $default = null)
     {
         $value = Arr::get($array, $key, $default);
-        return $closure($value) ? $value : $default;
+        return Is::check($condition, $value)? $value : $default;
     }
 
     public static function set(array &$array, $key, $value): void
@@ -95,7 +95,7 @@ class Arr
      */
     public static function is($value): bool
     {
-        return is_array($value);
+        return Is::array($value);
     }
 
     public static function isNot($value): bool

@@ -17,7 +17,7 @@ class Str
      */
     public static function is($value): bool
     {
-        return is_string($value);
+        return Is::string($value);
     }
 
     public static function isNot($value): bool
@@ -80,11 +80,69 @@ class Str
         return ! static::contains($haystack, $needle);
     }
     
+    /**
+     * Determinate if the string start with exclamation point.
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function isNegative(string $string): bool
+    {
+        return static::startWith($string, '!');
+    }
+    
+    /**
+     * Make the negative string if the string is positive.
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function toNegative(string $string): string
+    {
+        if (static::isNegative($string)) {
+            return $string;
+        }
+        return '!'.$string;
+    }
+    
+    /**
+     * Make the positive string.
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function toPositive(string $string): string
+    {
+        return static::ltrim($string, '!');
+    }
+    
+    public static function ltrim(string $string, string $characters = ' \t\n\r\0\x0B'): string
+    {
+        return ltrim($string, $characters);
+    }
+    
+    public static function toLower(string $string): string
+    {
+        return strtolower($string);
+    }
+    
+    /**
+     * Determinate if the string is empty.
+     *
+     * @param string $string
+     * @return bool
+     */
     public static function isEmpty(string $string): bool
     {
         return trim($string) == '';
     }
     
+    /**
+     * Determinate if the string is not empty.
+     *
+     * @param string $string
+     * @return bool
+     */
     public function isNotEmpty(string $string): bool
     {
         return ! static::isEmpty($string);
