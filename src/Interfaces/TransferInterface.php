@@ -45,7 +45,7 @@ interface TransferInterface extends PropertiesInterface, ErrorBagProviderInterfa
      */
     public function toSafeCollection(): CollectionInterface;
     
-    public function isLoad(): bool;
+    public function isLoaded(): bool;
     
-    public function isValidate(): bool;
+    public function isValidated(): bool;
 }

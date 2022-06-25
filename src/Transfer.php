@@ -20,10 +20,10 @@ abstract class Transfer extends Properties
     use ErrorBagTrait,
         EventsTrait;
     
-    protected bool $isLoad = false;
+    private bool $isLoaded = false;
     
-    protected bool $isValidate = false;
-
+    private bool $isValidated = false;
+    
     /**
      * @param mixed $data
      * @param array $constructArgs
@@ -53,31 +53,38 @@ abstract class Transfer extends Properties
     {
         $this->beforeLoadEvents();
         $this->errors()->clear();
+        $this->notLoaded();
         $collection = Arr::collect($data)->only($this->getProperties()->toArray());
         $this->setProperties($collection->toArray());
-        $this->setIsLoad($collection->isNotEmpty() && $this->errors()->isEmpty());
-        $this->setIsValidate($this->isLoad() && $collection->isEmpty()); // TODO
+        if ($collection->isNotEmpty() && $this->errors()->isEmpty()) {
+            $this->loaded();
+        }
         $this->afterLoadEvents();
-        return $this->isLoad();
+        return $this->isLoaded();
     }
 
     public function validate(array $properties = [], bool $clearErrors = true): bool
     {
         $this->beforeValidateEvents();
+        $this->notValidated();
         
         $validator = Validator::make(
             $this->toSafeCollection()->toArray(),
             (new Rules($this->rules()))->only(Rules::toValidation($this->getProperties(), $properties))
         );
-        $validator->validate();
         
-        $this->setIsValidate($clearErrors
-            ? $this->errors()->replace($validator->getErrors())->isEmpty()
-            : $this->errors()->merge($validator->getErrors())->isEmpty()
-        );
+        if ($validator->validate()) {
+            $this->validated();
+        }
+        
+        if ($clearErrors) {
+            $this->errors()->replace($validator->getErrors());
+        } else {
+            $this->errors()->merge($validator->getErrors());
+        }
         
         $this->afterValidateEvents();
-        return $this->isValidate();
+        return $this->isValidated();
     }
 
     public function setProperty(string $property, $value): void
@@ -118,32 +125,91 @@ abstract class Transfer extends Properties
     }
     
     /**
-     * @param bool $isLoad
+     * Change the transfer status to loaded.
+     *
      * @return static
      */
-    public function setIsLoad(bool $isLoad)
+    public function loaded()
     {
-        $this->isLoad = $isLoad;
+        $this->setIsLoaded(true);
+        $this->setIsValidated(false);
         return $this;
     }
     
     /**
-     * @param bool $isValidate
+     * Change the transfer status to not loaded.
+     *
      * @return static
      */
-    public function setIsValidate(bool $isValidate)
+    public function notLoaded()
     {
-        $this->isValidate = $isValidate;
+        $this->setIsLoaded(false);
         return $this;
     }
     
-    public function isLoad(): bool
+    /**
+     * Change the transfer status to validated.
+     *
+     * @return static
+     */
+    public function validated()
     {
-        return $this->isLoad;
+        $this->setIsValidated(true);
+        return $this;
     }
     
-    public function isValidate(): bool
+    /**
+     * Change the transfer status to not validated.
+     *
+     * @return static
+     */
+    public function notValidated()
     {
-        return $this->isValidate;
+        $this->setIsValidated(false);
+        return $this;
+    }
+    
+    /**
+     * Set the transfer loaded status.
+     *
+     * @param bool $isLoaded
+     * @return static
+     */
+    public function setIsLoaded(bool $isLoaded)
+    {
+        $this->isLoaded = $isLoaded;
+        return $this;
+    }
+    
+    /**
+     * Set the transfer loaded status.
+     *
+     * @param bool $isValidated
+     * @return static
+     */
+    public function setIsValidated(bool $isValidated)
+    {
+        $this->isValidated = $isValidated;
+        return $this;
+    }
+    
+    /**
+     * Determine if the transfer was loaded.
+     *
+     * @return bool
+     */
+    public function isLoaded(): bool
+    {
+        return $this->isLoaded;
+    }
+    
+    /**
+     * Determine if the transfer was validated.
+     *
+     * @return bool
+     */
+    public function isValidated(): bool
+    {
+        return $this->isValidated;
     }
 }

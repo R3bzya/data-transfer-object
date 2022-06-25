@@ -20,7 +20,7 @@ abstract class CompositeTransfer extends Transfer
     {
         parent::load(Arr::except($data, $this->internalTransfers()));
         $this->transferManager()->massiveLoad($data);
-        return $this->isLoad();
+        return $this->isLoaded();
     }
     
     public function validate(array $properties = [], bool $clearErrors = true): bool
@@ -28,7 +28,7 @@ abstract class CompositeTransfer extends Transfer
         $properties = new Properties($properties);
         parent::validate($properties->get(), $clearErrors);
         $this->transferManager()->massiveValidate($properties->get($this->internalTransfers()), $clearErrors);
-        return $this->isValidate();
+        return $this->isValidated();
     }
 
     public function errors(): ErrorBagInterface
@@ -65,13 +65,13 @@ abstract class CompositeTransfer extends Transfer
         return parent::getProperties()->with($this->internalTransfers());
     }
     
-    public function isLoad(): bool
+    public function isLoaded(): bool
     {
-        return parent::isLoad() || $this->transferManager()->isLoad();
+        return parent::isLoaded() || $this->transferManager()->isLoaded();
     }
     
-    public function isValidate(): bool
+    public function isValidated(): bool
     {
-        return parent::isValidate() && $this->transferManager()->isValidate();
+        return parent::isValidated() && $this->transferManager()->isValidated();
     }
 }

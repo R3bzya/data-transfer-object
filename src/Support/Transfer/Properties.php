@@ -6,6 +6,7 @@ use Rbz\Data\Components\Path;
 use Rbz\Data\Exceptions\PathException;
 use Rbz\Data\Interfaces\Components\Path\PathInterface;
 use Rbz\Data\Support\Arr;
+use Rbz\Data\Support\Str;
 
 class Properties
 {
@@ -43,7 +44,7 @@ class Properties
     {
         $result = [];
         foreach ($internalTransfers as $internalTransfer) {
-            if (Arr::has($this->items, '!'.$internalTransfer)) {
+            if (Arr::has($this->items, Str::toNegative($internalTransfer))) {
                 Arr::set($result, $internalTransfer, ['__toExclude__']);
             } else {
                 Arr::set($result, $internalTransfer, Arr::get($this->items, $internalTransfer, []));

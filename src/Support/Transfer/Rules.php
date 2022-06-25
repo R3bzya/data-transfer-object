@@ -30,7 +30,7 @@ class Rules
             return $transferProperties->toArray();
         }
         return $transferProperties
-            ->filter(fn(string $property) => Arr::notIn($properties, '!'.$property))
+            ->filter(fn(string $property) => Arr::notIn($properties, Str::toNegative($property)))
             ->filter(fn(string $property) => ! self::hasExclusion($properties) || Arr::in($properties, $property))
             ->toArray();
     }
@@ -38,7 +38,7 @@ class Rules
     private static function hasExclusion(array $properties): bool
     {
         foreach ($properties as $property) {
-            if (! Str::startWith($property, '!')) {
+            if (! Str::isNegative($property)) {
                 return true;
             }
         }

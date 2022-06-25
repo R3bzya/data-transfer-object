@@ -65,7 +65,7 @@ class TransferManager
         foreach ($this->toArray() as $property => $transfer) {
             $this->transferLoad($transfer, Arr::getIf($data, $property, 'array', []));
         }
-        return $this->isLoad();
+        return $this->isLoaded();
     }
     
     public function massiveValidate(array $properties = [], bool $clearErrors = true): bool
@@ -73,7 +73,7 @@ class TransferManager
         foreach ($this->toArray() as $property => $transfer) {
             $this->transferValidate($transfer, Arr::getIf($properties, $property, 'array', []), $clearErrors);
         }
-        return $this->isValidate();
+        return $this->isValidated();
     }
     
     public function getErrors(): ErrorBagInterface
@@ -85,29 +85,29 @@ class TransferManager
         return $collection;
     }
     
-    public function isLoad(): bool
+    public function isLoaded(): bool
     {
         if ($this->storage->isEmpty()) {
             return true;
         }
         
-        $isLoad = false;
+        $isLoaded = false;
         foreach ($this->toArray() as $transfer) {
-            $isLoad = $isLoad || $transfer->isLoad();
+            $isLoaded = $isLoaded || $transfer->isLoaded();
         }
-        return $isLoad;
+        return $isLoaded;
     }
     
-    public function isValidate(): bool
+    public function isValidated(): bool
     {
         if ($this->storage->isEmpty()) {
             return true;
         }
         
-        $isValidate = true;
+        $isValidated = true;
         foreach ($this->toArray() as $transfer) {
-            $isValidate = $isValidate && $transfer->isValidate();
+            $isValidated = $isValidated && $transfer->isValidated();
         }
-        return $isValidate;
+        return $isValidated;
     }
 }
