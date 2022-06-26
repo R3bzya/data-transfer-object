@@ -25,7 +25,7 @@ class Exploder
         
         foreach ($rules as $key => $keyRules) {
             if (Str::notContains($key, '*')) {
-                Arr::set($result, $key, $this->formatRules($keyRules));
+                $result[$key] = $this->formatRules($keyRules);
             } else {
                 $result = Arr::merge($result, $this->explodeAsterisk($key, $this->formatRules($keyRules)));
             }

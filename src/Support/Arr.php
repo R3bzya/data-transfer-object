@@ -16,7 +16,7 @@ class Arr
             if (static::is($value) && ! empty($value)) {
                 $dotted = static::merge($dotted, static::dot($value, $path.$key.'.'));
             } else {
-                static::set($dotted, $path.$key, $value);
+                $dotted[$path.$key] = $value;;
             }
         }
         return $dotted;
@@ -32,17 +32,13 @@ class Arr
 
     public static function get(array $array, $key, $default = null)
     {
-        if (static::has($array, $key)) {
+        if (static::exists($array, $key)) {
             return $array[$key];
         }
 
-        if (! Str::has($key, '.')) {
-            return $array[$key] ?? $default;
-        }
-
-        foreach (Str::explode($key) as $value) {
-            if (static::has($array, $value)) {
-                $array = $array[$value];
+        foreach (Str::explode($key) as $segment) {
+            if (static::has($array, $segment) && static::is($array)) {
+                $array = $array[$segment];
             } else {
                 return $default;
             }
@@ -57,9 +53,25 @@ class Arr
         return Is::check($condition, $value)? $value : $default;
     }
 
-    public static function set(array &$array, $key, $value): void
+    public static function set(array &$array, $key, $value): array
     {
-        $array[$key] = $value;
+        $segments = Str::explode($key);
+    
+        foreach ($segments as $i => $key) {
+            if (static::countEq($segments, 1)) {
+                break;
+            }
+            
+            static::unset($segments, $i);
+            if (static::notHas($array, $key) || static::isNot($array[$key])) {
+                $array[$key] = [];
+            }
+            $array = &$array[$key];
+        }
+    
+        $array[array_shift($segments)] = $value;
+        
+        return $array;
     }
 
     public static function add(array &$array, $value): void
@@ -74,7 +86,23 @@ class Arr
      */
     public static function has(array $array, $key): bool
     {
-        return key_exists($key, $array);
+        if (static::isEmpty($array)) {
+            return false;
+        }
+        
+        if (static::exists($array, $key)) {
+            return true;
+        }
+    
+        foreach (Str::explode($key) as $segment) {
+            if (static::is($array) && static::exists($array, $segment)) {
+                $array = $array[$segment];
+            } else {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     /**
@@ -110,7 +138,26 @@ class Arr
 
     public static function unset(array &$array, $key): void
     {
-        unset($array[$key]);
+        if (static::exists($array, $key)) {
+            unset($array[$key]);
+        }
+    
+        $segments = Str::explode($key);
+    
+        foreach ($segments as $i => $key) {
+            unset($segments[$i]);
+            
+            if (static::countEq($segments, 0)) {
+                unset($array[$key]);
+                break;
+            }
+            
+            if (static::notHas($array, $key) || static::isNot($array)) {
+                break;
+            }
+            
+            $array = &$array[$key];
+        }
     }
 
     public static function unique(array $param, int $flag = SORT_STRING): array
@@ -281,5 +328,10 @@ class Arr
     public static function pop(array &$groups)
     {
         return array_pop($groups);
+    }
+    
+    public static function exists(array $array, $key): bool
+    {
+        return key_exists($key, $array);
     }
 }

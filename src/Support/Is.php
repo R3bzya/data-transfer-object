@@ -93,13 +93,12 @@ class Is
     
     protected static function isEmpty($value): bool
     {
-        if (Arr::is($value)) {
-            return Arr::isEmpty($value);
-        } elseif (Str::is($value)) {
-            return Str::isEmpty($value);
+        if ($value instanceof \Countable) {
+            return $value->count() == 0;
         } elseif ($value instanceof Arrayable) {
             return Arr::isEmpty($value->toArray());
         }
-        throw new RuntimeException('Undefined type: ' . gettype($value));
+    
+        return empty($value);
     }
 }

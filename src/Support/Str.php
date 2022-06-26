@@ -49,7 +49,12 @@ class Str
 
     public static function contains(string $haystack, string $needle): bool
     {
-        return str_contains($haystack, $needle);
+        return static::pos($haystack, $needle) !== false;
+    }
+    
+    public static function notContains(string $haystack, string $needle): bool
+    {
+        return ! static::contains($haystack, $needle);
     }
 
     public static function first(string $string, $default = null, string $separator = '.'): ?string
@@ -62,22 +67,12 @@ class Str
         return $string1.$separator.$string2;
     }
 
-    public static function has(string $haystack, string $needle): bool
-    {
-        return static::pos($haystack, $needle) !== false;
-    }
-
     /**
      * @return int|false
      */
     public static function pos(string $haystack, string $needle)
     {
         return strpos($haystack, $needle);
-    }
-
-    public static function notContains(string $haystack, string $needle): bool
-    {
-        return ! static::contains($haystack, $needle);
     }
     
     /**
