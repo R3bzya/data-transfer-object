@@ -31,16 +31,14 @@ use RuntimeException;
  * @method static bool notScalar(mixed $value)
  * @method static bool empty(mixed $value)
  * @method static bool notEmpty(mixed $value)
+ * @method static bool equal(mixed ...$values)
+ * @method static bool notEqual(mixed ...$values)
  */
 class Is
 {
     public static function __callStatic($name, $arguments)
     {
-        $name = Str::toLower($name);
-        if (Str::startWith($name, 'not')) {
-            return static::checkTerms(Str::ltrim($name, 'not'), $arguments[0]);
-        }
-        return static::checkTerms($name, $arguments[0]);
+        return static::check(static::prepareCondition($name), $arguments);
     }
     
     /**
@@ -62,6 +60,11 @@ class Is
         return static::checkTerms($condition, $value);
     }
     
+    /**
+     * @param string $condition
+     * @param mixed $value
+     * @return bool
+     */
     protected static function checkTerms(string $condition, $value): bool
     {
         switch (static::normalize($condition)) {
@@ -77,6 +80,7 @@ class Is
             case 'iterable': return is_iterable($value);
             case 'scalar': return is_scalar($value);
             case 'empty': return static::isEmpty($value);
+            case 'equal': return static::isEqual($value);
             default: throw new RuntimeException("Undefined condition: $condition");
         }
     }
@@ -87,18 +91,48 @@ class Is
             case 'arr': return 'array';
             case 'str': return 'string';
             case 'int': return 'integer';
+            case 'eq': return 'equal';
             default: return $condition;
         }
     }
     
     protected static function isEmpty($value): bool
     {
-        if ($value instanceof \Countable) {
+        if (static::array($value)) {
+            return Arr::isEmpty($value);
+        } elseif (static::string($value)) {
+            return Str::isEmpty($value);
+        } elseif ($value instanceof \Countable) {
             return $value->count() == 0;
         } elseif ($value instanceof Arrayable) {
             return Arr::isEmpty($value->toArray());
         }
     
         return empty($value);
+    }
+    
+    protected static function isEqual(array $values): bool
+    {
+        static::checkArgs('equal', $values, 2);
+        
+        $base = Arr::pop($values);
+        foreach ($values as $value) {
+            if ($base !== $value) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    protected static function checkArgs(string $method, array $value, int $count): void
+    {
+        if (Arr::countLt($value, $count)) {
+            throw new \DomainException("Method `$method` required min $count arguments");
+        }
+    }
+    
+    private static function prepareCondition(string $name): string
+    {
+        return Str::replace('not', '!', Str::toLower($name));
     }
 }

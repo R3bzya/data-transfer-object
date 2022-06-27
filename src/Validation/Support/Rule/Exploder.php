@@ -67,13 +67,13 @@ class Exploder
         return $result;
     }
     
-    private static function addPreviousKey(array $keys, string $previousKey): array
-    {
-        return Arr::collect($keys)->mapWithKeys(fn(array $value, string $key) => [$previousKey . '.' . $key => $value])->toArray();
-    }
-    
     private function explodeArray(array $data, string $key, string $previousKey, array $rules): array
     {
         return static::addPreviousKey(static::explode($data, [$key => $rules]), $previousKey);
+    }
+    
+    private static function addPreviousKey(array $keys, string $previousKey): array
+    {
+        return Arr::collect($keys)->mapWithKeys(fn(array $value, string $key) => [$previousKey . '.' . $key => $value])->toArray();
     }
 }
